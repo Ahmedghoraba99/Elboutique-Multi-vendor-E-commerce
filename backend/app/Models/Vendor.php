@@ -42,4 +42,8 @@ class Vendor extends Model
         'email_verified_at' => 'datetime',
     ];
 
+    // function products(){
+    //     return $this->hasMany(Product::class);
+    // }
+
 }

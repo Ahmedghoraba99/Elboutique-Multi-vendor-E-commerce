@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
-// use App\Http\Resources\AdminResource;
+use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
@@ -14,7 +14,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return Admin::all();
+        return  AdminResource::collection(Admin::all());
     }
 
     /**
@@ -41,7 +41,7 @@ class AdminController extends Controller
      */
     public function show(Admin $admin)
     {
-        return $admin;
+        return new AdminResource($admin);
     }
 
 
