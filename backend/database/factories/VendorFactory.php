@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,15 @@ class VendorFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+             
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'address' => fake()->address(),
+            'image'=>fake()->image(),
+            'phone'=>fake()->phoneNumber(),
+            'remember_token' => Str::random(10),
+            'password' => bcrypt('password'),
+            'national_id' => fake()->image(),
         ];
     }
 }

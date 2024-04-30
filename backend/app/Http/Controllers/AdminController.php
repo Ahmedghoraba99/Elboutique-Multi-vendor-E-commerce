@@ -28,11 +28,11 @@ class AdminController extends Controller
             $imagePath = $request->file('image')->store('public');
             $validatedData['image'] = $imagePath;
         }
-        $post = Admin::create($validatedData);
+        $admin = Admin::create($validatedData);
         
         $imageUrl = $imagePath ? Storage::url($imagePath) : null;
         
-        return response()->json(['message' => 'Post created successfully', 'post' => $post, 'image_url' => $imageUrl], 201);
+        return response()->json(['message' => 'Admin created successfully', 'admin' => $admin, 'image_url' => $imageUrl], 201);
     }
      
 
@@ -60,7 +60,7 @@ class AdminController extends Controller
             $validatedData['image'] = $imagePath;
         }
         $admin->update( $validatedData);
-    return response()->json(['message' => 'Post updated successfully', 'admin' =>  $admin], 201);
+    return response()->json(['message' => 'Admin updated successfully', 'admin' =>  $admin], 201);
 
     }
 

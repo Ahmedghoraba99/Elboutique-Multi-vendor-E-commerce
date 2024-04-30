@@ -11,8 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vendor', function (Blueprint $table) {
+        Schema::create('vendors', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('address');
+            $table->string('phone');
+            $table->string('national_id')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->enum('active', ['true', 'false'])->default('false');
+            $table->enum('banned', ['true', 'false'])->default('false');
+            $table->string('image')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

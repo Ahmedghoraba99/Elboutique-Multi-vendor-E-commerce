@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+  use App\Http\Resources\VendorResource; 
 use App\Models\Vendor;
 use App\Http\Requests\StoreVendorRequest;
 use App\Http\Requests\UpdateVendorRequest;
+use Illuminate\Support\Facades\Storage;
 
 class VendorController extends Controller
 {
@@ -13,15 +14,7 @@ class VendorController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return VendorResource::collection(Vendor::all());
     }
 
     /**
@@ -29,7 +22,20 @@ class VendorController extends Controller
      */
     public function store(StoreVendorRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+        
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('public');
+            $validatedData['image'] = $imagePath;
+        }
+        if( $request->hasFile('national_id')){
+            $imagePath = $request->file('national_id')->store('public');
+            $validatedData['national_id'] = $imagePath;
+        }
+        $vendor = Vendor::create($validatedData);
+        
+        return response()->json(['message' => 'vendor created successfully', 'vendor' => $vendor], 201);
+
     }
 
     /**
@@ -37,23 +43,34 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        //
+        return new VendorResource($vendor);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Vendor $vendor)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateVendorRequest $request, Vendor $vendor)
     {
-        //
+        $validatedData = $request->validated();
+        if ($request->hasFile('image')) {
+            if ($vendor->image) {
+                Storage::delete($vendor->image);
+            }
+            $imagePath = $request->file('image')->store('public');
+            $validatedData['image'] = $imagePath;
+        }
+        if( $request->hasFile('national_id')){
+            if ($vendor->national_id) {
+                Storage::delete($vendor->national_id);
+            }
+            $imagePath = $request->file('national_id')->store('public');
+            $validatedData['national_id'] = $imagePath;
+        }
+        $vendor->update($validatedData);
+        
+        return response()->json(['message' => 'Vendor updated successfully', 'vendor' => $vendor], 201);
+
     }
 
     /**
@@ -61,6 +78,13 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-        //
+        if ($vendor->image) {
+            Storage::delete($vendor->image);
+        }
+        
+        if ($vendor->national_id) {
+            Storage::delete($vendor->national_id);
+        }
+        $vendor->delete();
     }
 }

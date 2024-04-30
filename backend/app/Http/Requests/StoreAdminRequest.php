@@ -29,6 +29,7 @@ class StoreAdminRequest extends FormRequest
             'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
             'address' => 'sometimes|string|max:255|min:10',
             'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
+            'image' => 'nullable|image|mimes:jpg,png|max:2048',
         ];
     }
 }
