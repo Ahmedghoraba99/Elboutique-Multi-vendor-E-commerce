@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // start of users tables 
-        Schema::create('coustmers', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
         });
         // end of users tables
@@ -21,13 +21,13 @@ return new class extends Migration
         Schema::create('address', function (Blueprint $table) {
             $table->id();
         });
-        Schema::create('coustmer_address', function (Blueprint $table) {
+        Schema::create('customer_address', function (Blueprint $table) {
             $table->id();
         });
         Schema::create('vendor_address', function (Blueprint $table) {
             $table->id();
         });
-        Schema::create('coustmer_phone', function (Blueprint $table) {
+        Schema::create('customer_phone', function (Blueprint $table) {
             $table->id();
         });
         Schema::create('vendor_phone', function (Blueprint $table) {
@@ -71,12 +71,7 @@ return new class extends Migration
         Schema::create('cart', function (Blueprint $table) {
             $table->id();
         });
-        Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('order_product', function (Blueprint $table) {
-            $table->id();
-        });
+
 
         // payment related tables
         Schema::create('payments', function (Blueprint $table) {

@@ -1,5 +1,7 @@
 <?php
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +24,9 @@ Route::group([],function(){
 Route::apiResource('admins',AdminController::class);
 Route::apiResource('vendors',VendorController::class);
 });
+
+
+Route::apiResource('orders', OrderController::class);
+
+Route::post('/orders/{id}/products',[OrderProductController::class,'addProductToOrder']);
+Route::get('/orders/{id}/products',[OrderProductController::class,'getOrderProduct']);
