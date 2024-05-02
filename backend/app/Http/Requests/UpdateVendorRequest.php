@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVendorRequest extends FormRequest
@@ -27,7 +27,16 @@ class UpdateVendorRequest extends FormRequest
                 return 
                 [
                     'name' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
-                    'email' => 'required|string|email|max:255|unique:admins|regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                    'email' => [
+                        'required',
+                        'string',
+                        'email',
+                        'max:255',
+                        Rule::unique('admins') ,
+                        Rule::unique('customers') ,
+                        Rule::unique('vendors')->whereNull('deleted_at'),
+                        'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                    ],
                     'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
                     'address' => 'sometimes|string|max:255|min:10',
                     'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
@@ -42,7 +51,16 @@ class UpdateVendorRequest extends FormRequest
                 return 
                 [
                     'name' => 'sometimes|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
-                    'email' => 'sometimes|string|email|max:255|unique:admins|regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                    'email' => [
+                        'sometimes',
+                        'string',
+                        'email',
+                        'max:255',
+                        Rule::unique('admins') ,
+                        Rule::unique('customers') ,
+                        Rule::unique('vendors')->whereNull('deleted_at'),
+                        'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                    ],
                     'password' => 'sometimes|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
                     'address' => 'sometimes|string|max:255|min:10',
                     'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
