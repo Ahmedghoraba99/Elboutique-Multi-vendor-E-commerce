@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // start of users tables 
-      
+        // start of users tables
+
         // end of user related tables
 
         // start of product tables
@@ -35,7 +35,7 @@ return new class extends Migration
         // end of product tables
 
         // functional tables
-      
+
         Schema::create('whishlist', function (Blueprint $table) {
             $table->id();
         });
@@ -45,10 +45,6 @@ return new class extends Migration
         });
 
 
-        // payment related tables
-        Schema::create('payments', function (Blueprint $table) {
-            $table->id();
-        });
     }
 
     /**
