@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([],function(){
 Route::apiResource('admins',AdminController::class);
 Route::apiResource('vendors',VendorController::class);
-Route::apiResource('customer',CustomerController::class);
+Route::apiResource('customers',CustomerController::class);
 });
 
 

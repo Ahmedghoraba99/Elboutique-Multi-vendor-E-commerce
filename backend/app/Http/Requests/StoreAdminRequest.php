@@ -33,7 +33,7 @@ class StoreAdminRequest extends FormRequest
                 'max:255',
                 Rule::unique('admins') ,
                 Rule::unique('customers') ,
-                Rule::unique('vendors')->whereNull('deleted_at'),
+                Rule::unique('vendors'),
                 'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
             ],
             'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
