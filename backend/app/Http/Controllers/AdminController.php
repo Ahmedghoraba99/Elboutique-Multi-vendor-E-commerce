@@ -23,18 +23,18 @@ class AdminController extends Controller
     public function store(StoreAdminRequest $request)
     {
         $validatedData = $request->validated();
-        
+
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('public');
             $validatedData['image'] = $imagePath;
         }
         $admin = Admin::create($validatedData);
-        
+
         $imageUrl = $imagePath ? Storage::url($imagePath) : null;
-        
+
         return response()->json(['message' => 'Admin created successfully', 'admin' => $admin, 'image_url' => $imageUrl], 201);
     }
-     
+    
 
     /**
      * Display the specified resource.

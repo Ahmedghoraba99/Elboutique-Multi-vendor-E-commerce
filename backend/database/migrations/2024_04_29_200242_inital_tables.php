@@ -11,28 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // start of users tables 
-        Schema::create('customers', function (Blueprint $table) {
-            $table->id();
-        });
-        // end of users tables
+        // start of users tables
 
-        // start of users related tables
-        Schema::create('address', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('customer_address', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('vendor_address', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('customer_phone', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('vendor_phone', function (Blueprint $table) {
-            $table->id();
-        });
         // end of user related tables
 
         // start of product tables
@@ -55,28 +35,16 @@ return new class extends Migration
         // end of product tables
 
         // functional tables
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('product_report', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('review_report', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('whishlist', function (Blueprint $table) {
-            $table->id();
-        });
 
-        Schema::create('cart', function (Blueprint $table) {
-            $table->id();
-        });
+        // Schema::create('whishlist', function (Blueprint $table) {
+        //     $table->id();
+        // });
+
+        // Schema::create('cart', function (Blueprint $table) {
+        //     $table->id();
+        // });
 
 
-        // payment related tables
-        Schema::create('payments', function (Blueprint $table) {
-            $table->id();
-        });
     }
 
     /**

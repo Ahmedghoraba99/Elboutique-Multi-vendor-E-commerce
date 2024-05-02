@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign("product_id")->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreign("product_id")->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -27,6 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        
         Schema::dropIfExists('order_products');
     }
 };
