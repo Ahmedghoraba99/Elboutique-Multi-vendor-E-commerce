@@ -9,6 +9,7 @@ use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 use App\Http\Resources\ReviewResource;
 
+
 class ReviewController extends Controller
 {
     public function index()
@@ -22,7 +23,17 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
-        //
+        $validated = $request->validated();
+        if ($request->fails()) {
+            return response()->json(['error' => $request->errors()->first()], 422);
+        }
+        $review = Review::create($validated);
+        // Return custom response
+        return response()->json([
+            'message' => 'Review created successfully',
+            'review' => new ReviewResource($review)
+        ], 201);
+
     }
 
     /**
