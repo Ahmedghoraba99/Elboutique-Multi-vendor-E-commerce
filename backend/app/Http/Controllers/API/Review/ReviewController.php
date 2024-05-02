@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\Review;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
@@ -9,15 +11,11 @@ use App\Http\Resources\ReviewResource;
 
 class ReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $reviews = Review::all();
         return ReviewResource::collection($reviews);
     }
-
 
     /**
      * Store a newly created resource in storage.

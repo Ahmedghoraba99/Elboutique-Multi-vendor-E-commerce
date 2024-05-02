@@ -32,3 +32,6 @@ Route::apiResource('orders', OrderController::class);
 
 Route::post('/orders/{id}/products',[OrderProductController::class,'addProductToOrder']);
 Route::get('/orders/{id}/products',[OrderProductController::class,'getOrderProduct']);
+
+
+require_once __DIR__ .'/ReviewRoutes/reviewRoutes.php';
