@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('street');
             $table->string('house_number');
-            $table->string('house_number');
+            $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->timestamps();
         });
