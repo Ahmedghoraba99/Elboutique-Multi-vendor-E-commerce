@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Requests;
-use Illuminate\Validation\Rule;
-use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateVendorRequest extends FormRequest
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+class UpdateCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -38,9 +38,8 @@ class UpdateVendorRequest extends FormRequest
                         'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
                     ],
                     'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-                    'address' => 'sometimes|string|max:255|min:10',
-                    'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
-                    'national_id'=>'sometimes|image|mimes:jpg,png|max:2048',
+                    // 'address' => 'sometimes|string|max:255|min:10',
+                    // 'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
                     'active' => 'sometimes|in:true,false',
                     'banned' => 'sometimes|in:true,false',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
@@ -62,9 +61,8 @@ class UpdateVendorRequest extends FormRequest
                         'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
                     ],
                     'password' => 'sometimes|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-                    'address' => 'sometimes|string|max:255|min:10',
-                    'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
-                    'national_id'=>'sometimes|image|mimes:jpg,png|max:2048',
+                    // 'address' => 'sometimes|string|max:255|min:10',
+                    // 'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
                     'active' => 'sometimes|in:true,false',
                     'banned' => 'sometimes|in:true,false',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
