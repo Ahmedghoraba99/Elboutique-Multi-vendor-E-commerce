@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreAddressRequest extends FormRequest
+class StoreCustomerPhoneRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class StoreAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'phoneNumper' =>  'required|unique|string|max:20|regex:/^01[012]\d{8}$/',
+            'customer_id' => 'required|integer|exists:customers,id',
         ];
     }
 }

@@ -16,33 +16,33 @@ return new class extends Migration
         // end of user related tables
 
         // start of product tables
-        Schema::create('products', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('tags', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('product_attributes', function (Blueprint $table) {
-            $table->id();
-        });
-        Schema::create('product_images', function (Blueprint $table) {
-            $table->id();
-        });
+        // Schema::create('products', function (Blueprint $table) {
+        //     $table->id();
+        // });
+        // Schema::create('categories', function (Blueprint $table) {
+        //     $table->id();
+        // });
+        // Schema::create('tags', function (Blueprint $table) {
+        //     $table->id();
+        // });
+        // Schema::create('product_attributes', function (Blueprint $table) {
+        //     $table->id();
+        // });
+        // Schema::create('product_images', function (Blueprint $table) {
+        //     $table->id();
+        // });
 
         // end of product tables
 
         // functional tables
 
-        Schema::create('whishlist', function (Blueprint $table) {
-            $table->id();
-        });
+        // Schema::create('whishlist', function (Blueprint $table) {
+        //     $table->id();
+        // });
 
-        Schema::create('cart', function (Blueprint $table) {
-            $table->id();
-        });
+        // Schema::create('cart', function (Blueprint $table) {
+        //     $table->id();
+        // });
 
 
     }
