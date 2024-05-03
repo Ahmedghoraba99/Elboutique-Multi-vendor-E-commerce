@@ -3,10 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateReviewRequest extends FormRequest
+
+class StoreReportPrductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,20 +25,24 @@ class UpdateReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rate.required' => 'The rate field is required.',
-            'rate.integer' => 'The rate field must be an integer.',
-            'rate.min' => 'The rate field must be at least :min.',
-            'rate.max' => 'The rate field may not be greater than :max.',
+            'customer_id' => 'required|exists:customers,id',
+            'product_id' => 'required|exists:products,id',
+            'reason' => 'required|string',
         ];
     }
 
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  Validator  $validator
+     * @return void
+     *
+     * @throws HttpResponseException
+     */
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'errors' => $validator->errors(),
         ], 422));
     }
-
-
-
 }

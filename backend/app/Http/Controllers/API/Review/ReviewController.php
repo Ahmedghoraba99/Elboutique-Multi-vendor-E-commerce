@@ -8,6 +8,9 @@ use App\Models\Review;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 use App\Http\Resources\ReviewResource;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 
 class ReviewController extends Controller
@@ -41,17 +44,42 @@ class ReviewController extends Controller
      */
     public function show(Review $review , $id)
     {
-        $review = Review::find($id);
-        return new ReviewResource($review);
+        try {
+            $review = Review::findOrFail($id);
+            return new ReviewResource($review);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Review not found'
+            ], 404);
+        }
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateReviewRequest $request, Review $review)
+    public function update(UpdateReviewRequest $request, $id)
     {
+        try {
+            // Find the review by ID
+            $review = Review::findOrFail($id);
+            $review->update($request->validated());
+            return response()->json([
+                'message' => 'Review updated successfully',
+                'review' => new ReviewResource($review)
+            ], 200);
 
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Review not found'
+            ], 404);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to update review'
+            ], 500);
+        }
     }
 
     /**
@@ -59,9 +87,18 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review,$id)
     {
+        try {
+            $review = Review::findOrFail($id);
+            $review->delete();
 
-        $review = Review::find($id);
-        $review->delete();
-        return new ReviewResource($review);
+            return response()->json([
+                'message' => 'Review deleted successfully'
+            ]);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Review not found'
+            ], 404);
+        }
     }
 }
