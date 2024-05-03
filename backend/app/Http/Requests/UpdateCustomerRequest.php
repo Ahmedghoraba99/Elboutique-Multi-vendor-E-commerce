@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,51 +22,90 @@ class UpdateCustomerRequest extends FormRequest
      */
     public function rules(): array
     {
+        $currentCustomerPhones=$this->route('customer')->phones->pluck('id');
+    //    dd($this->phones[0]['id']);
+        // dd($this->route('customer')->phones[0]->id);
+        
+
         $method=$this->method();
         if($method=='PUT')
             {
                 return 
                 [
-                    'name' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'name' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
                     'email' => [
                         'required',
                         'string',
                         'email',
                         'max:255',
-                        Rule::unique('admins') ,
-                        Rule::unique('customers') ,
-                        Rule::unique('vendors')->whereNull('deleted_at'),
+                        Rule::unique('admins'),
+                        Rule::unique('customers')->ignore($this->route('customer')),
+                        Rule::unique('vendors'),
                         'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
                     ],
                     'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-                    // 'address' => 'sometimes|string|max:255|min:10',
-                    // 'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
                     'active' => 'sometimes|in:true,false',
                     'banned' => 'sometimes|in:true,false',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
+                    'addresses' => 'sometimes|array',
+                    "addresses.*.id"=>'sometimes|integer|exists:customer_addresses,id',
+                    'addresses.*.city' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.street' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.Governate' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',
+                    'addresses.*.customer_id' => 'sometimes|integer|exists:customers,id',
+                    'phones' => 'sometimes|array',
+                    "phones.*.id"=>'sometimes|integer|exists:customer_addresses,id',
+                    'phones.*.phoneNumper'=> [
+                        'required',
+                        'string',
+                        'max:20',
+                        'regex:/^01[012]\d{8}$/',
+                        Rule::unique('customer_phones')->whereNotIn('id', $currentCustomerPhones),
+                        Rule::unique('admins','phone'),
+                        Rule::unique('vendors','phone'),
+                    ],
+                    'phones.*.customer_id' => 'sometimes|integer|exists:customers,id',
                 ];
             }
             else
             {
                 return 
                 [
-                    'name' => 'sometimes|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'name' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
                     'email' => [
                         'sometimes',
                         'string',
                         'email',
                         'max:255',
-                        Rule::unique('admins') ,
-                        Rule::unique('customers') ,
-                        Rule::unique('vendors')->whereNull('deleted_at'),
+                        Rule::unique('admins'),
+                        Rule::unique('customers')->ignore($this->route('customer')),
+                        Rule::unique('vendors'),
                         'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
                     ],
                     'password' => 'sometimes|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-                    // 'address' => 'sometimes|string|max:255|min:10',
-                    // 'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
                     'active' => 'sometimes|in:true,false',
                     'banned' => 'sometimes|in:true,false',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
+                    'addresses' => 'sometimes|array',
+                    "addresses.*.id"=>'sometimes|integer|exists:customer_addresses,id',
+                    'addresses.*.city' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.street' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.Governate' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',
+                    'addresses.*.customer_id' => 'sometimes|integer|exists:customers,id',
+                    'phones' => 'sometimes|array',
+                    "phones.*.id"=>'sometimes|integer|exists:customer_addresses,id',
+                    'phones.*.phoneNumper'=> [
+                        'required',
+                        'string',
+                        'max:20',
+                        'regex:/^01[012]\d{8}$/',
+                        Rule::unique('customer_phones')->whereNotIn('id', $currentCustomerPhones),
+                        Rule::unique('admins','phone'),
+                        Rule::unique('vendors','phone'),
+                    ],
+                    'phones.*.customer_id' => 'sometimes|integer|exists:customers,id',
                 ];
             }
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('Governate');
             $table->string('city');
             $table->string('street');
-            $table->integer('house_number');
+            $table->integer('house_number')->nullable();
             $table->foreignId('customer_id') ->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
