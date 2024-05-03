@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Http\Resources\CustomerResource; 
 use App\Models\Customer;
+use App\Models\CustomerAddress;
+use App\Models\CustomerPhone;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Support\Facades\Storage;
@@ -16,24 +18,38 @@ class CustomerController extends Controller
     {
         return CustomerResource::collection(Customer::all());
     }
-
-    
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCustomerRequest $request)
     {
         $validatedData = $request->validated();
-        
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('public');
             $validatedData['image'] = $imagePath;
         }
         
+        // $phones = $validatedData['phones'] ?? [];
+    
+        if (isset($validatedData['addresses'])) {
+            $addresses = $validatedData['addresses'];
+            unset($validatedData['addresses']);
+        }
+        if (isset($validatedData['phones'])) {
+            $phones = $validatedData['phones'];
+            unset($validatedData['phones']);
+        }
+    
         $customer = Customer::create($validatedData);
-        
-        return response()->json(['message' => 'customer created successfully', 'customer' => $customer], 201);
+    
+        if (!empty($addresses)) {
+            $customer->addresses()->createMany($addresses);
+        }
+    
+        if (!empty($phones)) {
+            $customer->phones()->createMany($phones);
+        }
+        return response()->json(['message' => 'Customer created successfully', 'customer' => $customer], 201);
     }
 
     /**
@@ -50,6 +66,7 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
+       
         $validatedData =$request->validated();
         if($request->hasfile('image')){
             if ($customer->image) {
@@ -58,6 +75,37 @@ class CustomerController extends Controller
             $imageName = $customer->id. $request->file('image')->getClientOriginalExtension();
             $imagePath = $request->file('image')->storeAs('public', $imageName);
             $validatedData['image'] = $imagePath;
+        }
+
+        if (isset($validatedData['addresses'])) {
+            $addresses = $validatedData['addresses'];
+            unset($validatedData['addresses']);
+        }
+        if (isset($validatedData['phones'])) {
+            $phones = $validatedData['phones'];
+            unset($validatedData['phones']);
+        }
+        if (!empty($addresses)) {
+            foreach ($addresses as $addressData) {
+                 
+                if (isset($addressData['id'])) {
+                    $address = CustomerAddress::find($addressData['id']);
+                    $address->update($addressData);
+                } else {
+                    $customer->addresses()->create($addressData);
+                }
+            }
+        }
+    
+        if (!empty($phones)) {
+            foreach ($phones as $phoneData) {
+                if (isset($phoneData['id'])) {
+                    $phone = CustomerPhone::find($phoneData['id']);
+                    $phone->update($phoneData);
+                } else {
+                    $customer->phones()->create($phoneData);
+                }
+            }
         }
         $customer->update( $validatedData);
     return response()->json(['message' => 'customer updated successfully', 'customer' =>  $customer], 201);
@@ -68,7 +116,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        Storage::delete($customer->image);
+        if($customer->image){
+         Storage::delete($customer->image);
+        }
         $customer->delete();
         return response()->json(['message' => 'customer deleted successfully', 'admin' =>  $customer], 201);
 

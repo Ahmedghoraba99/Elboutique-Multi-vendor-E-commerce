@@ -21,8 +21,8 @@ class Customer extends Model
         'email',
         'password',
         'image',
-        'address',
-        'phone',
+        // 'address',
+        // 'phone',
         'banned',
         'active'
     ];
@@ -44,4 +44,11 @@ class Customer extends Model
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+     function addresses(){
+          return $this->hasMany(CustomerAddress::class);
+     }
+     function phones(){
+          return $this->hasMany(CustomerPhone::class);
+     }
 }

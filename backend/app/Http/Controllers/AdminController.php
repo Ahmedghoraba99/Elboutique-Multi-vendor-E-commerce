@@ -69,7 +69,8 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
-        Storage::delete($admin->image);
+        if ($admin->image){
+        Storage::delete($admin->image);}
         $admin->delete();
     }
 }
