@@ -52,6 +52,22 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('customers');
+        Schema::dropIfExists('address');
+        Schema::dropIfExists('customer_address');
+        Schema::dropIfExists('vendor_address');
+        Schema::dropIfExists('customer_phone');
+        Schema::dropIfExists('vendor_phone');
+        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('products');
+        Schema::dropIfExists('categories');
+        Schema::dropIfExists('tags');
+        Schema::dropIfExists('product_report');
+        Schema::dropIfExists('review_report');
+        Schema::dropIfExists('product_attributes');
+        Schema::dropIfExists('product_images');
+        Schema::dropIfExists('whishlist');
+        Schema::dropIfExists('cart');
+        Schema::dropIfExists('payments');
     }
 };
