@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class UpdateReviewRequest extends FormRequest
+class UpdateReportPrductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,10 +24,7 @@ class UpdateReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rate.required' => 'The rate field is required.',
-            'rate.integer' => 'The rate field must be an integer.',
-            'rate.min' => 'The rate field must be at least :min.',
-            'rate.max' => 'The rate field may not be greater than :max.',
+            'reason' => 'required|string',
         ];
     }
 
@@ -37,7 +34,4 @@ class UpdateReviewRequest extends FormRequest
             'errors' => $validator->errors(),
         ], 422));
     }
-
-
-
 }
