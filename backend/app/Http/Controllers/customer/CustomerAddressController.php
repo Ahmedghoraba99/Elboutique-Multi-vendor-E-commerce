@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\customer;
-
+use App\Http\Resources\CustomerAddressResource; 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerAddress;
 use App\Http\Requests\StoreCustomerAddressRequest;
@@ -14,54 +14,44 @@ class CustomerAddressController extends Controller
      */
     public function index()
     {
-        //
+        return  CustomerAddressResource::collection(CustomerAddress::all());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
+  
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCustomerAddressRequest $request)
-    {
-        //
+    {  
+        $validatedData = $request->validated();
+        $customerAddress = CustomerAddress::create($validatedData);
+        return new CustomerAddressResource($customerAddress);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CustomerAddress $customerAddress)
+    public function show(CustomerAddress $customeraddress)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CustomerAddress $customerAddress)
-    {
-        //
+          return new CustomerAddressResource($customeraddress);
+         
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerAddressRequest $request, CustomerAddress $customerAddress)
+    public function update(UpdateCustomerAddressRequest $request, CustomerAddress $customeraddress)
     {
-        //
+        $validatedData = $request->validated();
+        $customeraddress->update($validatedData);
+        return new CustomerAddressResource($customeraddress);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CustomerAddress $customerAddress)
+    public function destroy(CustomerAddress $customeraddress)
     {
-        //
+         return  $customeraddress->delete();
     }
 }

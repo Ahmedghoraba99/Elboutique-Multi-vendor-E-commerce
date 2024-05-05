@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 class UpdateCustomerPhoneRequest extends FormRequest
 {
     /**
@@ -11,7 +11,7 @@ class UpdateCustomerPhoneRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,19 @@ class UpdateCustomerPhoneRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+            return [
+                'phoneNumper' =>  [
+                    'sometimes',
+                    'string',
+                    'max:20',
+                    'regex:/^01[012]\d{8}$/',
+                    Rule::unique('customer_phones'),
+                    Rule::unique('admins','phone'),
+                    Rule::unique('vendors','phone'),
+                ],
+                'customer_id' => 'sometimes|integer|exists:customers,id',
+            ];
+ 
+      
     }
 }

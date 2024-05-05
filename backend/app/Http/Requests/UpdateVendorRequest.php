@@ -21,43 +21,7 @@ class UpdateVendorRequest extends FormRequest
      */
     public function rules(): array
     {
-        $method=$this->method();
-        if($method=='PUT')
-            {
-                return 
-                [
-                    'name' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
-                    'email' => [
-                        'required',
-                        'string',
-                        'email',
-                        'max:255',
-                        Rule::unique('admins') ,
-                        Rule::unique('customers') ,
-                        Rule::unique('vendors')->ignore($this->route('vendor')),
-                        'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
-                    ],
-                    'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-                    'address' => 'sometimes|string|max:255|min:10',
-                    
-                    'phone' => [
-                        'sometimes',
-                        'string',
-                        'max:20',
-                        'regex:/^01[012]\d{8}$/',
-                        Rule::unique('customer_phones,phoneNumper'),
-                        Rule::unique('admins','phone'),
-                        Rule::unique('vendors','phone')->ignore($this->route('vendor')),
-                    ], 
-                    
-                    'national_id'=>'sometimes|image|mimes:jpg,png|max:2048',
-                    'active' => 'sometimes|in:true,false',
-                    'banned' => 'sometimes|in:true,false',
-                    'image' => 'sometimes|image|mimes:jpg,png|max:2048',
-                ];
-            }
-            else
-            {
+ 
                 return 
                 [
                     'name' => 'sometimes|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
@@ -87,6 +51,6 @@ class UpdateVendorRequest extends FormRequest
                     'banned' => 'sometimes|in:true,false',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
                 ];
-            }
+             
     }
 }

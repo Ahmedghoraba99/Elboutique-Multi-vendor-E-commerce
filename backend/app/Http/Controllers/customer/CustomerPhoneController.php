@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\customer;
-
+use App\Http\Resources\CustomerPhoneResource; 
 use App\Http\Controllers\Controller;
 use App\Models\CustomerPhone;
 use App\Http\Requests\StoreCustomerPhoneRequest;
@@ -14,54 +14,47 @@ class CustomerPhoneController extends Controller
      */
     public function index()
     {
-        //
+        return CustomerPhoneResource::collection(CustomerPhone::all()); 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreCustomerPhoneRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+        $customerPhone = CustomerPhone::create( $validatedData);
+        return new CustomerPhoneResource($customerPhone);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CustomerPhone $customerPhone)
+    public function show(CustomerPhone $customerphone)
     {
-        //
+        return new CustomerPhoneResource($customerphone); 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CustomerPhone $customerPhone)
-    {
-        //
-    }
+     
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCustomerPhoneRequest $request, CustomerPhone $customerPhone)
+    public function update(UpdateCustomerPhoneRequest $request, CustomerPhone $customerphone)
     {
-        //
+        $validatedData = $request->validated();
+        $customerphone->update($validatedData);
+        return new CustomerPhoneResource($customerphone);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CustomerPhone $customerPhone)
+    public function destroy(CustomerPhone $customerphone)
     {
-        //
+        
+         return  $customerphone->delete();
     }
 }

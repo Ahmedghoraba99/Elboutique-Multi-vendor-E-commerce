@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\customer;
-
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerResource; 
 use App\Models\Customer;
@@ -33,7 +32,7 @@ class CustomerController extends Controller
         }
         
         // $phones = $validatedData['phones'] ?? [];
-        
+
         $customer = Customer::create($validatedData);
         $addresses=$this->checkForAddressesExisting($validatedData);
         if (!empty($addresses)) {
@@ -58,6 +57,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
+        // dd($customer);
         return new CustomerResource($customer);
     }
 

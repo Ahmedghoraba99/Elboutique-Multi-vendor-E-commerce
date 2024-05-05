@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCustomerPhoneRequest extends FormRequest
@@ -22,7 +22,15 @@ class StoreCustomerPhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phoneNumper' =>  'required|unique|string|max:20|regex:/^01[012]\d{8}$/',
+            'phoneNumper' =>  [
+                'required',
+                'string',
+                'max:20',
+                'regex:/^01[012]\d{8}$/',
+                Rule::unique('customer_phones'),
+                Rule::unique('admins','phone'),
+                Rule::unique('vendors','phone'),
+            ],
             'customer_id' => 'required|integer|exists:customers,id',
         ];
     }

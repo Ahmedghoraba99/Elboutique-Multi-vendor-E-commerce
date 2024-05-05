@@ -3,6 +3,8 @@
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\customer\CustomerController;
+use App\Http\Controllers\customer\CustomerAddressController;
+use App\Http\Controllers\customer\CustomerPhoneController;
 use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\category\CategoryController;
 use App\Http\Controllers\tag\TagController;
@@ -29,6 +31,8 @@ Route::group([], function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('tags', TagController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('customeraddresses', CustomerAddressController::class);
+    Route::apiResource('customerphones', CustomerPhoneController::class);
 });
 
 // Order related routes

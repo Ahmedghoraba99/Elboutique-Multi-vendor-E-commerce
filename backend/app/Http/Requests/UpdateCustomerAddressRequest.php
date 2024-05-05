@@ -11,7 +11,7 @@ class UpdateCustomerAddressRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,14 @@ class UpdateCustomerAddressRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
-    }
+    
+            return [
+                'city' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                'street' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                'Governate' => 'sometimes|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                'house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',
+                'customer_id' => 'sometimes|integer|exists:customers,id',
+            ];
+        }
+     
 }
