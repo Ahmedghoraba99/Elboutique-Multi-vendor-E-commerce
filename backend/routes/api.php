@@ -1,14 +1,17 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImagesController;
-use App\Http\Controllers\OrderProductController;
+use App\Http\Controllers\order\OrderProductController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\wishlist\WishlistControlle;
+use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +31,20 @@ Route::group([], function () {
     Route::apiResource('tags', TagController::class);
     Route::apiResource('products', ProductController::class);
 });
+
 // Order related routes
-Route::post('/orders/{id}/products', [OrderProductController::class, 'addProductToOrder']);
 Route::apiResource('orders', OrderController::class);
 
-Route::post('/orders/{id}/products', [OrderProductController::class, 'addProductToOrder']);
-Route::get('/orders/{id}/products', [OrderProductController::class, 'getOrderProduct']);
+Route::post('/orders/{id}/addProducts', [OrderProductController::class, 'addProductToOrder']);
+Route::post('/orders/{id}/deleteProducts', [OrderProductController::class, 'deleteProductFromOrder']);
+Route::get('/orders/{id}/showProducts', [OrderProductController::class, 'getOrderProduct']);
+
+//cart endpoint
+Route::post('/customer/{id}/addCart',[CartController::class,'attachProductToCustomerCart']);
+Route::post('/customer/{id}/deleteCart',[CartController::class,'detachProductFromCustomerCart']);
+Route::get('/customer/{id}/showCart',[CartController::class,'showCutsomerCart']);
+
+//wishlist endpoint
+Route::post('/customer/{id}/addWishlist',[WishlistController::class,'attachProductToCustomerWishlist']);
+Route::post('/customer/{id}/deleteWishlist',[WishlistController::class,'detachProductFromCustomerWishlist']);
+Route::get('/customer/{id}/showWishlist',[WishlistController::class,'showCutsomerWishlist']);

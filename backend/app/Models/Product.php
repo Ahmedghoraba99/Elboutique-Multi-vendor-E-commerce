@@ -53,5 +53,16 @@ class Product extends Model
             'size'
         ]);
     }
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class)->withPivot('quantity');
+    }
+    
+    public function cartCustomers(){
+        return $this->belongsToMany(Customer::class,'cart')->withPivot('quantity');
+    }
+    public function wishlistCustomers(){
+        return $this->belongsToMany(Customer::class,'wishlists');
+    }
     use HasFactory;
 }

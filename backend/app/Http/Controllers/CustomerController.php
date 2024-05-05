@@ -8,7 +8,7 @@ use App\Models\CustomerPhone;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 class CustomerController extends Controller
 {
     /**
@@ -23,10 +23,11 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
+        DB::beginTransaction();
+        try {
         $validatedData = $request->validated();
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('public');
-            $validatedData['image'] = $imagePath;
+            $validatedData['image'] = $this->uploadImage($request);
         }
         
         // $phones = $validatedData['phones'] ?? [];
@@ -49,7 +50,14 @@ class CustomerController extends Controller
         if (!empty($phones)) {
             $customer->phones()->createMany($phones);
         }
+
+        DB::commit();
         return response()->json(['message' => 'Customer created successfully', 'customer' => $customer], 201);
+    } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
+    }
+   
     }
 
     /**
@@ -66,15 +74,11 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-       
+        DB::beginTransaction();
+        try {
         $validatedData =$request->validated();
         if($request->hasfile('image')){
-            if ($customer->image) {
-                Storage::delete($customer->image);
-            }
-            $imageName = $customer->id. $request->file('image')->getClientOriginalExtension();
-            $imagePath = $request->file('image')->storeAs('public', $imageName);
-            $validatedData['image'] = $imagePath;
+            $validatedData['image'] = $this->uploadImage($request,$customer);
         }
 
         if (isset($validatedData['addresses'])) {
@@ -85,30 +89,21 @@ class CustomerController extends Controller
             $phones = $validatedData['phones'];
             unset($validatedData['phones']);
         }
-        if (!empty($addresses)) {
-            foreach ($addresses as $addressData) {
-                 
-                if (isset($addressData['id'])) {
-                    $address = CustomerAddress::find($addressData['id']);
-                    $address->update($addressData);
-                } else {
-                    $customer->addresses()->create($addressData);
-                }
-            }
-        }
-    
-        if (!empty($phones)) {
-            foreach ($phones as $phoneData) {
-                if (isset($phoneData['id'])) {
-                    $phone = CustomerPhone::find($phoneData['id']);
-                    $phone->update($phoneData);
-                } else {
-                    $customer->phones()->create($phoneData);
-                }
-            }
-        }
-        $customer->update( $validatedData);
+    $updateAddressesResult=$this->updateAddresses($addresses,$customer);
+    if($updateAddressesResult=='unauthorized'){
+        return response()->json(['message' => 'The current customer is unauthorized to update this address. Customers can only update their own addresses.' ]);
+    }
+    $updatePhonesResult=$this->updatePhons($phones,$customer);
+    if($updatePhonesResult=='unauthorized'){
+        return response()->json(['message' => 'The current customer is unauthorized to update this phone. Customers can only update their own phones.' ]);
+    }
+    $customer->update( $validatedData);
+    DB::commit();
     return response()->json(['message' => 'customer updated successfully', 'customer' =>  $customer], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -123,4 +118,52 @@ class CustomerController extends Controller
         return response()->json(['message' => 'customer deleted successfully', 'admin' =>  $customer], 201);
 
     }
+
+    public function uploadImage($request,$customer=null){
+        $imagePath="";
+        if ($customer!=null and $customer->image) {
+            Storage::delete($customer->image);
+            $imageName = $customer->id. $request->file('image')->getClientOriginalExtension();
+            $imagePath = $request->file('image')->storeAs('public', $imageName);
+        }else{
+            $imagePath = $request->file('image')->store('public');
+        }
+        return  $imagePath;
+    }
+    public function updateAddresses($addresses,$customer){
+        if (!empty($addresses)) {
+            foreach ($addresses as $addressData) {
+                 
+                if (isset($addressData['id'])) {
+                    $customersAddresses=$customer->addresses()->pluck('id')->toArray();
+                    if(in_array($addressData['id'], $customersAddresses)){
+                    $address = CustomerAddress::find($addressData['id']);
+                    $address->update($addressData);}
+                    else{
+                        return 'unauthorized';
+                    }
+                } else {
+                    $customer->addresses()->create($addressData);
+                }
+            }
+        }
+    }
+    public function updatePhons($phones,$customer){
+        if (!empty($phones)) {
+            foreach ($phones as $phoneData) {
+                if (isset($phoneData['id'])) {
+                   $customersPhons=$customer->phones()->pluck('id')->toArray();
+                    if(in_array($phoneData['id'], $customersPhons)){
+                    $phone = CustomerPhone::find($phoneData['id']);
+                    $phone->update($phoneData);}
+                    else{
+                        return 'unauthorized';
+                    }
+                } else {
+                    $customer->phones()->create($phoneData);
+                }
+            }
+        }
+    }
+
 }

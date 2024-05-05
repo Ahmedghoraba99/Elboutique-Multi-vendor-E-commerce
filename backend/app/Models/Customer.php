@@ -45,10 +45,20 @@ class Customer extends Model
         'email_verified_at' => 'datetime',
     ];
 
-     function addresses(){
-          return $this->hasMany(CustomerAddress::class);
-     }
-     function phones(){
-          return $this->hasMany(CustomerPhone::class);
-     }
+    function addresses(){
+        return $this->hasMany(CustomerAddress::class);
+    }
+    function phones(){
+        return $this->hasMany(CustomerPhone::class);
+    }
+    
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
+    public function cartProducts(){
+        return $this->belongsToMany(Product::class,'carts')->withPivot('quantity')->as('cart_table');
+    }
+    public function wishlistProducts(){
+        return $this->belongsToMany(Product::class,'wishlists');
+    }
 }
