@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ReportProductResource;
 use App\Models\ReportProduct;
 use App\Http\Requests\StoreReportPrductRequest;
+use App\Http\Requests\UpdateReportPrductRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 
@@ -46,7 +47,7 @@ class ReportProductController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateReportPrductRequest $request, $id)
     {
         try {
             // Find the review by ID
