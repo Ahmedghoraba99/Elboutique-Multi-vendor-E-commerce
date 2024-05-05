@@ -33,22 +33,13 @@ class CustomerController extends Controller
         }
         
         // $phones = $validatedData['phones'] ?? [];
-    
-        if (isset($validatedData['addresses'])) {
-            $addresses = $validatedData['addresses'];
-            unset($validatedData['addresses']);
-        }
-        if (isset($validatedData['phones'])) {
-            $phones = $validatedData['phones'];
-            unset($validatedData['phones']);
-        }
-    
+        
         $customer = Customer::create($validatedData);
-    
+        $addresses=$this->checkForAddressesExisting($validatedData);
         if (!empty($addresses)) {
             $customer->addresses()->createMany($addresses);
         }
-    
+        $phones=$this->checkForPhonesExisting($validatedData);
         if (!empty($phones)) {
             $customer->phones()->createMany($phones);
         }
@@ -82,25 +73,22 @@ class CustomerController extends Controller
         if($request->hasfile('image')){
             $validatedData['image'] = $this->uploadImage($request,$customer);
         }
+        $addresses=$this->checkForAddressesExisting($validatedData);
+       
+        $updateAddressesResult=$this->updateAddresses($addresses,$customer);
+        if($updateAddressesResult=='unauthorized'){
+            DB::rollBack();
+            return response()->json(['message' => 'The current customer is unauthorized to update this address. Customers can only update their own addresses.' ]);
+        }
+        $phones=$this->checkForPhonesExisting($validatedData);
+        $updatePhonesResult=$this->updatePhons($phones,$customer);
+        if($updatePhonesResult=='unauthorized'){
+            DB::rollBack();
+            return response()->json(['message' => 'The current customer is unauthorized to update this phone. Customers can only update their own phones.' ]);
+        }
 
-        if (isset($validatedData['addresses'])) {
-            $addresses = $validatedData['addresses'];
-            unset($validatedData['addresses']);
-        }
-        if (isset($validatedData['phones'])) {
-            $phones = $validatedData['phones'];
-            unset($validatedData['phones']);
-        }
-    $updateAddressesResult=$this->updateAddresses($addresses,$customer);
-    if($updateAddressesResult=='unauthorized'){
-        return response()->json(['message' => 'The current customer is unauthorized to update this address. Customers can only update their own addresses.' ]);
-    }
-    $updatePhonesResult=$this->updatePhons($phones,$customer);
-    if($updatePhonesResult=='unauthorized'){
-        return response()->json(['message' => 'The current customer is unauthorized to update this phone. Customers can only update their own phones.' ]);
-    }
-    $customer->update( $validatedData);
-    DB::commit();
+        $customer->update( $validatedData);
+        DB::commit();
     return response()->json(['message' => 'customer updated successfully', 'customer' =>  $customer], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -118,6 +106,29 @@ class CustomerController extends Controller
         }
         $customer->delete();
         return response()->json(['message' => 'customer deleted successfully', 'admin' =>  $customer], 201);
+
+    }
+
+    public function checkForAddressesExisting(&$validatedData){
+        if (isset($validatedData['addresses'])) {
+            $addresses = $validatedData['addresses'];
+            unset($validatedData['addresses']);
+            return $addresses;
+        }
+        else{
+            return;
+        }
+
+    }
+    public function checkForPhonesExisting(&$validatedData){
+        if (isset($validatedData['phones'])) {
+            $phones = $validatedData['phones'];
+            unset($validatedData['phones']);
+            return $phones;
+        }
+        else{
+            return;
+        }
 
     }
 
