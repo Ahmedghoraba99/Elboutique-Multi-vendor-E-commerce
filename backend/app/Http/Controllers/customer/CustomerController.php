@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\customer;
+
+use App\Http\Controllers\Controller;
 use App\Http\Resources\CustomerResource; 
 use App\Models\Customer;
 use App\Models\CustomerAddress;

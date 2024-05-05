@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\customer;
 
+use App\Http\Controllers\Controller;
 use App\Models\CustomerAddress;
 use App\Http\Requests\StoreCustomerAddressRequest;
 use App\Http\Requests\UpdateCustomerAddressRequest;

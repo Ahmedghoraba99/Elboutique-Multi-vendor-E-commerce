@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
-  use App\Http\Resources\VendorResource; 
+namespace App\Http\Controllers\vendor;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\VendorResource; 
 use App\Models\Vendor;
 use App\Http\Requests\StoreVendorRequest;
 use App\Http\Requests\UpdateVendorRequest;

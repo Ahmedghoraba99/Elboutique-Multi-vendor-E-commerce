@@ -1,16 +1,15 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\cart\CartController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\customer\CustomerController;
 use App\Http\Controllers\order\OrderController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\TagController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductImagesController;
+use App\Http\Controllers\category\CategoryController;
+use App\Http\Controllers\tag\TagController;
+use App\Http\Controllers\product\ProductController;
+use App\Http\Controllers\product\ProductImagesController;
 use App\Http\Controllers\order\OrderProductController;
-use App\Http\Controllers\VendorController;
-use App\Http\Controllers\wishlist\WishlistControlle;
+use App\Http\Controllers\vendor\VendorController;
 use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
