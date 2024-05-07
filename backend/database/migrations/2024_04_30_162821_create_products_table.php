@@ -21,8 +21,9 @@ return new class extends Migration
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->boolean('is_featured')->default(false);
             $table->softDeletes();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->timestamps();
+            // $table->timestamp('created_at')->useCurrent();
+            // $table->timestamp('updated_at')->useCurrentOnUpdate();
         });
     }
 
