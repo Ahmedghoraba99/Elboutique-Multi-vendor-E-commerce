@@ -24,10 +24,7 @@ class UpdateReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rate.required' => 'The rate field is required.',
-            'rate.integer' => 'The rate field must be an integer.',
-            'rate.min' => 'The rate field must be at least :min.',
-            'rate.max' => 'The rate field may not be greater than :max.',
+            'rate' => 'required|integer|min:1|max:5',
         ];
     }
 

@@ -14,4 +14,15 @@ class ReportProduct extends Model
         'product_id',
         'reason'
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
 }

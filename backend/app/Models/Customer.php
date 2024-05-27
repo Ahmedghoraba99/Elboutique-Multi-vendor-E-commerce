@@ -51,7 +51,7 @@ class Customer extends Model
     function phones(){
         return $this->hasMany(CustomerPhone::class);
     }
-    
+
     public function orders(){
         return $this->hasMany(Order::class);
     }
@@ -61,4 +61,19 @@ class Customer extends Model
     public function wishlistProducts(){
         return $this->belongsToMany(Product::class,'wishlists');
     }
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
+
+    public function reportProducts(){
+        return $this->hasMany(ReportProduct::class);
+    }
+
+    public function reportReviews(){
+        return $this->hasMany(ReportReview::class);
+    }
+
+
+
 }

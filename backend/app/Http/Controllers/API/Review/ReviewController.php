@@ -27,9 +27,6 @@ class ReviewController extends Controller
     public function store(StoreReviewRequest $request)
     {
         $validated = $request->validated();
-        if ($request->fails()) {
-            return response()->json(['error' => $request->errors()->first()], 422);
-        }
         $review = Review::create($validated);
         // Return custom response
         return response()->json([
@@ -47,7 +44,6 @@ class ReviewController extends Controller
         try {
             $review = Review::findOrFail($id);
             return new ReviewResource($review);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Review not found'
@@ -62,9 +58,9 @@ class ReviewController extends Controller
     public function update(UpdateReviewRequest $request, $id)
     {
         try {
-            // Find the review by ID
             $review = Review::findOrFail($id);
-            $review->update($request->validated());
+            $validation = $request->validated();
+            $review->update($validation);
             return response()->json([
                 'message' => 'Review updated successfully',
                 'review' => new ReviewResource($review)
@@ -77,7 +73,8 @@ class ReviewController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Failed to update review'
+                'message' => 'Failed to update review',
+                'error'=> $e->getMessage()
             ], 500);
         }
     }

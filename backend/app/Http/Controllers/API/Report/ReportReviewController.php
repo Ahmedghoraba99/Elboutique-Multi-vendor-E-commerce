@@ -21,9 +21,6 @@ class ReportReviewController extends Controller
     public function store(StoreReportReviewRequest $request)
     {
         $validated = $request->validated();
-        if ($request->fails()) {
-            return response()->json(['error' => $request->errors()->first()], 422);
-        }
         $review = ReportReview::create($validated);
         // Return custom response
         return response()->json([
@@ -36,7 +33,6 @@ class ReportReviewController extends Controller
         try {
             $review = ReportReview::findOrFail($id);
             return new ReportReviewResource($review);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'Report not found'
@@ -72,7 +68,8 @@ class ReportReviewController extends Controller
             $review->delete();
 
             return response()->json([
-                'message' => 'Report Review deleted successfully'
+                'message' => 'Report Review deleted successfully',
+                'report' => new ReportReviewResource($review)
             ]);
 
         } catch (ModelNotFoundException $e) {

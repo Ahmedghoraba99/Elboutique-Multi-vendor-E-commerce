@@ -17,7 +17,9 @@ class ReportReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'customer_id' => $this->faker->numberBetween(1, 5),
+            'review_id' => $this->faker->numberBetween(1, 5),
+            'reason' => $this->faker->sentence(1),
         ];
     }
 }

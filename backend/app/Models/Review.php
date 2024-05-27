@@ -15,4 +15,15 @@ class Review extends Model
         'rate',
     ];
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    // Add other relationships as needed
 }

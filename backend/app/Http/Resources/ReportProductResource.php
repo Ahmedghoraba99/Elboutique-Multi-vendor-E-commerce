@@ -4,8 +4,10 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReportProductResource extends ResourceCollection
+
+class ReportProductResource extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -16,8 +18,8 @@ class ReportProductResource extends ResourceCollection
     {
         return [
             'id' => $this->id,
-            'customer_id' => $this->customer_id,
-            'product_id' => $this->product_id,
+            'customer' => $this->customer,
+            'product' => $this->product,
             'reason' => $this->reason,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),

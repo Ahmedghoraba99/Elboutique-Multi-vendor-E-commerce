@@ -14,7 +14,7 @@ class CategorySeeder extends Seeder
     {
 
         // DB::table('categories')->delete();
-        dd('CATEGORIES SEEDED');
+        // dd('CATEGORIES SEEDED');
         DB::table('categories')->insert([
             [
                 'name' => 'Food',

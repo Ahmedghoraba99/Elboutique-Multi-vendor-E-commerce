@@ -14,4 +14,15 @@ class ReportReview extends Model
         'review_id',
         'reason'
     ];
+
+    public function review()
+    {
+        return $this->belongsTo(Review::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
 }
