@@ -44,8 +44,13 @@ class CategoryController extends Controller
 
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category->update($request->validated());
-        return response()->json($category);
+        try {
+
+            $category->updateOrFail($request->validated());
+            return response()->json($category);
+        } catch (\Exception $e) {
+            return response()->json($e->getMessage(), 400);
+        }
     }
 
 
