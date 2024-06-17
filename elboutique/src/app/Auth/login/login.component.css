@@ -1,0 +1,70 @@
+.stepper {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+.step {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  margin: auto;
+}
+.step-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--primary-color-3);
+  border: 2px solid var(--secondary-color);
+  background-color: var(--accent-color-3);
+}
+.step.active .step-icon {
+  color: var(--accent-color-1);
+  background-color: var(--primary-color);
+}
+.step-title {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+.form-step {
+  display: none;
+}
+.form-step-active {
+  display: block;
+}
+
+.text-danger > div {
+  margin: 0.5rem 0;
+}
+.divider {
+  width: 50%;
+  height: 2px;
+  background-color: var(--secondary-color);
+  display: inline-block;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+.user-type-option {
+  cursor: pointer;
+  text-align: center;
+  border: 2px solid var(--secondary-color);
+  background-color: transparent;
+  padding: 0.5rem;
+  transition: all 0.3s ease-in-out;
+  border-radius: 1rem;
+}
+
+.user-type-option img {
+  width: 100px;
+  height: 100px;
+}
+
+.user-type-option.selected {
+  border: 2px solid var(--primary-color);
+}
+
+.user-type-option p {
+  display: block;
+  margin-top: 5px;
+}
