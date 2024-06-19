@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
  
 use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
-use App\Models\User;
+use App\Models\Customer;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +29,10 @@ class AuthController extends Controller
     return response()->json([
         'token' => $user->createToken($user->name)->plainTextToken,
         'id' => $user->id,
-        'role' => $request->role
+        'role' => $request->role,
+        'name' => $user->tokens()->get(),
+         
+
     ]);
 }   
      
@@ -42,8 +45,8 @@ class AuthController extends Controller
 
     private function getUserByRole($role, $email) {
         switch ($role) {
-            case 'user':
-                return User::where('email', $email)->first();
+            case 'customer':
+                return Customer::where('email', $email)->first();
             case 'vendor':
                 return Vendor::where('email', $email)->first();
             case 'admin':
