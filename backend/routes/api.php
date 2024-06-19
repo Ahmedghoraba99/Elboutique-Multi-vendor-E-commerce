@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\customer\CustomerController;
@@ -51,3 +51,6 @@ Route::get('/customer/{id}/showCart',[CartController::class,'showCutsomerCart'])
 Route::post('/customer/{id}/addWishlist',[WishlistController::class,'attachProductToCustomerWishlist']);
 Route::post('/customer/{id}/deleteWishlist',[WishlistController::class,'detachProductFromCustomerWishlist']);
 Route::get('/customer/{id}/showWishlist',[WishlistController::class,'showCutsomerWishlist']);
+
+
+Route::post('/login',  [AuthController::class,'login']);

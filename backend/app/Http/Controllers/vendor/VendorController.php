@@ -8,9 +8,11 @@ use App\Models\Vendor;
 use App\Http\Requests\StoreVendorRequest;
 use App\Http\Requests\UpdateVendorRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\AuthTrait;
 
 class VendorController extends Controller
 {
+    use AuthTrait;
     /**
      * Display a listing of the resource.
      */
@@ -26,14 +28,13 @@ class VendorController extends Controller
     {
         $validatedData = $request->validated();
         
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('public');
-            $validatedData['image'] = $imagePath;
+        if($request->hasfile('image')){
+            $validatedData['image'] = $this->uploadImage($request,"vendors");
         }
         if( $request->hasFile('national_id')){
-            $imagePath = $request->file('national_id')->store('public');
-            $validatedData['national_id'] = $imagePath;
+            $validatedData['national_id'] = $this->uploadImage($request,"vendors/national_id");
         }
+        $validatedData['password'] = bcrypt($validatedData['password']);
         $vendor = Vendor::create($validatedData);
         
         return response()->json(['message' => 'vendor created successfully', 'vendor' => $vendor], 201);
@@ -55,19 +56,13 @@ class VendorController extends Controller
     public function update(UpdateVendorRequest $request, Vendor $vendor)
     {
         $validatedData = $request->validated();
-        if ($request->hasFile('image')) {
-            if ($vendor->image) {
-                Storage::delete($vendor->image);
-            }
-            $imagePath = $request->file('image')->store('public');
-            $validatedData['image'] = $imagePath;
+        if($request->hasfile('image')){
+            $validatedData['image'] = $this->uploadImage($request,"vendors",$vendor);
         }
+
         if( $request->hasFile('national_id')){
-            if ($vendor->national_id) {
-                Storage::delete($vendor->national_id);
-            }
-            $imagePath = $request->file('national_id')->store('public');
-            $validatedData['national_id'] = $imagePath;
+            
+            $validatedData['national_id'] = $this->uploadImage($request,"vendors/national_id",$vendor);
         }
         $vendor->update($validatedData);
         
@@ -80,12 +75,15 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
+
+         
         if ($vendor->image) {
-            Storage::delete($vendor->image);
+            
+            Storage::delete('public/images/vendors/'.$vendor->image);
         }
         
         if ($vendor->national_id) {
-            Storage::delete($vendor->national_id);
+            Storage::delete('public/images/vendors/national_id'.$vendor->national_id);
         }
         $vendor->delete();
     }

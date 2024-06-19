@@ -10,8 +10,10 @@ use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use App\Traits\AuthTrait;
 class CustomerController extends Controller
 {
+    use AuthTrait;
     /**
      * Display a listing of the resource.
      */
@@ -27,10 +29,10 @@ class CustomerController extends Controller
         DB::beginTransaction();
         try {
         $validatedData = $request->validated();
-        if ($request->hasFile('image')) {
-            $validatedData['image'] = $this->uploadImage($request);
+        if($request->hasfile('image')){
+            $validatedData['image'] = $this->uploadImage($request,"customers");
         }
-        
+        $validatedData['password'] = bcrypt($validatedData['password']);
         // $phones = $validatedData['phones'] ?? [];
 
         $customer = Customer::create($validatedData);
@@ -71,15 +73,15 @@ class CustomerController extends Controller
         try {
         $validatedData =$request->validated();
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,$customer);
+            $validatedData['image'] = $this->uploadImage($request,"customers",$customer);
         }
-        $addresses=$this->checkForAddressesExisting($validatedData);
-       
+        $addresses=$this->checkForAddressesExisting($validatedData);   
         $updateAddressesResult=$this->updateAddresses($addresses,$customer);
         if($updateAddressesResult=='unauthorized'){
             DB::rollBack();
             return response()->json(['message' => 'The current customer is unauthorized to update this address. Customers can only update their own addresses.' ]);
         }
+
         $phones=$this->checkForPhonesExisting($validatedData);
         $updatePhonesResult=$this->updatePhons($phones,$customer);
         if($updatePhonesResult=='unauthorized'){
@@ -102,7 +104,7 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         if($customer->image){
-         Storage::delete($customer->image);
+        Storage::delete('public/images/customers/'.$customer->image);
         }
         $customer->delete();
         return response()->json(['message' => 'customer deleted successfully', 'admin' =>  $customer], 201);
@@ -131,18 +133,7 @@ class CustomerController extends Controller
         }
 
     }
-
-    public function uploadImage($request,$customer=null){
-        $imagePath="";
-        if ($customer!=null and $customer->image) {
-            Storage::delete($customer->image);
-            $imageName = $customer->id. $request->file('image')->getClientOriginalExtension();
-            $imagePath = $request->file('image')->storeAs('public', $imageName);
-        }else{
-            $imagePath = $request->file('image')->store('public');
-        }
-        return  $imagePath;
-    }
+ 
     public function updateAddresses($addresses,$customer){
         if (!empty($addresses)) {
             foreach ($addresses as $addressData) {

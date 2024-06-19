@@ -11,9 +11,9 @@
 // {
 // Schema::create('orders', function (Blueprint $table) {
 // $table->id();
-// $table->unsignedBigInteger('customer_id');
+// $table->unsignedBigInteger('customer_id'); 
 // // $table->unsignedBigInteger('payment_id');
-// $table->enum('status', ['arrived', 'midway'])->default('midway');
+// $table->enum('status', ['arrived', 'midway'])->default('midway'); 
 // $table->timestamps();
 
 // $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade')->onUpdate('cascade');
