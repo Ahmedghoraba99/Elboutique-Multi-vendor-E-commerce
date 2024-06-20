@@ -1,0 +1,27 @@
+
+.lastest-prodcut-header ,.off-prodcut-header ,.arrival-prodcut-header ,.best-prodcut-header{
+    /* background-color: #064c4f; */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 20rem; 
+    color: #ffff;
+    border-radius: 1rem;
+}
+.latest-product-info ,.off-product-info{
+    font-size: 2rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    backdrop-filter: blur(13px) saturate(180%);
+    -webkit-backdrop-filter: blur(13px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.7);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    /* backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(155, 155, 155, 0.36);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.125); */
+
+
+}
