@@ -28,5 +28,11 @@ export class HomeService {
       .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
   }
 
+  getAllCategories(): Observable<any> {
+    return this.httpClient
+      .get<any>(`${this.baseUrl}/categories`)
+      .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
+  }
+
   constructor() {}
 }
