@@ -28,7 +28,7 @@ export const routes: Routes = [
     component: WishListComponent,
   },
   {
-    path: 'details',
+    path: 'products/:id',
     title: 'Details',
     component: CartComponent,
   },
@@ -36,5 +36,5 @@ export const routes: Routes = [
     path: '**',
     title: 'Page not found',
     component: PageNotFoundComponent,
-  }
+  },
 ];
