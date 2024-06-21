@@ -1,219 +1,70 @@
 <div class="container-fluid big-deals my-5">
-    <div class="d-flex flex-row align-items-center justify-content-center my-4">
-      <div class="big-deals-header">
-        <h2 class="fw-bold ms-3">Big deals</h2>
-      </div>
-      <div class="big-deals-btn">
-        <a href="#" class="me-4">See More</a>
-      </div>
+  <div class="d-flex flex-row align-items-center justify-content-center my-4">
+    <div class="big-deals-header">
+      <h2 class="fw-bold ms-3">Big deals</h2>
     </div>
-    <div class="container ">
-      <div class="row d-flex flex-row">
-        
-        <div class="col-sm-6 col-md-3 mb-4">
-          <a href="#">
-            <div class="d-flex flex-column">
-              <div class="big-deal-product-data p-4">
-                <div class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center">
-                  <div class="big-deal-product-big-tag">
-                    <span>Big Deal</span>
-                  </div>
-                  <div class="products-wish">
-                    <i class="fa-regular fa-heart"></i>
-                  </div>
+    <div class="big-deals-btn">
+      <a href="#" class="me-4">See More</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row d-flex flex-row">
+      <!-- part to be looped through -->
+      <div class="col-sm-6 col-md-3 mb-4" *ngFor="let product of products">
+        <a href="#">
+          <div class="d-flex flex-column">
+            <div class="big-deal-product-data p-4">
+              <div
+                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
+              >
+                <div class="big-deal-product-big-tag">
+                  <span
+                    >Big Deal
+                    <span *ngIf="product.sale"
+                      >{{ product.sale }}% Off</span
+                    ></span
+                  >
                 </div>
-                <div class="big-deal-product-slider">
-                  <div class="swiper mySwiper big-deal-product-swiper">
-                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                      <!-- Repeat this block for each slide -->
-                       <swiper-container pagination="true" >
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                      </swiper-container>
-                                                
-                    </div>
-                    <div class="swiper-pagination"></div>
-                  </div>
+                <div class="products-wish">
+                  <i class="fa-regular fa-heart"></i>
                 </div>
-                <div class="big-deal-product-detail">
-                  <div class="big-deal-detail-header">
-                    <div class="big-deal-detail-data">
-                      <span>The Ordinary Niacinamide 10% And Zinc 1% Clear 30ml</span>
-                    </div>
-                    <div class="big-deal-info d-flex flex-column my-2">
-                      <span class="my-2">sara magdi</span>
-                      <div class="big-deal-price d-flex align-items-center">
-                        <span class="me-2">EGP</span>
-                        <strong class="fs-4">450</strong>
-                      </div>
+              </div>
+              <div class="big-deal-product-slider">
+                <div class="swiper mySwiper big-deal-product-swiper">
+                  <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                    <swiper-container pagination="true">
+                      <swiper-slide
+                        class="swiper-slide big-deal-product-swiper-slider"
+                        *ngFor="let image of product.images"
+                      >
+                        <img
+                          [src]="'http://localhost:8000/' + image.image"
+                          alt="{{ product.name }}"
+                        />
+                      </swiper-slide>
+                    </swiper-container>
+                  </div>
+                  <div class="swiper-pagination"></div>
+                </div>
+              </div>
+              <div class="big-deal-product-detail">
+                <div class="big-deal-detail-header">
+                  <div class="big-deal-detail-data">
+                    <span>{{ product.name }}</span>
+                  </div>
+                  <div class="big-deal-info d-flex flex-column my-2">
+                    <span class="my-2">{{ product.vendor.name }}</span>
+                    <div class="big-deal-price d-flex align-items-center">
+                      <strong class="fs-4">{{ product.price }}</strong>
+                      <span class="ms-2">EGP</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </a>
-        </div>
-        <div class="col-sm-6 col-md-3 mb-4">
-          <a href="#">
-            <div class="d-flex flex-column">
-              <div class="big-deal-product-data d-flex flex-column justify-content-evenly p-4">
-                <div class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center">
-                  <div class="big-deal-product-big-tag">
-                    <span>Big Deal</span>
-                  </div>
-                  <div class="products-wish">
-                    <i class="fa-regular fa-heart"></i>
-                  </div>
-                </div>
-                <div class="big-deal-product-slider">
-                  <div class="swiper mySwiper big-deal-product-swiper">
-                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                      <!-- Repeat this block for each slide -->
-                       <swiper-container pagination="true" >
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                      </swiper-container>
-                                                
-                    </div>
-                    <div class="swiper-pagination"></div>
-                  </div>
-                </div>
-                <div class="big-deal-product-detail">
-                  <div class="big-deal-detail-header">
-                    <div class="big-deal-detail-data">
-                      <span>The Ordinary Niacinamide 10% And Zinc 1% Clear 30ml</span>
-                    </div>
-                    <div class="big-deal-info d-flex flex-column my-2">
-                      <span class="my-2">sara magdi</span>
-                      <div class="big-deal-price d-flex align-items-center">
-                        <span class="me-2">EGP</span>
-                        <strong class="fs-4">450</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-       
-        <div class="col-sm-6 col-md-3 mb-4">
-          <a href="#">
-            <div class="d-flex flex-column">
-              <div class="big-deal-product-data d-flex flex-column justify-content-evenly p-4">
-                <div class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center">
-                  <div class="big-deal-product-big-tag">
-                    <span>Big Deal</span>
-                  </div>
-                  <div class="products-wish">
-                    <i class="fa-regular fa-heart"></i>
-                  </div>
-                </div>
-                <div class="big-deal-product-slider">
-                  <div class="swiper mySwiper big-deal-product-swiper">
-                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                      <!-- Repeat this block for each slide -->
-                       <swiper-container pagination="true" >
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                      </swiper-container>
-                                                
-                    </div>
-                    <div class="swiper-pagination"></div>
-                  </div>
-                </div>
-                <div class="big-deal-product-detail">
-                  <div class="big-deal-detail-header">
-                    <div class="big-deal-detail-data">
-                      <span>The Ordinary Niacinamide 10% And Zinc 1% Clear 30ml</span>
-                    </div>
-                    <div class="big-deal-info d-flex flex-column my-2">
-                      <span class="my-2">sara magdi</span>
-                      <div class="big-deal-price d-flex align-items-center">
-                        <span class="me-2">EGP</span>
-                        <strong class="fs-4">450</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-       
-         
-        <div class="col-sm-6 col-md-3 mb-4">
-          <a href="#">
-            <div class="d-flex flex-column">
-              <div class="big-deal-product-data d-flex flex-column justify-content-evenly p-4">
-                <div class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center">
-                  <div class="big-deal-product-big-tag">
-                    <span>Big Deal</span>
-                  </div>
-                  <div class="products-wish">
-                    <i class="fa-regular fa-heart"></i>
-                  </div>
-                </div>
-                <div class="big-deal-product-slider">
-                  <div class="swiper mySwiper big-deal-product-swiper">
-                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                       <swiper-container pagination="true" >
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                        <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                          <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                        </swiper-slide>
-                      </swiper-container>
-                                                
-                    </div>
-                    <div class="swiper-pagination"></div>
-                  </div>
-                </div>
-                <div class="big-deal-product-detail">
-                  <div class="big-deal-detail-header">
-                    <div class="big-deal-detail-data">
-                      <span>The Ordinary Niacinamide 10% And Zinc 1% Clear 30ml</span>
-                    </div>
-                    <div class="big-deal-info d-flex flex-column my-2">
-                      <span class="my-2">sara magdi</span>
-                      <div class="big-deal-price d-flex align-items-center">
-                        <span class="me-2">EGP</span>
-                        <strong class="fs-4">450</strong>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-       
+          </div>
+        </a>
       </div>
     </div>
   </div>
-  
+</div>

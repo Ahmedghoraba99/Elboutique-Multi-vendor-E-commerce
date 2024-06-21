@@ -8,6 +8,7 @@ use App\Models\CustomerAddress;
 use App\Models\CustomerPhone;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Traits\AuthTrait;
@@ -46,6 +47,7 @@ class CustomerController extends Controller
         }
 
         DB::commit();
+        event(new Registered($customer));
         return response()->json(['message' => 'Customer created successfully', 'customer' => $customer], 201);
     } catch (\Exception $e) {
             DB::rollBack();
@@ -91,6 +93,7 @@ class CustomerController extends Controller
 
         $customer->update( $validatedData);
         DB::commit();
+        
     return response()->json(['message' => 'customer updated successfully', 'customer' =>  $customer], 201);
         } catch (\Exception $e) {
             DB::rollBack();

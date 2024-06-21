@@ -47,7 +47,8 @@ class ProductController extends Controller
                 $imageName = $product->id . '_' . time() . '.' . $image->getClientOriginalExtension();
 
                 // Store the image with the modified filename
-                $imagePath = $image->storeAs('public/images/products', $imageName);
+                $imagePath = $image->storeAs('public/products', $imageName);
+                $imagePath = str_replace('public/', 'storage/', $imagePath);
 
                 // Save image path to the database
                 $productImage->product_id = $product->id;
@@ -98,12 +99,7 @@ class ProductController extends Controller
     {
         try {
             // Update product details
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->price = $request->price;
-            $product->category_id = $request->category_id;
-            $product->vendor_id = $request->vendor_id;
-            $product->stock = $request->stock;
+            $product->update($request->validated());
 
             // Update images if provided
             if ($request->hasFile('images')) {
@@ -149,6 +145,67 @@ class ProductController extends Controller
             $product->delete();
 
             return response()->json(['message' => 'Product deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getFeaturedProducts()
+    {
+        try {
+            $products = Product::where('is_featured', true)
+                ->with('images')
+                ->with('tags')
+                ->get();
+
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function featureAndUnfeatureProduct(int $id)
+    {
+        try {
+            // Find the product by ID
+            $product = Product::findOrFail($id);
+
+            // Toggle the is_featured flag
+            $product->is_featured = !$product->is_featured;
+            $product->save();
+
+            return response()->json(['message' => 'Product featured status updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getProductsOnSale()
+    {
+        try {
+            $products = Product::where('sale', '>', 0)
+                ->with('images')
+                ->with('tags')
+                ->with("vendor")
+                ->orderBy('sale', 'desc')
+                ->get();
+
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getNewArrivalProducts()
+    {
+
+        try {
+            $products = Product::where('created_at', '>', now()->subDays(7))
+                ->with('images')
+                ->with('tags')
+                ->get();
+
+            return response()->json($products);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
