@@ -4,6 +4,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './Auth/login/login.component';
 import { WishListComponent } from './wish-list/wish-list.component';
+import { CartComponent } from './cart/cart.component';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,11 @@ export const routes: Routes = [
     path: 'wishlist',
     title: 'WishList',
     component: WishListComponent,
+  },
+  {
+    path: 'details',
+    title: 'Details',
+    component: CartComponent,
   },
   {
     path: '**',
