@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Route;
+
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Route::get('/email/verify/{id}/{hash}', function ( EmailVerificationRequest $request ) {
+
+     
+//     $request->fulfill();
+//     return response()->json(['message' => 'Email verified successfully.']);
+     
+// })->middleware(['auth:sanctum'])->name('verification.verify');
 
 Route::get('/', function () {
     return view('welcome');

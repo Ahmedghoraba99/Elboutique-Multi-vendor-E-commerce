@@ -12,9 +12,13 @@ use App\Http\Controllers\product\ProductController;
 use App\Http\Controllers\product\ProductImagesController;
 use App\Http\Controllers\order\OrderProductController;
 use App\Http\Controllers\vendor\VendorController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+ 
+
 
 require_once __DIR__ .'/ReviewRoutes/reviewRoutes.php';
 require_once __DIR__ . '/ReportRoutes/reportProductRoutes.php';
@@ -23,6 +27,8 @@ require_once __DIR__ . '/ReportRoutes/reportReviewRotes.php';
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
 
 Route::group([], function () {
     Route::apiResource('admins', AdminController::class);
@@ -54,3 +60,22 @@ Route::get('/customer/{id}/showWishlist',[WishlistController::class,'showCutsome
 
 
 Route::post('/login',  [AuthController::class,'login']);
+
+// Route::get('/verified-middleware-example', function () {
+//     return response()->json([
+//         'message' => 'The email account is already confirmed. Now you are able to see this message...',
+//     ]);
+// })->middleware( 'verified');
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+    
+});
+
+
+
+
+
+
