@@ -47,7 +47,8 @@ class ProductController extends Controller
                 $imageName = $product->id . '_' . time() . '.' . $image->getClientOriginalExtension();
 
                 // Store the image with the modified filename
-                $imagePath = $image->storeAs('public/images/products', $imageName);
+                $imagePath = $image->storeAs('public/products', $imageName);
+                $imagePath = str_replace('public/', 'storage/', $imagePath);
 
                 // Save image path to the database
                 $productImage->product_id = $product->id;
