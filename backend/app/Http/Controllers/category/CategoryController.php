@@ -21,10 +21,18 @@ class CategoryController extends Controller
     }
 
 
-    public function store(StoreCategoryRequest $category)
+    public function store(StoreCategoryRequest $request)
     {
         try {
-            $category = Category::create($category->validated());
+            $validatedData = $request->validated();
+
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('categories', 'public');
+                $validatedData['image'] = $path;
+            }
+
+            $category = Category::create($validatedData);
+
             return response()->json($category);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 400);

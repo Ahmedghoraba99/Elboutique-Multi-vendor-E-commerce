@@ -24,7 +24,8 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:50',
-            'description' => 'required|string'
+            'description' => 'required|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
@@ -36,6 +37,10 @@ class StoreCategoryRequest extends FormRequest
             'name.max' => 'The name field must not be greater than 50 characters.',
             'description.required' => 'The description field is required.',
             'description.string' => 'The description field must be a string.',
+            'image.required' => 'The image field is required.',
+            'image.image' => 'The image field must be an image.',
+            'image.mimes' => 'The image field must be a jpeg, png, jpg, gif, or svg file.',
+            'image.max' => 'The image field must not be greater than 2MB.',
         ];
     }
 }
