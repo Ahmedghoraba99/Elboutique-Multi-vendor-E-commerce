@@ -86,6 +86,7 @@ color:gold;
 .product-review-card{
     border: 2px solid var(--accent-color-1);
     padding: 1rem;
+    border-radius: 0.5rem;
 
 }
 .rating-section sub{

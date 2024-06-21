@@ -3,6 +3,11 @@
     font-weight: 600;
     text-transform: capitalize;
   }
+  .product-description-section {
+    background-color: var(--accent-color-3);
+    padding: 3rem;
+    border: 2rem;
+  }
 
 .product-description-pricing ,.vendor-profile-info p{
     font-weight: 500;

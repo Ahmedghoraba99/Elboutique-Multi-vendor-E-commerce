@@ -10,11 +10,48 @@ swiper-slide img{
 } */
 
 .myswiper2 {
-    height: 39rem; 
+    width: 10rem;
+    height: 43rem;
+    box-sizing: border-box;
+    padding: 10px; 
   }
-  .myswiper2 img{
+  @media (max-width: 768px) {
+    .myswiper2{
+        display: none;
+       
+    }
+    .myswiper swiper-slide img{
+        width: 70%;
+        height: 51%;
+        object-fit: cover;
+        background-position: center;
+        background-size: contain;
+    }
+    swiper-slide{
+        display: flex ;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+}
+  
+  .myswiper img , .myswiper2 img{
+    width: 100%;
     height: 100%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    border-radius: 0.6rem;
+}
+.myswiper2 swiper-slide{
+    opacity: 0.6;
+    
+}
+.myswiper2 .swiper-slide-thumb-active{
+    opacity: 1;
+}
+.shop-now-swiper .swiper-pagination .swiper-pagination-bullet{
+    height: 0.3rem;
+    width: 1em;
+    border-radius: 1rem;
 }
