@@ -9,14 +9,20 @@ import { AuthService } from '../../service/auth.service';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ToastComponent, NavComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ToastComponent,
+    NavComponent,
+    RouterLink,
+  ],
 })
 export class LoginComponent {
   currentStep = 0;

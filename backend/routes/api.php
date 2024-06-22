@@ -1,7 +1,9 @@
 <?php
 
+ 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\customer\CustomerController;
 use App\Http\Controllers\customer\CustomerAddressController;
@@ -18,7 +20,7 @@ use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
+ 
 
 
 require_once __DIR__ . '/ReviewRoutes/reviewRoutes.php';
@@ -81,3 +83,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 });
+ 
+
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset']);

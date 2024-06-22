@@ -1,0 +1,23 @@
+.user-type-option {
+  cursor: pointer;
+  text-align: center;
+  border: 2px solid var(--secondary-color);
+  background-color: transparent;
+  padding: 0.5rem;
+  transition: all 0.3s ease-in-out;
+  border-radius: 1rem;
+}
+
+.user-type-option img {
+  width: 100px;
+  height: 100px;
+}
+
+.user-type-option.selected {
+  border: 2px solid var(--primary-color);
+}
+
+.user-type-option p {
+  display: block;
+  margin-top: 5px;
+}

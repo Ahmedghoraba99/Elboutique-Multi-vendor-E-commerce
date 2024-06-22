@@ -29,17 +29,9 @@ class VerificationController extends Controller
     public function sendVerificationEmail(Request $request)
 {
     $user = $request->user();
-
-    if (!$user) {
-        Log::error('User not authenticated.');
-        return response()->json(['message' => 'User not authenticated.'], 401);
-    }
-
     if ($user->hasVerifiedEmail()) {
         return response()->json(['message' => 'Email already verified.'], 400);
     }
-
-    Log::info('Sending email verification to user:', $user->toArray());
 
     try {
       $user->sendEmailVerificationNotification() ;
