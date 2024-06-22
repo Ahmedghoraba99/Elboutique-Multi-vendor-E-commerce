@@ -9,6 +9,7 @@ use App\Http\Requests\StoreVendorRequest;
 use App\Http\Requests\UpdateVendorRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\AuthTrait;
+use Illuminate\Auth\Events\Registered;
 
 class VendorController extends Controller
 {
@@ -36,8 +37,8 @@ class VendorController extends Controller
         }
         $validatedData['password'] = bcrypt($validatedData['password']);
         $vendor = Vendor::create($validatedData);
-        
-        return response()->json(['message' => 'vendor created successfully', 'vendor' => $vendor], 201);
+        event(new Registered($vendor));
+        return response()->json(['message' => 'vendor created successfully we sent a verification email to you please check your inbox', 'vendor' => $vendor], 201);
 
     }
 

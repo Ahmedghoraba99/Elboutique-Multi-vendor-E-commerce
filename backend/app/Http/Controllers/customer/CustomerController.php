@@ -48,7 +48,7 @@ class CustomerController extends Controller
 
         DB::commit();
         event(new Registered($customer));
-        return response()->json(['message' => 'Customer created successfully', 'customer' => $customer], 201);
+        return response()->json(['message' => 'Customer created successfully we sent a verification email to you please check your inbox', 'customer' => $customer], 201);
     } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
