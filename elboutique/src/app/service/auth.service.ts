@@ -15,12 +15,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(email: string, password: string, role: string): Observable<any> {
+    console.log({ email, password, role });
+
     return this.http.post(this.loginUrl, { email, password, role });
   }
 
-  // loginCustomer(email: string, password: string): Observable<any> {
-  //   return this.http.post(this.customerLoginUrl, { email, password });
-  // }
   forgotPassword(email: string) {
     return this.http.post(`${this.baseUrl}/forgot-password`, { email });
   }

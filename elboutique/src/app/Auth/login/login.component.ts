@@ -73,7 +73,6 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { userType, email, password } = this.loginForm.value;
-
       this.authService.login(email, password, userType).subscribe({
         next: (response: any) => this.handleSuccess(response),
         error: (error: any) => this.handleError(error),
@@ -88,7 +87,7 @@ export class LoginComponent {
 
   handleSuccess(response: any) {
     this.nextStep();
-    console.log(response);
+    localStorage.setItem('user_info', JSON.stringify(response));
     this.showToastMessage('Welcome! Redirecting to home page...', 'Success');
     setTimeout(() => {
       this.router.navigateByUrl('/');
