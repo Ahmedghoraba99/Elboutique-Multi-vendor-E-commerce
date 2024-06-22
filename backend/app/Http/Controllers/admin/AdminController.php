@@ -8,9 +8,10 @@ use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
-
+use App\Traits\AuthTrait;
 class AdminController extends Controller
 {
+    use AuthTrait;
     /**
      * Display a listing of the resource.
      */
@@ -26,15 +27,15 @@ class AdminController extends Controller
     {
         $validatedData = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('public');
-            $validatedData['image'] = $imagePath;
+        if($request->hasfile('image')){
+            $validatedData['image'] = $this->uploadImage($request,"admins");
         }
+        $validatedData['password'] = bcrypt($validatedData['password']);
         $admin = Admin::create($validatedData);
 
-        $imageUrl = $imagePath ? Storage::url($imagePath) : null;
+        
 
-        return response()->json(['message' => 'Admin created successfully', 'admin' => $admin, 'image_url' => $imageUrl], 201);
+        return response()->json(['message' => 'Admin created successfully', 'admin' => $admin,  ], 201);
     }
     
 
@@ -54,12 +55,7 @@ class AdminController extends Controller
     {
         $validatedData =$request->validated();
         if($request->hasfile('image')){
-            if ($admin->image) {
-                Storage::delete($admin->image);
-            }
-            $imageName = $admin->id. $request->file('image')->getClientOriginalExtension();
-            $imagePath = $request->file('image')->storeAs('public', $imageName);
-            $validatedData['image'] = $imagePath;
+            $validatedData['image'] = $this->uploadImage($request,"admins",$admin);
         }
         $admin->update( $validatedData);
     return response()->json(['message' => 'Admin updated successfully', 'admin' =>  $admin], 201);
@@ -72,7 +68,8 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         if ($admin->image){
-        Storage::delete($admin->image);}
-        $admin->delete();
+            Storage::delete('public/images/admins/'.$admin->image);}
+            $admin->delete();
+    
     }
 }

@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row flex-row align-items-center justify-content-center">
+    <div class="col-md-4">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <swiper-container
+          class="myswiper2 swiper-horizontal-on-small"
+          [spaceBetween]="20"
+          [slidesPerView]="3"
+          direction="vertical"
+          #swiperContainer
+        >
+          <swiper-slide
+            *ngFor="let image of productImages; trackBy: trackByImage"
+          >
+            <img [src]="image" alt="product-Name" />
+          </swiper-slide>
+        </swiper-container>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="swiper">
+        <swiper-container
+          class="myswiper"
+          pagination="true"
+          loop="true"
+          thumbs-swiper=".myswiper2"
+        >
+          <swiper-slide *ngFor="let image of productImages">
+            <img [src]="image" alt="product-Name" />
+          </swiper-slide>
+        </swiper-container>
+      </div>
+    </div>
+  </div>
+</div>

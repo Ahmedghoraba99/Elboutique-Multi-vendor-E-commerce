@@ -57,14 +57,9 @@ class TagController extends Controller
      */
     public function update(UpdateTagRequest $request, Tag $tag)
     {
-        $tag = Tag::find($tag);
-        if (!$tag) {
-            return response()->json([
-                'message' => 'Tag not found'
-            ], 404);
-        }
-        $tag->update($request->validated());
-        return response()->json($tag);
+        // return response()->json($tag);
+        $tag->updateOrFail($request->validated());
+        return response()->json($tag, 200);
     }
 
     /**

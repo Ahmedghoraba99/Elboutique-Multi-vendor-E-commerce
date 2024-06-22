@@ -19,7 +19,9 @@ class Product extends Model
         'stock',
         'category_id',
         'vendor_id',
-        'is_featured'
+        'is_featured',
+        'sale',
+
     ];
     protected $table = 'products';
 
@@ -58,21 +60,26 @@ class Product extends Model
         return $this->belongsToMany(Order::class)->withPivot('quantity');
     }
 
-    public function cartCustomers(){
-        return $this->belongsToMany(Customer::class,'cart')->withPivot('quantity');
+    public function cartCustomers()
+    {
+        return $this->belongsToMany(Customer::class, 'cart')->withPivot('quantity');
     }
-    public function wishlistCustomers(){
-        return $this->belongsToMany(Customer::class,'wishlists');
+    public function wishlistCustomers()
+    {
+        return $this->belongsToMany(Customer::class, 'wishlists');
     }
-    public function reviews(){
+    public function reviews()
+    {
         return $this->hasMany(Review::class);
     }
 
-    public function reportProducts(){
+    public function reportProducts()
+    {
         return $this->hasMany(ReportProduct::class);
     }
 
-    public function reportReviews(){
+    public function reportReviews()
+    {
         return $this->hasMany(ReportReview::class);
     }
     use HasFactory;

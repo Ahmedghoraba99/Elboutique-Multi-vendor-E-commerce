@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->boolean('is_featured')->default(false);
+            $table->integer("sale")->default(0);
             $table->softDeletes();
             $table->timestamps();
             // $table->timestamp('created_at')->useCurrent();

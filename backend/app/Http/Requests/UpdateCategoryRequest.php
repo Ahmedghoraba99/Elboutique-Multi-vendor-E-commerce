@@ -6,32 +6,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateCategoryRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
-        return true;
+        return true; // Adjust this as per your authorization logic
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            'name' => 'sometime|max:50',
-            'description' => 'sometimes',
-        ];
-    }
-    public function messages()
-    {
-        return [
-            'name.sometime' => 'The name field is required.',
-            'name.max' => 'The name field may not be greater than 50 characters.',
-            'description.sometimes' => 'The description field is required.',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            // Add more rules as needed for other fields
         ];
     }
 }

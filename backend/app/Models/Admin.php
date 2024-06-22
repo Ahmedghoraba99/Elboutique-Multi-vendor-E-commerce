@@ -11,6 +11,13 @@ class Admin extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return url('storage/images/admins/' . $this->image);
+    }
+
     /**
      * The attributes that are mass assignable.
      *

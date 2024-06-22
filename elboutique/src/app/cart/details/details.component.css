@@ -1,0 +1,22 @@
+.close-up-section h1 , .product-rating-section h1{ 
+    font-size: clamp(1.2rem, 1.04rem + 1.28vw, 1.5rem);   
+     font-weight: 600;
+
+}
+
+.basic-feature-section h1{
+    font-size: 1.4rem;
+
+}
+.basic-feature-section > p{
+    color: #1a181882;
+  }
+  .basic-feature-span{
+  color: rgb(64, 69, 83);
+  font-weight: 600;
+}
+.close-up-section{
+    background-color: #fff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+}

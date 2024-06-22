@@ -28,8 +28,7 @@ class ProductController extends Controller
     {
         try {
             $images = $request->images;
-            // removing images from the request to avoid validation error
-            // $request->request->remove('images');
+            // Create a new product instance and populate it with request data
             $product = new Product();
             $product->name = $request->name;
             $product->description = $request->description;
@@ -37,33 +36,43 @@ class ProductController extends Controller
             $product->category_id = $request->category_id;
             $product->vendor_id = $request->vendor_id;
             $product->stock = $request->stock;
-            // save product to database
+
+            // Save the product to the database
             $product->save();
-            // Multiple image handling
-            foreach ($images as $image) {
-                $productImage = new product_images();
 
-                // Change stored name to be product_id + timestamp + original extension
-                $imageName = $product->id . '_' . time() . '.' . $image->getClientOriginalExtension();
+            // Check if images are present in the request
+            if ($images && is_array($images)) {
+                // Multiple image handling
+                foreach ($images as $image) {
+                    // Create a new instance for each image
+                    $productImage = new product_images();
+                    // Store the image and get the path
+                    $imagePath = $image->store('products', 'public');
+                    $imagePath = str_replace('public/', 'storage/', $imagePath);
 
-                // Store the image with the modified filename
-                $imagePath = $image->storeAs('public/images/products', $imageName);
-
-                // Save image path to the database
-                $productImage->product_id = $product->id;
-                $productImage->image = $imagePath;
-                $productImage->save();
+                    // Save the image path to the database
+                    $productImage->product_id = $product->id;
+                    $productImage->image = $imagePath;
+                    $productImage->save();
+                }
             }
 
             // Multiple tag handling
-            $product->tags()->attach($request->tags);
+            if ($request->tags && is_array($request->tags)) {
+                $product->tags()->attach($request->tags);
+            }
+
             return response()->json($product);
         } catch (\Throwable $th) {
-            // delete product if created 
-            // Product::where('id', $product->id)->delete();
+            // Rollback by deleting the created product and related images if any error occurs
+            if (isset($product->id)) {
+                Product::where('id', $product->id)->delete();
+                product_images::where('product_id', $product->id)->delete();
+            }
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -87,7 +96,9 @@ class ProductController extends Controller
      */
     public function show(int $product)
     {
-        $product = Product::with('images')->find($product);
+        // $product = Product::with('images')->find($product);
+        // with image and vendor 
+        $product = Product::with(['images', 'vendor'])->find($product);
         return response()->json($product);
     }
 
@@ -98,12 +109,7 @@ class ProductController extends Controller
     {
         try {
             // Update product details
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->price = $request->price;
-            $product->category_id = $request->category_id;
-            $product->vendor_id = $request->vendor_id;
-            $product->stock = $request->stock;
+            $product->update($request->validated());
 
             // Update images if provided
             if ($request->hasFile('images')) {
@@ -149,6 +155,67 @@ class ProductController extends Controller
             $product->delete();
 
             return response()->json(['message' => 'Product deleted successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getFeaturedProducts()
+    {
+        try {
+            $products = Product::where('is_featured', true)
+                ->with('images')
+                ->with('tags')
+                ->get();
+
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function featureAndUnfeatureProduct(int $id)
+    {
+        try {
+            // Find the product by ID
+            $product = Product::findOrFail($id);
+
+            // Toggle the is_featured flag
+            $product->is_featured = !$product->is_featured;
+            $product->save();
+
+            return response()->json(['message' => 'Product featured status updated successfully']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getProductsOnSale()
+    {
+        try {
+            $products = Product::where('sale', '>', 0)
+                ->with('images')
+                ->with('tags')
+                ->with("vendor")
+                ->orderBy('sale', 'desc')
+                ->get();
+
+            return response()->json($products);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function getNewArrivalProducts()
+    {
+
+        try {
+            $products = Product::where('created_at', '>', now()->subDays(7))
+                ->with('images')
+                ->with('tags')
+                ->get();
+
+            return response()->json($products);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
