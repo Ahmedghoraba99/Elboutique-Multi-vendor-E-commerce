@@ -1,0 +1,32 @@
+<app-nav></app-nav>
+<div class="container my-5">
+    <h1 class="lead text-uppercase">Create an account</h1>
+    <p class="text-muted">SETUP A FREE ACCOUNT TO GET ACCESS TO UNLIMITED PRODUCTS</p>
+
+    <div class="form-group mb-3">
+        <p class="form-label text-center text-muted">Select User Type</p>
+        <div class="d-flex justify-content-evenly">
+            <button type="button" (click)="selectUserType('customer')" class="btn user-type-option"
+                [ngClass]="{'selected': registerForm.value.userType === 'customer'}">
+                <img src="assets/images/customer.gif" alt="Customer" class="user-type-image">
+                <p class="form-check-label">Customer</p>
+            </button>
+            <button type="button" (click)="selectUserType('vendor')" class="btn user-type-option"
+                [ngClass]="{'selected': registerForm.value.userType === 'vendor'}">
+                <img src="assets/images/vendor.gif" alt="Vendor" class="user-type-image">
+                <p class="form-check-label">Vendor</p>
+            </button>
+        </div>
+        <div *ngIf="registerForm.controls['userType'].invalid && (registerForm.controls['userType'].dirty || registerForm.controls['userType'].touched)"
+            class="text-danger">
+            Please select a user type
+        </div>
+    </div>
+
+    <div *ngIf="userType === 'customer'">
+        <app-customer-form></app-customer-form>
+    </div>
+    <div *ngIf="userType === 'vendor'">
+        <app-vendor-form></app-vendor-form>
+    </div>
+</div>

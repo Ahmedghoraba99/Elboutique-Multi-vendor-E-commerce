@@ -45,6 +45,7 @@ Route::group([], function () {
 });
 // Product related
 Route::get('/product/featured', [ProductController::class, "getFeaturedProducts"]);
+Route::get('/product/category/{id}', [ProductController::class, "getProductsByCategory"]);
 Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
 Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
 Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);

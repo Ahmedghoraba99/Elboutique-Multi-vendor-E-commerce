@@ -1,0 +1,91 @@
+    <div class="container">
+        <div class="row order-section">
+           <div class="order-summery">
+            <h1>order summery</h1>
+           </div>
+           <div class="total-details d-flex justify-content-between my-3">
+            <span >Subtotal ( 3 items )</span>
+            <span class="price">156 <sub>EGP</sub></span>
+           </div>
+           <div class="totalshiping d-flex justify-content-between my-3">
+            <span >Shipping Fee</span>
+            <span class="price">50 <sub>EGP</sub></span>
+           </div>
+           <div class="tatla-price d-flex justify-content-between my-3">
+            <div class="total-price-info my-3">
+                <span class="fw-bold">Total</span>
+                <sub class="mx-2">inclusive of VAT</sub>
+            </div>
+            <div class="total-price-order my-3">
+                <span class="price">156 <sub>EGP</sub></span>
+            </div>
+           </div>
+           <div class="payment-section">
+            <div class="payment">
+              <div class="payment-type my-2">
+                <label>Payment Type</label>
+                <div>
+                  <div class="row justify-content-center payment-methods">
+                    <div class="col-md-6 p-0  text-center">
+                      <input type="radio" id="card" name="paymentType" value="card" />
+                      <label for="card" class="payment-option my-3">
+                        <fa-icon [icon]="faCreditCard"></fa-icon>
+                        <span>CreditCard</span>
+                      </label>
+                    </div>
+                    <div class="col-md-6 p-0 text-center">
+                      <input type="radio" id="cash" name="paymentType" value="visa"  />
+                      <label for="cash" class="payment-option my-3">
+                        <fa-icon [icon]="faCcVisa"></fa-icon>
+                        <span class="m-1">Visa</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <form  [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+                <div class="payment-card">
+                  <div class="payment-card-number">
+                    <label>Card Number</label>
+                    <input formControlName="cardNumber" class="card-number my-2" placeholder="1234 1234 1234 1234" type="text" (input)="formatCardNumber($event)" />
+                    <div *ngIf="paymentForm.get('cardNumber')!.invalid && paymentForm.get('cardNumber')!.touched" class="error">
+                      Card number is required and must be 16 digits.
+                    </div>
+                  </div>
+                  <div class="name my-2">
+                    <label>Card Holder</label>
+                    <input formControlName="cardHolder" class="card-name" placeholder="Sara Magdi" type="text" />
+                    <div *ngIf="paymentForm.get('cardHolder')!.invalid && paymentForm.get('cardHolder')!.touched" class="error">
+                      Card holder name is required.
+                    </div>
+                  </div>
+                  <div class="expiration-date my-2">
+                    <label>Exp. Date</label>
+                    <input formControlName="expDate" class="card-name" placeholder="MM/YY" type="text" (input)="formatExpDate($event)" />
+                    <div *ngIf="paymentForm.get('expDate')!.invalid && paymentForm.get('expDate')!.touched" class="error">
+                      Expiration date is required and must be in the format MM/YY.
+                    </div>
+                  </div>
+                  <div class="ccv my-2">
+                    <label>CCV</label>
+                    <input formControlName="ccv" class="card-name" placeholder="123" type="text" (input)="formatCcv($event)" />
+                    <div  *ngIf="paymentForm.get('ccv')!.invalid && paymentForm.get('ccv')!.touched" class="error">
+                      CCV is required and must be 3 digits.
+                    </div>
+                  </div>
+                   <div class="checkout-btn text-center my-4">
+                     <button class="btn " type="submit" >
+                         ckeckout
+                     </button>
+                    </div>
+                </div>
+              </form>  
+            </div>
+               
+           </div>
+           
+        </div>
+    </div>
+
+   

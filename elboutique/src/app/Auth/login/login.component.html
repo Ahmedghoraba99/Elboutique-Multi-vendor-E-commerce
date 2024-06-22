@@ -24,7 +24,8 @@
                 </div>
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                     <!-- Step 1: Select User Type -->
-                    <div *ngIf="currentStep === 0" class="form-step form-step-active">
+                    @if (currentStep === 0) {
+                    <div class="form-step form-step-active">
                         <div class="form-group mb-3">
                             <p class="form-label text-center text-muted">Select User Type</p>
                             <div class="d-flex justify-content-evenly">
@@ -46,9 +47,10 @@
                         </div>
                         <button type="button" class="btn primary-bg-color float-end" (click)="nextStep()">Next</button>
                     </div>
-
+                    }
+                    @else if (currentStep === 1) {
                     <!-- Step 2: Enter Credentials -->
-                    <div *ngIf="currentStep === 1" class="form-step form-step-active">
+                    <div class="form-step form-step-active">
                         <div class="form-group mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" formControlName="email"
@@ -73,23 +75,36 @@
                                     at least 8 characters long</div>
                             </div>
                         </div>
+                        <a routerLink="/login/forget-password"
+                            class="text-muted btn-link my-3 d-block text-start cursor-pointer">Forgot Password?</a>
                         <button type="button" class="btn secondary-bg-color" (click)="prevStep()">Back</button>
                         <button type="button" class="btn primary-bg-color float-end" (click)="nextStep()">Login</button>
                     </div>
-
+                    }
+                    @else if (currentStep === 2) {
                     <!-- Step 3: Review and Submit -->
-                    <div *ngIf="currentStep === 2" class="form-step form-step-active">
+                    <div class="form-step form-step-active">
 
                         <div class="form-group mb-3 text-center">
                             <img src="assets/images/done.gif" alt="done" width="100">
                             <p class="text-muted">Welcome! Redirecting to home page...</p>
                         </div>
                     </div>
+                    }
+
                 </form>
             </div>
         </div>
     </div>
+    <!-- register section -->
+    @if (currentStep!==2) {
+    <div class="d-flex justify-content-center align-items-center     my-3">
+        <h6 class="text-muted fw-light m-0">Don't have an account?</h6> <a routerLink="/register"
+            class="text-muted btn-link mx-1  text-start cursor-pointer ">Register here </a>
+    </div>}
 
     <!-- Toast Notification -->
-    <app-toast *ngIf="showToast" [message]="toastMessage" [title]="toastTitle"></app-toast>
+    @if (showToast) {
+    <app-toast [message]="toastMessage" [title]="toastTitle"></app-toast>
+    }
 </div>
