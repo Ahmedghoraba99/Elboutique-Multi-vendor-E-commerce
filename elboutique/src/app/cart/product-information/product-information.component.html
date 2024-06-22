@@ -1,53 +1,90 @@
 <div class="container-fluid">
-    <div class="row  gx-0  align-items-center justify-content-center my-5">
-        <div class="col-md-7">
-            <app-product-slider></app-product-slider>
-        </div>
-        <div class="col-md-5 ">
-            <div class="product-description-section ">
-                <div class="prodcut-description-data d-flex flex-column justify-content-evenly gap-4">
-                    <div class="product-description-info">
-                        <h1 class="product-description-h1">coffe machine</h1>
-                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Odio quam consequuntur quidem est, illum nemo quia nulla soluta omnis eos aliquid aliquam officia nisi, ducimus, natus eius totam iusto consectetur!</p>
-
-                    </div>
-                    <div class="product-description-pricing d-flex align-items-center">
-                        <span>price : </span>
-                        <strong class="mx-2" >2000</strong>
-                        <sub class="ms-1">inclusive of VAT</sub>
-                    </div>
-                    <div class="product-description-amount">
-                        <span >Amount</span>
-                        <select class="m-3" name="" id="">
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                        </select>
-                    </div>
-                    <div class="product-description-vendor">
-                        <div class="vendor-data d-flex align-items-center p-3">
-                            <div class="vendor-profile">
-                                <img src="../../../assets/images/bag.jpg" alt="">
-                            </div>
-                            <div class="vendor-profile-info ms-3">
-                                <h5><a href="">vendor name</a></h5>
-                                <p>vendor information</p>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="product-adding d-flex flex-row gap-5">
-                        <div class="product-wish d-flex justify-content-center align-items-center px-4 text-light ">
-                          <i class="fa-regular fa-heart fs-6"></i>
-                        </div>
-                        <div class="product-cart">
-                            <button type="button" class="btn btn-primary ">Add To Cart</button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+  <div class="row gx-0 align-items-center justify-content-center my-5">
+    <div class="col-md-7">
+      <app-product-slider></app-product-slider>
     </div>
+    <div class="col-md-5">
+      <div class="product-description-section">
+        <div
+          class="prodcut-description-data d-flex flex-column justify-content-evenly gap-4"
+        >
+          <div class="product-description-info">
+            <h1 class="product-description-h1">{{ product.name }}</h1>
+            <p>
+              {{ product.description }}
+            </p>
+          </div>
+          <div class="product-description-pricing d-flex align-items-center">
+            <!-- condotional render if there's a sale -->
+            <div *ngIf="product.sale">
+              <span>price : </span>
+              <strong class="mx-2 text-decoration-line-through"
+                >{{ product.price }}
+              </strong>
+              <span>{{ product.sale }}% OFF</span>
+              <strong class="mx-2 text-danger fw-bold">{{
+                product.price - (product.price * product.sale) / 100
+              }}</strong>
+            </div>
+            <div *ngIf="!product.sale">
+              <strong class="mx-2">{{ product.price }}</strong>
+            </div>
+            <sub class="ms-1">inclusive of VAT</sub>
+          </div>
+          <div class="product-description-amount">
+            <div
+              [ngClass]="{
+                'text-danger': product.stock < 10,
+                'text-success': product.stock >= 10
+              }"
+            >
+              {{
+                product.stock < 10
+                  ? "Warning: Low stock: " + product.stock
+                  : "Available: " + product.stock
+              }}
+            </div>
+            <!-- amount to be specified in cart -->
+            <!-- <span>Amount</span> -->
+            <!-- <select class="m-3" name="" id="">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select> -->
+          </div>
+          <div class="product-description-vendor">
+            <div class="vendor-data d-flex align-items-center p-3">
+              <div class="vendor-profile">
+                <img src="../../../assets/images/defaultAvatar.webp" alt="" />
+              </div>
+              <div class="vendor-profile-info ms-3">
+                <h5>
+                  <a class="" href="">{{ product.vendor.name }}</a>
+                </h5>
+                <p class="text-success" *ngIf="product.vendor.national_id">
+                  Verfied Seller
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="product-adding d-flex flex-row gap-5">
+            <div
+              class="product-wish d-flex justify-content-center align-items-center px-4 text-light"
+            >
+              <i class="fa-regular fa-heart fs-6"></i>
+            </div>
+            <div class="product-cart">
+              <button
+                type="button"
+                [disabled]="product.stock <= 0"
+                class="btn btn-primary"
+              >
+                {{ product.stock > 0 ? "Add to Cart" : "Out of stock" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

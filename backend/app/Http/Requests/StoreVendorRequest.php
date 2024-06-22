@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+
 class StoreVendorRequest extends FormRequest
 {
     /**
@@ -28,15 +29,15 @@ class StoreVendorRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('admins') ,
-                Rule::unique('customers') ,
-                Rule::unique('vendors')->whereNull('deleted_at'),
+                Rule::unique('admins'),
+                Rule::unique('customers'),
+                // Rule::unique('vendors')->whereNull('deleted_at'),
                 'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
             ],
             'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
-            'address' => 'sometimes|string|max:255|min:10',
-            'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
-            'national_id'=>'sometimes|image|mimes:jpg,png|max:2048',
+            'address' => 'required|string|max:255|min:10',
+            'phone' => 'required|string|max:20|regex:/^01[012]\d{8}$/',
+            'national_id' => 'sometimes|image|mimes:jpg,png|max:2048',
             'active' => 'sometimes|in:true,false',
             'banned' => 'sometimes|in:true,false',
             'image' => 'sometimes|image|mimes:jpg,png|max:2048',
