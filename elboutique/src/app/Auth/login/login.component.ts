@@ -73,17 +73,11 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { userType, email, password } = this.loginForm.value;
-      if (userType === 'vendor') {
-        this.authService.loginVendor(email, password).subscribe({
-          next: (response: any) => this.handleSuccess(response),
-          error: (error: any) => this.handleError(error),
-        });
-      } else if (userType === 'customer') {
-        this.authService.loginCustomer(email, password).subscribe({
-          next: (response: any) => this.handleSuccess(response),
-          error: (error: any) => this.handleError(error),
-        });
-      }
+
+      this.authService.login(email, password, userType).subscribe({
+        next: (response: any) => this.handleSuccess(response),
+        error: (error: any) => this.handleError(error),
+      });
     } else {
       this.showToastMessage(
         'Please fill out the form correctly',
@@ -93,6 +87,8 @@ export class LoginComponent {
   }
 
   handleSuccess(response: any) {
+    this.nextStep();
+    console.log(response);
     this.showToastMessage('Welcome! Redirecting to home page...', 'Success');
     setTimeout(() => {
       this.router.navigateByUrl('/');

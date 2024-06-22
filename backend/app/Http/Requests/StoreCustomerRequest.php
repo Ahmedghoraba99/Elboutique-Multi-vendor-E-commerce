@@ -36,13 +36,12 @@ class StoreCustomerRequest extends FormRequest
     ],
     'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
-    'addresses' => 'sometimes|array',
+    'addresses' => 'required|sometimes|array',
     'addresses.*.city' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
     'addresses.*.street' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
     'addresses.*.Governate' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
     'addresses.*.house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',
-    'addresses.*.customer_id' => 'sometimes|integer|exists:customers,id',
-    'phones' => 'sometimes|array',
+    'phones' => 'required|sometimes|array',
     'phones.*.phoneNumper'=> [
         'required',
         'string',
@@ -52,7 +51,7 @@ class StoreCustomerRequest extends FormRequest
         Rule::unique('admins','phone'),
         Rule::unique('vendors','phone'),
     ],
-    'phones.*.customer_id' => 'sometimes|integer|exists:customers,id',
+     
 ];
 
     }
