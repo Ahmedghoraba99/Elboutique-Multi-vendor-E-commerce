@@ -79,7 +79,7 @@ class ProductController extends Controller
      */
     public function getProductsByCategory(int $categoryId)
     {
-        $products = Product::where('category_id', $categoryId)->paginate(15);
+        $products = Product::with(["images", "vendor"])->where('category_id', $categoryId)->paginate(5);
         return response()->json($products);
     }
     // Custom
@@ -96,7 +96,6 @@ class ProductController extends Controller
      */
     public function show(int $product)
     {
-        // $product = Product::with('images')->find($product);
         // with image and vendor 
         $product = Product::with(['images', 'vendor'])->find($product);
         return response()->json($product);

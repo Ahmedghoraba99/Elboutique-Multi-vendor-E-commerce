@@ -1,0 +1,67 @@
+<form [formGroup]="vendorForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label for="avatar" class="form-label">Avatar Image</label>
+        <input type="file" formControlName="avatar" accept="image/*" class="form-control" id="avatar"
+            placeholder="Choose avatar image">
+    </div>
+
+
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" formControlName="name" class="form-control" id="name" placeholder="Enter name">
+        <div *ngIf="vendorForm.controls['name'].invalid && (vendorForm.controls['name'].dirty || vendorForm.controls['name'].touched)"
+            class="text-danger">
+            Name is required
+        </div>
+    </div>
+    <div class="row">
+        <div class="mb-3 col">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="text" formControlName="phone" class="form-control" id="phone" placeholder="Enter phone number">
+            <div *ngIf="vendorForm.controls['phone'].invalid && (vendorForm.controls['phone'].dirty || vendorForm.controls['phone'].touched)"
+                class="text-danger">
+                Phone number is required
+            </div>
+        </div>
+        <div class="mb-3 col">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" formControlName="email" class="form-control" id="email" placeholder="Enter email">
+            <div *ngIf="vendorForm.controls['email'].invalid && (vendorForm.controls['email'].dirty || vendorForm.controls['email'].touched)"
+                class="text-danger">
+                Valid email is required
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label for="idFront" class="form-label">ID Front Image</label>
+            <input type="file" formControlName="idFront" class="form-control" id="idFront"
+                placeholder="Upload front of ID">
+        </div>
+        <div class="col">
+            <label for="idBack" class="form-label">ID Back Image</label>
+            <input type="file" formControlName="idBack" class="form-control" id="idBack"
+                placeholder="Upload back of ID">
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" formControlName="password" class="form-control" id="password"
+            placeholder="Enter password">
+        <div *ngIf="vendorForm.controls['password'].invalid && (vendorForm.controls['password'].dirty || vendorForm.controls['password'].touched)"
+            class="text-danger">
+            Password must be at least 8 characters long
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" formControlName="confirmPassword" class="form-control" id="confirmPassword"
+            placeholder="Confirm password">
+        <div *ngIf="vendorForm.errors?.['mismatch'] && (vendorForm.controls['confirmPassword'].dirty || vendorForm.controls['confirmPassword'].touched)"
+            class="text-danger">
+            Passwords must match
+        </div>
+    </div>
+    <button type="submit" class="btn primary-bg-color">Register</button>
+</form>

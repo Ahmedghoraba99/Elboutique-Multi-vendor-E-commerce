@@ -6,6 +6,8 @@ import { LoginComponent } from './Auth/login/login.component';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { ForgotPasswordComponent } from './Auth/forget-password/forget-password.component';
+import { RegisterComponent } from './Auth/register/register.component';
 export const routes: Routes = [
   {
     path: '',
@@ -36,6 +38,16 @@ export const routes: Routes = [
     path: 'checkout',
     title: 'Checkout',
     component: CheckoutComponent,
+  },
+  {
+    path: 'login/forget-password',
+    title: 'ForgetPassword',
+    component: ForgotPasswordComponent,
+  },
+  {
+    path: 'register',
+    title: 'Register',
+    component: RegisterComponent,
   },
   {
     path: '**',

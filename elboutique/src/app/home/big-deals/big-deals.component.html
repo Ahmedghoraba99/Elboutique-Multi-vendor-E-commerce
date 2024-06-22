@@ -4,6 +4,7 @@
       <h2 class="fw-bold ms-3">Big deals</h2>
     </div>
     <div class="big-deals-btn">
+      <!-- TODO: link to product sections -->
       <a href="#" class="me-4">See More</a>
     </div>
   </div>
@@ -11,7 +12,7 @@
     <div class="row d-flex flex-row">
       <!-- part to be looped through -->
       <div class="col-sm-6 col-md-3 mb-4" *ngFor="let product of products">
-        <a href="#">
+        <a routerLink="/products/{{ product.id }}">
           <div class="d-flex flex-column">
             <div class="big-deal-product-data p-4">
               <div
@@ -19,14 +20,17 @@
               >
                 <div class="big-deal-product-big-tag">
                   <span
-                    >Big Deal
+                    >Deal
                     <span *ngIf="product.sale"
                       >{{ product.sale }}% Off</span
                     ></span
                   >
                 </div>
                 <div class="products-wish">
-                  <i class="fa-regular fa-heart"></i>
+                  <i
+                    class="fa-regular fa-heart"
+                    style="font-family: 'Font Awesome 6 Free'"
+                  ></i>
                 </div>
               </div>
               <div class="big-deal-product-slider">
@@ -38,7 +42,7 @@
                         *ngFor="let image of product.images"
                       >
                         <img
-                          [src]="'http://localhost:8000/' + image.image"
+                          [src]="'http://localhost:8000/storage/' + image.image"
                           alt="{{ product.name }}"
                         />
                       </swiper-slide>
