@@ -4,6 +4,7 @@ import { SummaryOrderComponent } from './summary-order/summary-order.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {  faHeart , faTrashCan  } from '@fortawesome/free-regular-svg-icons';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -16,8 +17,23 @@ import { CommonModule } from '@angular/common';
 export class CheckoutComponent  {
   faHeart = faHeart;
   faTrashCan=faTrashCan;
-  addToWishlist() {
-   
+  constructor(private Toaster : ToastrService){}
+
+  addToast(){
+    this.Toaster.success("Product added to Wishlist" , "Added");
   }
-  DeleteFromWishlist(){}
+  deleteToast(){
+    this.Toaster.error("Product Removed From Cart" , "Remove")
+  }
+
+
+
+// for services 
+  AddToWishlist() {
+    this.addToast();
+  }
+  DeleteFromCart(){
+    this.deleteToast()
+
+  }
 }
