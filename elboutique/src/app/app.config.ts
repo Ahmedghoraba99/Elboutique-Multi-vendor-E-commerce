@@ -10,6 +10,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(), 
-    provideToastr({timeOut:50000}),
+    provideToastr({timeOut:900}),
   ],
 };
