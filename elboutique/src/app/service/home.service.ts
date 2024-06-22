@@ -28,6 +28,17 @@ export class HomeService {
       .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
   }
 
+  getProductsInCategory(categoryId: number): Observable<any> {
+    return this.httpClient
+      .get<any>(`${this.baseUrl}/product/category/${categoryId}`)
+      .pipe(
+        tap((data) => {
+          console.log(categoryId);
+          console.log('Data form product cat: ', JSON.stringify(data));
+        })
+      );
+  }
+
   getAllCategories(): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/categories`)
