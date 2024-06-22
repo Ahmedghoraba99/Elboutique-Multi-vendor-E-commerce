@@ -31,14 +31,23 @@ class StoreAdminRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
+                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
                 Rule::unique('admins') ,
                 Rule::unique('customers') ,
                 Rule::unique('vendors'),
-                'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                
             ],
             'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
             'address' => 'sometimes|string|max:255|min:10',
-            'phone' => 'sometimes|string|max:20|regex:/^01[012]\d{8}$/', 
+            'phone' => [
+                'sometimes',
+                'string',
+                'max:20',
+                'regex:/^01[012]\d{8}$/',
+                Rule::unique('customer_phones',"phoneNumper"),
+                Rule::unique('admins','phone'),
+                Rule::unique('vendors','phone'),
+            ],
             'image' => 'nullable|image|mimes:jpg,png|max:2048',
         ];
     }

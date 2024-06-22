@@ -21,7 +21,7 @@ class Vendor extends Authenticatable implements MustVerifyEmail
     }
     public function getNationalIdUrlAttribute()
     {
-        return url('storage/images/vendors/national_id' . $this->national_id);
+        return url('storage/images/vendors/national_id/' . $this->national_id);
     }
 
     /**
