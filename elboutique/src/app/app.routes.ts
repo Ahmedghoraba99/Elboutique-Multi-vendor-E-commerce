@@ -5,7 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './Auth/login/login.component';
 import { WishListComponent } from './wish-list/wish-list.component';
 import { CartComponent } from './cart/cart.component';
-
+import { CheckoutComponent } from './checkout/checkout.component';
 export const routes: Routes = [
   {
     path: '',
@@ -31,6 +31,11 @@ export const routes: Routes = [
     path: 'details',
     title: 'Details',
     component: CartComponent,
+  },
+  {
+    path: 'checkout',
+    title: 'Checkout',
+    component: CheckoutComponent,
   },
   {
     path: '**',
