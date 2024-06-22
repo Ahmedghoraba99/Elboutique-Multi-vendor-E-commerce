@@ -143,9 +143,6 @@ swiper-container{
 .seller-name{
     font-weight: 600;
 }
-.product-info-anmount select {
-    padding: 0.5rem;
-}
 
 
 @media (max-width: 1000px) {
@@ -153,3 +150,38 @@ swiper-container{
         justify-content: center;
     }
 }
+
+
+.product-info-anmount select {
+  padding: 0.4rem 1.5rem;
+  border-radius: 0.3rem;
+  color: var(--primary-color);
+  background-color: rgb(255, 255, 255);
+  opacity: 1;
+  border: 1px solid #caced1;
+  cursor: pointer;
+  padding: 0.675em 6em -0.325em 1em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 4rem;
+  outline: none;
+}
+.product-info-anmount select:focus{
+  box-shadow: 0 0 0 .25rem var(--accent-color-1);}
+
+  .btn-wishlist{
+    border: 1px solid #caced1;
+    color: var(--primary-color);
+  }
+  .btn-wishlist fa-icon{
+    color: red;
+  }
+
+  .btn-wishlist-delete{
+    border: 1px solid #caced1;
+    color: var(--accent-color-3);
+    background-color: var(--accent-color-2);
+  }
+  .btn-wishlist-delete fa-icon{
+    margin: 0 0.2rem ;
+  }
