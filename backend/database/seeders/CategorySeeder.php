@@ -18,31 +18,38 @@ class CategorySeeder extends Seeder
         DB::table('categories')->insert([
             [
                 'name' => 'Food',
-                'description' => 'High quality food'
+                'description' => 'High quality food',
+                'image' => '1.jpg'
             ],
             [
                 'name' => 'Accessories',
-                'description' => 'High quality accessories'
+                'description' => 'High quality accessories',
+                'image' => '1.jpg'
             ],
             [
                 'name' => 'Clothes',
-                'description' => 'High quality clothes'
+                'description' => 'High quality clothes',
+                'image' => '1.jpg'
             ],
             [
                 'name' => 'Electronics',
-                'description' => 'High quality electronics'
+                'description' => 'High quality electronics',
+                'image' => '1.jpg'
             ],
             [
                 'name' => 'Books',
-                'description' => 'High quality books'
+                'description' => 'High quality books',
+                'image' => '1.jpg'
             ],
             [
                 'name' => 'Toys',
-                'description' => 'High quality toys'
+                'description' => 'High quality toys',
+                'image' => '1.jpg'
             ],
             [
                 'name' => 'Bakery',
-                'description' => 'High quality bakery'
+                'description' => 'High quality bakery',
+                'image' => '1.jpg'
             ],
         ]);
     }
