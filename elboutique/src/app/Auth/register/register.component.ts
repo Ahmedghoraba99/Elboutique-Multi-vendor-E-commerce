@@ -41,16 +41,19 @@ export class RegisterComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       const formData = this.registerForm.value;
-      if (this.userType === 'vendor') {
-        this.authService.registerVendor(formData).subscribe({
-          next: (response) => {
-            // handle success
-          },
-          error: (error) => {
-            // handle error
-          },
-        });
-      } else if (this.userType === 'customer') {
+      console.log(formData);
+
+      // if (this.userType === 'vendor') {
+      //   this.authService.registerVendor(formData).subscribe({
+      //     next: (response) => {
+      //       // handle success
+      //     },
+      //     error: (error) => {
+      //       // handle error
+      //     },
+      //   });
+      // }
+      if (this.userType === 'customer') {
         this.authService.registerCustomer(formData).subscribe({
           next: (response) => {
             // handle success
