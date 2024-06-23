@@ -15,6 +15,7 @@ import { ProductsComponent } from './dashboard/products/products.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
 import { OverviewComponent } from './dashboard/overview/overview.component';
 import { CheckMailComponent } from './Auth/check-mail/check-mail.component';
+import { CongsComponent } from './Auth/congs/congs.component';
 export const routes: Routes = [
   {
     path: '',
@@ -97,6 +98,11 @@ export const routes: Routes = [
     path: 'checkmail',
     title: 'checkmail',
     component: CheckMailComponent,
+  },
+  {
+    path: 'congs',
+    title: 'congs',
+    component: CongsComponent,
   },
   {
     path: '**',
