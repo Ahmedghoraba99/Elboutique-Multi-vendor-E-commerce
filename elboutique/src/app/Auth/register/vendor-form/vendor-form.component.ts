@@ -32,7 +32,7 @@ export class VendorFormComponent {
   ) {
     this.vendorForm = this.fb.group(
       {
-        avatar: [null, [Validators.required]],
+        image: [null, [Validators.required]],
         name: [
           '',
           [Validators.required, Validators.pattern(/^[a-zA-Z ,.\'-]+$/)],
@@ -82,7 +82,9 @@ export class VendorFormComponent {
     this.markFormGroupTouched(this.vendorForm);
 
     if (this.vendorForm.valid) {
-      this.authService.register('vendors', this.vendorForm.value).subscribe(
+      const from = this.createForm();
+
+      this.authService.register('vendors', from).subscribe(
         (res) => {
           this.showToastMessage(
             'Welcome! Redirecting to checkmail page...',
@@ -105,6 +107,14 @@ export class VendorFormComponent {
 
       console.log('Vendor Form Data:', this.vendorForm.value);
     }
+  }
+
+  createForm() {
+    const formData = new FormData();
+    for (const key in this.vendorForm.value) {
+      formData.append(key, this.vendorForm.value[key]);
+    }
+    return formData;
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
