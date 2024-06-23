@@ -1,59 +1,84 @@
 <div class="container text-capitalize">
   <div class="row">
-    <div class="wishList-section px-2 ">
-        <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
-            <h1>Total Items</h1>
-            <span>( 3 Items)</span>
-        </div>
-        <div class="wishList-content p-4">
-            <div class="row">
-                <!-- prodcut-card -->
-                <div class="col-md-4">
-                    <div class="d-flex flex-column">
-                        <div class="big-deal-product-data d-flex flex-column justify-content-evenly  p-4">
-                          <div class="big-deal-product-slider">
-                            <div class="swiper mySwiper big-deal-product-swiper">
-                              <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                                 <swiper-container pagination="true" >
-                                  <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                                    <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                                  </swiper-slide>
-                                  <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                                    <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                                  </swiper-slide>
-                                  <swiper-slide class="swiper-slide big-deal-product-swiper-slider ">  
-                                    <img src="../../../assets/images/bigdeals.avif" alt="product-Name">
-                                  </swiper-slide>
-                                </swiper-container>
-                                                          
-                              </div>
-                            </div>
-                          </div>
-                          <div class="big-deal-product-detail">
-                            <div class="big-deal-detail-header">
-                              <div class="big-deal-detail-data">
-                                <span>The Ordinary Niacinamide 10% And Zinc 1% Clear 30ml</span>
-                              </div>
-                              <div class="big-deal-info d-flex flex-column my-2">
-                                <span class="my-2">sara magdi</span>
-                                <div class="big-deal-price d-flex align-items-center">
-                                  <span class="me-2">EGP</span>
-                                  <strong class="fs-4">450</strong>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="wishlist-actions d-flex flex-row justify-content-evenly text-capitalize">
-                            <button class="btn btn-primary ">Add to cart </button>
-                            <button class="btn btn-primary ">Remove</button>
-                          </div>
-                        </div>
-                      </div>
+    <div class="wishList-section px-2">
+      <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
+        <h1>Total Items</h1>
+        <span>( {{ userWishlist.length }} Items)</span>
+      </div>
+      <div class="wishList-content p-4">
+        <div class="row">
+          <!-- prodcut-card -->
+          @for (product of userWishlist; track $index) {
+          <div class="col-md-4">
+            <div class="d-flex flex-column">
+              <div
+                class="big-deal-product-data d-flex flex-column justify-content-evenly p-4"
+              >
+                <div class="big-deal-product-slider">
+                  <div class="swiper mySwiper big-deal-product-swiper">
+                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                      <swiper-container pagination="true">
+                        <swiper-slide
+                          class="swiper-slide big-deal-product-swiper-slider"
+                        >
+                          <img
+                            src="../../../assets/images/bigdeals.avif"
+                            alt="product-Name"
+                          />
+                        </swiper-slide>
+                        <swiper-slide
+                          class="swiper-slide big-deal-product-swiper-slider"
+                        >
+                          <img
+                            src="../../../assets/images/bigdeals.avif"
+                            alt="product-Name"
+                          />
+                        </swiper-slide>
+                        <swiper-slide
+                          class="swiper-slide big-deal-product-swiper-slider"
+                        >
+                          <img
+                            src="../../../assets/images/bigdeals.avif"
+                            alt="product-Name"
+                          />
+                        </swiper-slide>
+                      </swiper-container>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-md-4"></div>
-                <div class="col-md-4"></div>
+                <div class="big-deal-product-detail">
+                  <div class="big-deal-detail-header">
+                    <div class="big-deal-detail-data">
+                      <span>{{ product.name }}</span>
+                    </div>
+                    <div class="big-deal-info d-flex flex-column my-2">
+                      <span class="my-2">{{ product.vendor.name }}</span>
+                      <div class="big-deal-price d-flex align-items-center">
+                        <span class="me-2">EGP</span>
+                        <strong class="fs-4">{{ product.price }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="wishlist-actions d-flex flex-row justify-content-evenly text-capitalize"
+                >
+                  <button class="btn btn-primary">Add to cart</button>
+                  <button
+                    class="btn btn-primary"
+                    (click)="removeProductFromWishlist(product.id)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
+          }
+          <div class="col-md-4"></div>
+          <div class="col-md-4"></div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 </div>

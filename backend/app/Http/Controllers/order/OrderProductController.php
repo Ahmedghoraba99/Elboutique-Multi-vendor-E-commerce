@@ -50,7 +50,8 @@ class OrderProductController extends Controller
         if (!$order) {
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
-        return $order->products;
+        $orderProducts = $order->products()->with(['images','tags','vendor'])->get();
+        return response()->json(['order_product'=>$orderProducts],200);
     }
 
     

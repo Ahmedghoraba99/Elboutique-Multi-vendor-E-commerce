@@ -3,6 +3,8 @@ import { ProductSliderComponent } from '../product-slider/product-slider.compone
 import { ProductDetailsService } from '../../service/product-details.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgClass, NgFor, NgIf } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { WishlistService } from '../../service/wishlist.service';
 @Component({
   selector: 'app-product-information',
   standalone: true,
@@ -13,9 +15,11 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 export class ProductInformationComponent {
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductDetailsService // Inject the service in the constructor
+    private productService: ProductDetailsService, // Inject the service in the constructor
+    private wishlistService: WishlistService
   ) {}
   product: any = {};
+  addToWishlistSub: Subscription | null = null;
   id: number = 0;
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -24,5 +28,16 @@ export class ProductInformationComponent {
         this.product = product;
       });
     });
+  }
+  addToWishlist(div: HTMLDivElement) {
+    const sentBody: Object = {
+      products: [this.product.id],
+    };
+    this.addToWishlistSub = this.wishlistService
+      .addToUserWishlist(sentBody)
+      .subscribe((res) => {
+        console.log(res);
+        div.innerHTML = `<i class="fa-solid fa-heart fs-6 text-danger"></i>`;
+      });
   }
 }

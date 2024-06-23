@@ -39,6 +39,7 @@ class WishlistController extends Controller
         if (!$customer) {
             return response()->json(["message"=> "Customer Doesn't exist"],404);
         }
-        return $customer->wishlistProducts;
+        $wishlistProducts = $customer->wishlistProducts()->with(['images','tags','vendor'])->get();
+        return response()->json($wishlistProducts,200);
     }
 }
