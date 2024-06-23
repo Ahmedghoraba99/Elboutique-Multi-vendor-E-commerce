@@ -22,7 +22,7 @@ class AuthController extends Controller
             'email' => ['The provided credentials are incorrect.'],
         ]);
     }
-    else if(!$user->hasVerifiedEmail()){
+    else if( !($user instanceof Admin) and !$user->hasVerifiedEmail()   ){
         return response()->json(['error' => 'Email not verified.'], 400);
     }
     if ($user->tokens()->count() >= 5) {

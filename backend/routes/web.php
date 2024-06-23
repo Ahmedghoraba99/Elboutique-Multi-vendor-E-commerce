@@ -18,12 +18,12 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // Route::get('/email/verify/{id}/{hash}', function ( EmailVerificationRequest $request ) {
 
-     
+
 //     $request->fulfill();
 //     return response()->json(['message' => 'Email verified successfully.']);
-     
+
 // })->middleware(['auth:sanctum'])->name('verification.verify');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
