@@ -25,12 +25,14 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        $this->registerPolicies();
+         
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             $frontendUrl = config('app.frontend_url');
+            $token = $notifiable->createToken("Verify")->plainTextToken;
+            $verificationUrl ="$frontendUrl/congs?link=$url&token=$token";
             
-            $verificationUrl ="$frontendUrl/congs?link=$url";
+            
 
             return (new MailMessage)
                 ->subject('Verify Email Address')
