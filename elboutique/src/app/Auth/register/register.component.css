@@ -2,9 +2,8 @@
   cursor: pointer;
   text-align: center;
   border: 2px solid var(--secondary-color);
-  background-color: transparent;
+  background-color: white;
   padding: 0.5rem;
-  transition: all 0.3s ease-in-out;
   border-radius: 1rem;
 }
 
@@ -14,7 +13,7 @@
 }
 
 .user-type-option.selected {
-  border: 2px solid var(--primary-color);
+  outline: 2px solid var(--primary-color);
 }
 
 .user-type-option p {

@@ -16,7 +16,6 @@ class OrderProductController extends Controller
         if (!$order) {
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
-        // dd($request->products);
         $products=[];
         foreach($request->products as $product_id => $quantity){
             $product=Product::find($product_id);
@@ -34,8 +33,14 @@ class OrderProductController extends Controller
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
         $product=Product::find($request->all()['product']);
-        if(!$product){
-            return response()->json(["message"=> "Product Doesn't exist"],404);
+        $flag = false;
+        foreach ($order->products as $key => $orderProduct) {
+            if($product->id === $orderProduct->id){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            return response()->json(["message"=> "Product Doesn't exist in order"],404);
         }
         $order->products()->detach($product);
         return response()->json(['message'=> 'Products deleted from Order'], 200);
@@ -45,7 +50,8 @@ class OrderProductController extends Controller
         if (!$order) {
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
-        return $order->products;
+        $orderProducts = $order->products()->with(['images','tags','vendor'])->get();
+        return response()->json(['order_product'=>$orderProducts],200);
     }
 
     
