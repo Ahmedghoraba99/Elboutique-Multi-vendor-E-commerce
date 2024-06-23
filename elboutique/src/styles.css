@@ -62,3 +62,113 @@ ul {
   border: 2px solid var(--secondary-color);
   border-radius: 1rem;
 }
+.logo-dark {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+.logo-light {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-color-3);
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: var(--primary-color);
+  min-height: 100vh;
+  width: 280px;
+  padding: 1.5rem;
+  padding-right: 5rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  margin-right: -2rem;
+}
+.sidebar .item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+
+.sidebar .item:hover {
+  outline: 2px solid var(--accent-color-3);
+}
+.sidebar .item.active {
+  background-color: var(--accent-color-3);
+  color: var(--primary-color);
+  outline: 2px solid var(--primary-color);
+  font-weight: bold;
+}
+.sidebar .item .icon {
+  margin-right: 10px;
+}
+.sidebar .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.sidebar .hr {
+  margin: 1rem 0;
+  border: 1px solid var(--accent-color-3);
+}
+.profile {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding-right: 5rem;
+}
+.user-details {
+  display: flex;
+  align-items: start;
+}
+.user-details .user-name {
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  color: var(--secondary-color);
+}
+.user-details .email {
+  font-size: 0.8rem;
+  color: var(--accent-color-1);
+}
+
+.toggle-btn {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 200;
+  background-color: var(--primary-color);
+  color: var(--accent-color-3);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+}
+.toggle-btn i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.content {
+  padding: 2rem;
+  background-color: var(--accent-color-3);
+  width: 100%;
+  min-height: 100vh;
+  z-index: 1;
+  border-radius: 2rem 0 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .toggle-btn {
+    display: block;
+  }
+}
+
+/* end of sidebar */

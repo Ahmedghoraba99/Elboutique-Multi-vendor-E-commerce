@@ -1,8 +1,6 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <h2>Dashboard</h2>
-            <p>Welcome to the dashboard!</p>
-        </div>
+<div class="d-flex">
+    <app-side-bar [user]="currentUser" [navLinks]="navLinks"></app-side-bar>
+    <div class="content">
+        <router-outlet></router-outlet>
     </div>
 </div>

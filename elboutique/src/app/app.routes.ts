@@ -8,6 +8,11 @@ import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { ForgotPasswordComponent } from './Auth/forget-password/forget-password.component';
 import { RegisterComponent } from './Auth/register/register.component';
+import { UsersComponent } from './dashboard/users/users.component';
+import { VendorsComponent } from './dashboard/vendors/vendors.component';
+import { ProductsComponent } from './dashboard/products/products.component';
+import { OrdersComponent } from './dashboard/orders/orders.component';
+import { OverviewComponent } from './dashboard/overview/overview.component';
 export const routes: Routes = [
   {
     path: '',
@@ -18,6 +23,38 @@ export const routes: Routes = [
     path: 'dashboard',
     title: 'Dashboard',
     component: DashboardComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'overview',
+        pathMatch: 'full',
+      },
+      {
+        path: 'overview',
+        title: 'Overview',
+        component: OverviewComponent,
+      },
+      {
+        path: 'users',
+        title: 'Users',
+        component: UsersComponent,
+      },
+      {
+        path: 'vendors',
+        title: 'Vendors',
+        component: VendorsComponent,
+      },
+      {
+        path: 'products',
+        title: 'Products',
+        component: ProductsComponent,
+      },
+      {
+        path: 'orders',
+        title: 'Orders',
+        component: OrdersComponent,
+      },
+    ],
   },
   {
     path: 'login',
