@@ -6,11 +6,11 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
 import { ProductsComponent } from './products/products.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { SpecificCategoriesComponent } from './specific-categories/specific-categories.component';
-
+import { NavbarComponent } from '../layout/navbar/navbar.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ HomeSliderComponent,OffersComponent ,BigDealsComponent ,ShopNowComponent ,ProductsComponent,CategoriesComponent ,SpecificCategoriesComponent],
+  imports: [NavbarComponent, HomeSliderComponent,OffersComponent ,BigDealsComponent ,ShopNowComponent ,ProductsComponent,CategoriesComponent ,SpecificCategoriesComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
