@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateReviewRequest;
 use App\Http\Resources\ReviewResource;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -20,6 +21,20 @@ class ReviewController extends Controller
         $reviews = Review::all();
         return ReviewResource::collection($reviews);
     }
+
+    public function getReviewsByProductId(Request $request ,$productId)
+    {
+        $reviews=  Review::where('product_id', $productId)->get();
+        if($reviews){
+            return ReviewResource::collection($reviews);
+        }
+        else{
+            return response()->json([
+                'message' => 'No reviews found for this product'
+            ], 404);
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.

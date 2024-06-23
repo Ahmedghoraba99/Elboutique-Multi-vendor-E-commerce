@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        
+
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->enum('rate', [1, 2, 3, 4, 5]);
+            $table->text('comment');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('product_id');
 
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-            // $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
