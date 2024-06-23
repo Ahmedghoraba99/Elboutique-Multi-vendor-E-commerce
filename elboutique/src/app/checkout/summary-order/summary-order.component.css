@@ -14,6 +14,7 @@
     border-top: 1px solid var(--accent-color-1);
     
 }
+
 .price{
     color: var(--accent-color-2);
     font-weight: bold;
@@ -103,23 +104,6 @@ input {
     margin: 10px 0;
     color: var(--accent-color-2);
   }
-/*  
-/* 
-  .payment-methods input[type="radio"]{
-    -webkit-appearance: none;
-  }
-  .payment-methods label{
-    height: 4rem ;
-    width: 6rem;
-    border: 2px solid var(--accent-color-3);
-    border-radius: 1rem;
-    color: var(--accent-color-1);
-
-  }
-  .payment-methods fa-icon{
-    font-size: 1rem;
-    color: var(--accent-color-1);
-  } */
 
   .payment-option label{
     display: inline;

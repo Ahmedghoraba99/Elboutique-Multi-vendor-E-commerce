@@ -69,7 +69,9 @@
           </div>
           <div class="product-adding d-flex flex-row gap-5">
             <div
+            #element
               class="product-wish d-flex justify-content-center align-items-center px-4 text-light"
+              (click)="addToWishlist(element)"
             >
               <i class="fa-regular fa-heart fs-6"></i>
             </div>

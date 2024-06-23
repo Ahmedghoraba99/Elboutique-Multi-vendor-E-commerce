@@ -8,6 +8,7 @@ import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { ForgotPasswordComponent } from './Auth/forget-password/forget-password.component';
 import { RegisterComponent } from './Auth/register/register.component';
+import { CategoryComponent } from './category/category.component';
 import { UsersComponent } from './dashboard/users/users.component';
 import { VendorsComponent } from './dashboard/vendors/vendors.component';
 import { ProductsComponent } from './dashboard/products/products.component';
@@ -75,6 +76,11 @@ export const routes: Routes = [
     path: 'checkout',
     title: 'Checkout',
     component: CheckoutComponent,
+  },
+  {
+    path: 'category',
+    title: 'Category',
+    component: CategoryComponent,
   },
   {
     path: 'login/forget-password',

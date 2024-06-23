@@ -30,12 +30,13 @@ class UpdateAdminRequest extends FormRequest
                         'string',
                         'email',
                         'max:255',
+                        'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
                         Rule::unique('admins')->ignore($this->route('admin')),
                         Rule::unique('customers') ,
                         Rule::unique('vendors'),
-                        'regex:/^[^@\s]+@[^@\s]+\.[^@\s]+$/',
+                        
                     ],
-                    'password' => 'sometimes|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
+                  
                     'address' => 'sometimes|string|max:255|min:10',
                     'phone' => [
                         'sometimes',
