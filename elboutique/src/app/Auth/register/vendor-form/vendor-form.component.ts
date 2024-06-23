@@ -9,18 +9,27 @@ import {
 import { passwordMatchValidator } from '../../validators';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../service/auth.service';
+import { Router } from '@angular/router';
+import { ToastComponent } from '../../../widgets/toast/toast.component';
 
 @Component({
   selector: 'app-vendor-form',
   templateUrl: './vendor-form.component.html',
   styleUrls: ['./vendor-form.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ToastComponent],
 })
 export class VendorFormComponent {
   vendorForm: FormGroup;
+  showToast = false;
+  toastMessage = '';
+  toastTitle = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.vendorForm = this.fb.group(
       {
         avatar: [null, [Validators.required]],
@@ -75,10 +84,22 @@ export class VendorFormComponent {
     if (this.vendorForm.valid) {
       this.authService.register('vendors', this.vendorForm.value).subscribe(
         (res) => {
-          
+          this.showToastMessage(
+            'Welcome! Redirecting to checkmail page...',
+            'vendor created successfully we sent a verification email to you please check your inbox'
+          );
+          setTimeout(() => {
+            this.router.navigateByUrl('/checkmail');
+          }, 2000);
+
+          this.vendorForm.reset();
         },
         (err) => {
           console.log(err);
+          this.showToastMessage(
+            'Please fill out the form correctly',
+            'Validation Error'
+          );
         }
       );
 
@@ -94,5 +115,13 @@ export class VendorFormComponent {
         this.markFormGroupTouched(control);
       }
     });
+  }
+  showToastMessage(message: string, title: string) {
+    this.toastMessage = message;
+    this.toastTitle = title;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 5000);
   }
 }

@@ -167,3 +167,6 @@
   </div>
   <button type="submit" class="btn primary-bg-color">Register</button>
 </form>
+@if (showToast) {
+<app-toast [message]="toastMessage" [title]="toastTitle"></app-toast>
+}

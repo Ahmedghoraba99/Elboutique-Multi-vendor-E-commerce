@@ -14,6 +14,7 @@ import { VendorsComponent } from './dashboard/vendors/vendors.component';
 import { ProductsComponent } from './dashboard/products/products.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
 import { OverviewComponent } from './dashboard/overview/overview.component';
+import { CheckMailComponent } from './Auth/check-mail/check-mail.component';
 export const routes: Routes = [
   {
     path: '',
@@ -91,6 +92,11 @@ export const routes: Routes = [
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+  },
+  {
+    path: 'checkmail',
+    title: 'checkmail',
+    component: CheckMailComponent,
   },
   {
     path: '**',
