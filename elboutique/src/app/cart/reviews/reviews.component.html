@@ -1,4 +1,5 @@
-<div class="container product-rating-section my-5 " *ngIf="reviews.length">
+@if (reviews.length > 0) {
+  <div class="container product-rating-section my-5 " >
     <h1>Product ratings and reviews</h1>
     <div class="row border-top">
         <div class="col-md-5 my-3">
@@ -49,3 +50,9 @@
         </div>
     </div>
 </div>
+}@else {
+  <div class="container product-rating-section my-5 " >
+      <h3>No Rating</h3>
+    </div>
+}
+
