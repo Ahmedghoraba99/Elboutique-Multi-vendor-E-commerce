@@ -25,17 +25,26 @@ class CartController extends Controller
     }
 
     public function detachProductFromCustomerCart(Request $request,$id){
-        $product=Product::find($request->all()["products"]);
-        if (!$product) {
-            return response()->json(["message"=> "Product Doesn't exist"],404);
-        }
         $customer = Customer::find($id);
+        $product=Product::find($request->all()["products"]);
+        $flag = false;
+        foreach ($customer->cartProducts as $key => $cartProduct) {
+            if($product->id === $cartProduct->id){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            return response()->json(["message"=> "Product Doesn't exist in cart"],404);
+        }
         $customer->cartProducts()->detach($request->all("products"));
         return response()->json(["message"=>"Product Detatched from cart"],200);
     }
 
     public function showCutsomerCart($id){
         $customer = Customer::find($id);
-        return $customer->cartProducts;
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        return response()->json(['cart'=>$customer->cartProducts],200);
     }
 }

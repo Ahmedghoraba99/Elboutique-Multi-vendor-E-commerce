@@ -55,19 +55,19 @@ Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProd
 // Order related routes
 Route::apiResource('orders', OrderController::class);
 
-Route::post('/orders/{id}/addProducts', [OrderProductController::class, 'addProductToOrder']);
-Route::post('/orders/{id}/deleteProducts', [OrderProductController::class, 'deleteProductFromOrder']);
-Route::get('/orders/{id}/showProducts', [OrderProductController::class, 'getOrderProduct']);
+Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProductToOrder']);
+Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
+Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
 
 //cart endpoint
-Route::post('/customer/{id}/addCart', [CartController::class, 'attachProductToCustomerCart']);
-Route::post('/customer/{id}/deleteCart', [CartController::class, 'detachProductFromCustomerCart']);
-Route::get('/customer/{id}/showCart', [CartController::class, 'showCutsomerCart']);
+Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
+Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
+Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
 
 //wishlist endpoint
-Route::post('/customer/{id}/addWishlist', [WishlistController::class, 'attachProductToCustomerWishlist']);
-Route::post('/customer/{id}/deleteWishlist', [WishlistController::class, 'detachProductFromCustomerWishlist']);
-Route::get('/customer/{id}/showWishlist', [WishlistController::class, 'showCutsomerWishlist']);
+Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachProductToCustomerWishlist']);
+Route::post('/customer/deleteWishlist/{id}', [WishlistController::class, 'detachProductFromCustomerWishlist']);
+Route::get('/customer/showWishlist/{id}', [WishlistController::class, 'showCutsomerWishlist']);
 
 
 Route::post('/login',  [AuthController::class, 'login']);
