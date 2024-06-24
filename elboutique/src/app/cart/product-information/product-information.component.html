@@ -45,12 +45,12 @@
               }}
             </div>
             <!-- amount to be specified in cart -->
-            <!-- <span>Amount</span> -->
-            <!-- <select class="m-3" name="" id="">
+            <span>Amount</span>
+            <select class="m-3" name="" id="" #select>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
-            </select> -->
+            </select>
           </div>
           <div class="product-description-vendor">
             <div class="vendor-data d-flex align-items-center p-3">
@@ -80,6 +80,7 @@
                 type="button"
                 [disabled]="product.stock <= 0"
                 class="btn btn-primary"
+                (click)="addToCart(select)"
               >
                 {{ product.stock > 0 ? "Add to Cart" : "Out of stock" }}
               </button>

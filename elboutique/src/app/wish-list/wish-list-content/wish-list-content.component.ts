@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WishlistService } from '../../service/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-wish-list-content',
@@ -15,7 +16,10 @@ export class WishListContentComponent implements OnInit, OnDestroy {
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
-  constructor(private wishlistService: WishlistService) {}
+  constructor(
+    private wishlistService: WishlistService,
+    private toaster: ToastrService
+  ) {}
   ngOnDestroy(): void {
     this.getWishlistSub?.unsubscribe();
     this.deleteFromWishlistSub?.unsubscribe();
@@ -39,6 +43,7 @@ export class WishListContentComponent implements OnInit, OnDestroy {
         this.userWishlist = this.userWishlist.filter(
           (product: any) => product.id != id
         );
+        this.toaster.error('Product Removed From Wishlist', 'Remove');
       });
   }
 }
