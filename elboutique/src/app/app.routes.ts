@@ -14,6 +14,12 @@ import { VendorsComponent } from './dashboard/vendors/vendors.component';
 import { ProductsComponent } from './dashboard/products/products.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
 import { OverviewComponent } from './dashboard/overview/overview.component';
+import { UserComponent } from './profile/user/user.component';
+import { AccountComponent } from './profile/user/account/account.component';
+import { OrdersComponent as UserOrdersComponent } from './profile/user/orders/orders.component';
+import { WishListComponent as UserWishListComponent } from './profile/user/wish-list/wish-list.component';
+import { PaymentComponent } from './profile/user/payment/payment.component';
+import { ChangePasswordComponent as UserChangePasswordComponent } from './profile/user/change-password/change-password.component';
 export const routes: Routes = [
   {
     path: '',
@@ -91,6 +97,44 @@ export const routes: Routes = [
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+  },
+
+  {
+    path: 'u',
+    title: 'Users',
+    component: UserComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'account',
+        pathMatch: 'full',
+      },
+      {
+        path: 'account',
+        title: 'Account',
+        component: AccountComponent,
+      },
+      {
+        path: 'orders',
+        title: 'Orders',
+        component: UserOrdersComponent,
+      },
+      {
+        path: 'wishlist',
+        title: 'WishList',
+        component: UserWishListComponent,
+      },
+      {
+        path: 'payment',
+        title: 'Payment',
+        component: PaymentComponent,
+      },
+      {
+        path: 'account/change-password',
+        title: 'Change Password',
+        component: UserChangePasswordComponent,
+      },
+    ],
   },
   {
     path: '**',
