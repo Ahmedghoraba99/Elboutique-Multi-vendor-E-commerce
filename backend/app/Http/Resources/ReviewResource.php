@@ -18,6 +18,7 @@ class ReviewResource extends JsonResource
         return [
             'id' => $this->id,
             'rate' => $this->rate,
+            'comment' => $this->comment,
             'customer' => $this->customer,
             'product' => $this->product,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),

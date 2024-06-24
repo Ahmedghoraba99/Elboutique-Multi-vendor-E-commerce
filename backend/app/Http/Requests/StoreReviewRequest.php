@@ -25,6 +25,7 @@ class StoreReviewRequest extends FormRequest
     {
         return [
             'rate' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string',
             'customer_id' => 'required|exists:customers,id',
             'product_id' => 'required|exists:products,id',
         ];
@@ -43,6 +44,7 @@ class StoreReviewRequest extends FormRequest
             'rate.integer' => 'The rate field must be an integer.',
             'rate.min' => 'The rate field must be at least :min.',
             'rate.max' => 'The rate field may not be greater than :max.',
+            'comment.required' => 'The comment field is required.',
             'customer_id.required' => 'The customer ID field is required.',
             'customer_id.exists' => 'The selected customer ID is invalid.',
             'product_id.required' => 'The product ID field is required.',

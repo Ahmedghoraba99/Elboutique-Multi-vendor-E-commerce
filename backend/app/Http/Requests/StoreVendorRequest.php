@@ -46,7 +46,7 @@ class StoreVendorRequest extends FormRequest
                 Rule::unique('admins','phone'),
                 Rule::unique('vendors','phone'),
             ],
-            // 'national_id' => 'required|image|mimes:jpg,png|max:2048',
+            'national_id' => 'required|image|mimes:jpg,png|max:2048',
             'image' => 'sometimes|image|mimes:jpg,png|max:2048',
 
         ];

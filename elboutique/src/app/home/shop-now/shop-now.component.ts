@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component  , OnInit, inject} from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { HomeService } from '../../service/home.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shop-now',
@@ -10,6 +12,18 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
-export class ShopNowComponent {
+export class ShopNowComponent  implements OnInit{
+ categories : any[] = [] ;
+ sub:Subscription | null = null;
+ constructor(private HomeService : HomeService){}
+ 
+ ngOnInit(): void {
+     this.sub = this.HomeService.getAllCategories().subscribe(items=>{
+      this.categories = items.data;
+      console.log("000000000000");
+      console.log(this.categories)
+     })
+ }
+
 
 }

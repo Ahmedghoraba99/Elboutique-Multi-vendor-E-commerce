@@ -1,51 +1,58 @@
-<div class="container product-rating-section my-5">
+@if (reviews.length > 0) {
+  <div class="container product-rating-section my-5 " >
     <h1>Product ratings and reviews</h1>
     <div class="row border-top">
         <div class="col-md-5 my-3">
             <div class="average-rating-section">
                 <h1 class="mb-3">Average rating</h1>
                 <div class="rating-section d-flex flex-column gap-1  ">
-                    <strong>5 <sub>out of 5</sub></strong> 
+                  <strong>{{ averageRating }} <sub>out of 5</sub></strong>
                     <!-- add out of the total ratuing data  -->
                     <div class="average-rating-stars">
                         <fa-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
-                                 [icon]="faStar"
-                                 [ngClass]="{'active-star': i < rating, 'inactive-star': i >= rating}">
+                                icon]="faStar"
+                                [ngClass]="{'active-star': i < rating, 'inactive-star': i >= rating}">
                         </fa-icon>
                       </div>
-                      
-                    <p class="">at the total rate of <span class="fw-bold">12.000</span> reviwe</p>
+
+                    <p class="">at the total rate of <span class="fw-bold">{{reviews.length}}</span> reviwe</p>
                 </div>
                 <div class="rating-review-section">
 
                 </div>
-              
+
             </div>
         </div>
         <div class="col-md-7 my-3">
             <div class="product-review-section">
               <h1>See All The Reviews</h1>
-                <div class="product-review-card">
+                <div  *ngFor="let review of reviews"  class="product-review-card mt-2">
                     <div class="reviewer-data d-flex gap-3 my-2">
                         <div class="reviewer-profile">
-                            <img src="../images/product/coffe1.jpg" alt="">
+                            <img [src]="review.customer.image_url"  alt="">
                         </div>
                         <div class="reviewer-info ">
-                            <h1 class="mb-0">reviewer Name</h1>
-                            <p  class="mb-0">2024/4/4</p>
+                            <h1 class="mb-0">{{ review.customer.name }}</h1>
+                            <p class="mb-0">{{ review.created_at | date }}</p>
                         </div>
                     </div>
                     <div class="review-rate my-3">
-                        <fa-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
+                      <fa-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
                         [icon]="faStar"
-                        [ngClass]="{'active-star': i < reviewRate, 'inactive-star': i >= reviewRate}">
-                        </fa-icon>
+                        [ngClass]="{'active-star': i < review.rate, 'inactive-star': i >= review.rate}">
+                      </fa-icon>
                     </div>
                     <div class="rewiew-content">
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate corporis neque dolorem pariatur, ducimus repudiandae quisquam temporibus quasi aliquam. Obcaecati corporis dolores assumenda necessitatibus reprehenderit optio numquam sunt, voluptatum non?</p>
+                      <p>{{ review.comment }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+}@else {
+  <div class="container product-rating-section my-5 " >
+      <h3>No Rating</h3>
+    </div>
+}
+

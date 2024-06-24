@@ -1,10 +1,12 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ProductSliderComponent } from '../product-slider/product-slider.component';
 import { ProductDetailsService } from '../../service/product-details.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { WishlistService } from '../../service/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
+import { CartService } from '../../service/cart.service';
 @Component({
   selector: 'app-product-information',
   standalone: true,
@@ -12,14 +14,21 @@ import { WishlistService } from '../../service/wishlist.service';
   templateUrl: './product-information.component.html',
   styleUrl: './product-information.component.css',
 })
-export class ProductInformationComponent {
+export class ProductInformationComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductDetailsService, // Inject the service in the constructor
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private toaster: ToastrService,
+    private cartService: CartService
   ) {}
+  ngOnDestroy(): void {
+    this.addToCartSub?.unsubscribe();
+    this.addToWishlistSub?.unsubscribe();
+  }
   product: any = {};
   addToWishlistSub: Subscription | null = null;
+  addToCartSub: Subscription | null = null;
   id: number = 0;
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -29,6 +38,20 @@ export class ProductInformationComponent {
       });
     });
   }
+  addToCart(select: HTMLSelectElement) {
+    const sentBody = {
+      products: {
+        [`${this.product.id}`]: select.value,
+      },
+    };
+    this.addToCartSub = this.cartService
+      .addToCustomerCart(sentBody)
+      .subscribe((res) => {
+        console.log(res);
+        this.toaster.success('Product Added To Cart', 'success');
+      });
+  }
+
   addToWishlist(div: HTMLDivElement) {
     const sentBody: Object = {
       products: [this.product.id],
@@ -38,6 +61,7 @@ export class ProductInformationComponent {
       .subscribe((res) => {
         console.log(res);
         div.innerHTML = `<i class="fa-solid fa-heart fs-6 text-danger"></i>`;
+        this.toaster.success('Product added to Wishlist', 'Added');
       });
   }
 }

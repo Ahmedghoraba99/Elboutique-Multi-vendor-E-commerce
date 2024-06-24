@@ -6,7 +6,6 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
 import { ProductsComponent } from './products/products.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { SpecificCategoriesComponent } from './specific-categories/specific-categories.component';
-
 @Component({
   selector: 'app-home',
   standalone: true,
