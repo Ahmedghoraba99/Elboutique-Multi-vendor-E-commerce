@@ -86,30 +86,34 @@ export class VendorFormComponent {
 
       this.authService.register('vendors', from).subscribe(
         (res) => {
-          localStorage.setItem('needactivation', 'true');
-          this.showToastMessage(
-            'Welcome! Redirecting to checkmail page...',
-            'vendor created successfully we sent a verification email to you please check your inbox'
-          );
-          setTimeout(() => {
-            this.router.navigateByUrl('/checkmail');
-          }, 2000);
-
-          this.vendorForm.reset();
+          this.handleSuccess();
         },
         (err) => {
-          console.log(err);
-          this.showToastMessage(
-            'Please fill out the form correctly',
-            'Validation Error'
-          );
+          this.handleError(err);
         }
       );
-
-      console.log('Vendor Form Data:', this.vendorForm.value);
     }
   }
 
+  handleSuccess() {
+    localStorage.setItem('needactivation', 'true');
+    this.showToastMessage(
+      'Welcome! Redirecting to checkmail page...',
+      'vendor created successfully we sent a verification email to you please check your inbox'
+    );
+    setTimeout(() => {
+      this.router.navigateByUrl('/checkmail');
+    }, 2000);
+
+    this.vendorForm.reset();
+  }
+  handleError(err: any) {
+    console.log(err);
+    this.showToastMessage(
+      'Please fill out the form correctly',
+      'Validation Error'
+    );
+  }
   createForm() {
     const formData = new FormData();
     for (const key in this.vendorForm.value) {
