@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -37,9 +37,17 @@ export class AuthService {
   }
 
   register(role: string, data: any): Observable<any> {
+    console.log(data);
+
     return this.http.post(`${this.baseUrl}${role}`, data);
   }
-
+  verification(verificationLink: string, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(verificationLink, { headers });
+  }
+  logout() {
+    localStorage.removeItem('user_info');
+  }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);
   }

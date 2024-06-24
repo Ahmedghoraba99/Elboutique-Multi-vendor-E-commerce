@@ -16,6 +16,8 @@ import { OrdersComponent } from './dashboard/orders/orders.component';
 import { OverviewComponent } from './dashboard/overview/overview.component';
 import { CheckMailComponent } from './Auth/check-mail/check-mail.component';
 import { CongsComponent } from './Auth/congs/congs.component';
+import { checkMailGuard } from './guards/check-mail.guard';
+import { authGuard } from './guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
@@ -63,6 +65,7 @@ export const routes: Routes = [
     path: 'login',
     title: 'Login',
     component: LoginComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'wishlist',
@@ -93,11 +96,13 @@ export const routes: Routes = [
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'checkmail',
     title: 'checkmail',
     component: CheckMailComponent,
+    canActivate: [checkMailGuard],
   },
   {
     path: 'congs',

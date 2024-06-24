@@ -49,7 +49,7 @@ width: 5px !important;
 }
 
 .selectDrop{
-    width: 150px;
+    width: 119px;
     font-size: 15px;
     font-weight: 500;
     position: relative;
@@ -58,9 +58,9 @@ width: 5px !important;
 
 .selectDrop fa-icon{
     position: absolute;
-  top: 15px;
-  right: 43px;
-  font-size: 0.7rem;
+    top: 15px;
+    right: 10px;
+    font-size: 0.7rem;
 }
 
 .active{

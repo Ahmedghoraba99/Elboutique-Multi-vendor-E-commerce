@@ -32,7 +32,7 @@ export class VendorFormComponent {
   ) {
     this.vendorForm = this.fb.group(
       {
-        avatar: [null, [Validators.required]],
+        image: [null, [Validators.required]],
         name: [
           '',
           [Validators.required, Validators.pattern(/^[a-zA-Z ,.\'-]+$/)],
@@ -50,7 +50,7 @@ export class VendorFormComponent {
           ],
         ],
         national_id: [null, [Validators.required]],
-        address: ['', Validators.required],
+        address: ['', [Validators.required, Validators.minLength(10)]],
         password: [
           '',
           [
@@ -82,29 +82,44 @@ export class VendorFormComponent {
     this.markFormGroupTouched(this.vendorForm);
 
     if (this.vendorForm.valid) {
-      this.authService.register('vendors', this.vendorForm.value).subscribe(
-        (res) => {
-          this.showToastMessage(
-            'Welcome! Redirecting to checkmail page...',
-            'vendor created successfully we sent a verification email to you please check your inbox'
-          );
-          setTimeout(() => {
-            this.router.navigateByUrl('/checkmail');
-          }, 2000);
+      const from = this.createForm();
 
-          this.vendorForm.reset();
+      this.authService.register('vendors', from).subscribe(
+        (res) => {
+          this.handleSuccess();
         },
         (err) => {
-          console.log(err);
-          this.showToastMessage(
-            'Please fill out the form correctly',
-            'Validation Error'
-          );
+          this.handleError(err);
         }
       );
-
-      console.log('Vendor Form Data:', this.vendorForm.value);
     }
+  }
+
+  handleSuccess() {
+    localStorage.setItem('needactivation', 'true');
+    this.showToastMessage(
+      'Welcome! Redirecting to checkmail page...',
+      'vendor created successfully we sent a verification email to you please check your inbox'
+    );
+    setTimeout(() => {
+      this.router.navigateByUrl('/checkmail');
+    }, 2000);
+
+    this.vendorForm.reset();
+  }
+  handleError(err: any) {
+    console.log(err);
+    this.showToastMessage(
+      'Please fill out the form correctly',
+      'Validation Error'
+    );
+  }
+  createForm() {
+    const formData = new FormData();
+    for (const key in this.vendorForm.value) {
+      formData.append(key, this.vendorForm.value[key]);
+    }
+    return formData;
   }
 
   markFormGroupTouched(formGroup: FormGroup) {

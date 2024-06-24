@@ -1,1 +1,35 @@
-<p>footer works!</p>
+<footer class="footer-sectoin text-center text-lg-start">
+    <div class="container p-4">
+      <div class="row">
+        <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+            <img src="../../../assets/images/logo.png" alt="Elboutique-logo">
+          </div>
+        <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+          <h5 class="text-uppercase text-footer">Categories</h5>
+
+            <ul class="footer-categories m-0 p-0">
+                @for(item of categories ; track item.id){
+                    <li><a href="">{{item.name}}</a></li>
+                }
+                @empty {
+                    <li>No categories</li>
+                }
+            </ul>
+        </div>
+  
+        <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
+          <h5 class="text-uppercase text-footer">Information</h5>
+          <ul class="footer-categories m-0 p-0">
+            <li><a href="">About Us</a></li>
+            <li> <a href="">WishList</a></li>
+            <li> <a href="">Cart</a></li>
+            <li> <a href="">Products</a></li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  
+    <div class="text-center p-3 footer-copyright">
+      © 2024 Copyright <a>Elboutique.com</a>
+    </div>
+  </footer>

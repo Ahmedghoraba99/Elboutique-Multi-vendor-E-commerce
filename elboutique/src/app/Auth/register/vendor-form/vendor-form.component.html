@@ -1,19 +1,19 @@
 <form [formGroup]="vendorForm" (ngSubmit)="onSubmit()">
   <div class="mb-3">
-    <label for="avatar" class="form-label">Avatar Image</label>
+    <label for="image" class="form-label">Avatar Image</label>
     <input
       type="file"
-      (change)="onFileSelected($event, 'avatar')"
+      (change)="onFileSelected($event, 'image')"
       accept="image/*"
       class="form-control"
-      id="avatar"
+      id="image"
       placeholder="Choose avatar image"
     />
     <div
       *ngIf="
-        vendorForm.controls['avatar'].invalid &&
-        (vendorForm.controls['avatar'].dirty ||
-          vendorForm.controls['avatar'].touched)
+        vendorForm.controls['image'].invalid &&
+        (vendorForm.controls['image'].dirty ||
+          vendorForm.controls['image'].touched)
       "
       class="text-danger"
     >
@@ -124,7 +124,7 @@
         "
         class="text-danger"
       >
-        address is required
+        address is required and must be Minimum ten characters
       </div>
     </div>
   </div>
