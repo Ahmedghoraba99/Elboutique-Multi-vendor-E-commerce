@@ -9,7 +9,7 @@
 }
 .main-hero-info {
   color: var(--primary-color);
-  font-size: 5rem;
+  font-size:clamp(3rem, 0.44rem + 6.08vw, 5rem);
   font-weight: bold;
   text-transform: uppercase;
 }

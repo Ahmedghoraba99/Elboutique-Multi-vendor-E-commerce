@@ -4,7 +4,6 @@
 }
 .products-detail-data {
     line-height: 1.5;
-    max-height: 2.6em;
     font-size: 1rem;
     font-weight: 500;
     color: #1a1818;
@@ -38,8 +37,12 @@
     border: 1px solid rgba(255, 255, 255, 0.125);
     color: #ffff;
     padding: 0.4rem 0.5rem;
+    margin: 0;
 }
 .big-deals-btn a{
     font-size: 1.2rem;
     font-weight:500;
+}
+.products-price strong{
+  font-weight: 600;
 }
