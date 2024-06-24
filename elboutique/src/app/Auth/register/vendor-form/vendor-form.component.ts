@@ -8,39 +8,118 @@ import {
 } from '@angular/forms';
 import { passwordMatchValidator } from '../../validators';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../service/auth.service';
+import { Router } from '@angular/router';
+import { ToastComponent } from '../../../widgets/toast/toast.component';
 
 @Component({
   selector: 'app-vendor-form',
   templateUrl: './vendor-form.component.html',
   styleUrls: ['./vendor-form.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ToastComponent],
 })
 export class VendorFormComponent {
   vendorForm: FormGroup;
+  showToast = false;
+  toastMessage = '';
+  toastTitle = '';
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.vendorForm = this.fb.group(
       {
-        avatar: ['', [Validators.required]],
-        name: ['', Validators.required],
-        phone: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        idFront: ['', Validators.required],
-        idBack: ['', Validators.required],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        image: [null, [Validators.required]],
+        name: [
+          '',
+          [Validators.required, Validators.pattern(/^[a-zA-Z ,.\'-]+$/)],
+        ],
+        phone: [
+          '',
+          [Validators.required, Validators.pattern(/^01[012]\d{8}$/)],
+        ],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.email,
+            Validators.pattern(/^[^@\s]+@[^@\s]+\.[^@\s]+$/),
+          ],
+        ],
+        national_id: [null, [Validators.required]],
+        address: ['', [Validators.required, Validators.minLength(10)]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+            ),
+          ],
+        ],
         confirmPassword: ['', Validators.required],
       },
-      { validators: passwordMatchValidator }
+      {
+        validators: passwordMatchValidator,
+      }
     );
+  }
+  onFileSelected(event: any, controlName: string) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.vendorForm.patchValue({
+        [controlName]: file,
+      });
+    }
   }
 
   onSubmit() {
     this.markFormGroupTouched(this.vendorForm);
 
     if (this.vendorForm.valid) {
-      console.log('Vendor Form Data:', this.vendorForm.value);
+      const from = this.createForm();
+
+      this.authService.register('vendors', from).subscribe(
+        (res) => {
+          this.handleSuccess();
+        },
+        (err) => {
+          this.handleError(err);
+        }
+      );
     }
+  }
+
+  handleSuccess() {
+    localStorage.setItem('needactivation', 'true');
+    this.showToastMessage(
+      'Welcome! Redirecting to checkmail page...',
+      'vendor created successfully we sent a verification email to you please check your inbox'
+    );
+    setTimeout(() => {
+      this.router.navigateByUrl('/checkmail');
+    }, 2000);
+
+    this.vendorForm.reset();
+  }
+  handleError(err: any) {
+    console.log(err);
+    this.showToastMessage(
+      'Please fill out the form correctly',
+      'Validation Error'
+    );
+  }
+  createForm() {
+    const formData = new FormData();
+    for (const key in this.vendorForm.value) {
+      formData.append(key, this.vendorForm.value[key]);
+    }
+    return formData;
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
@@ -51,5 +130,13 @@ export class VendorFormComponent {
         this.markFormGroupTouched(control);
       }
     });
+  }
+  showToastMessage(message: string, title: string) {
+    this.toastMessage = message;
+    this.toastTitle = title;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 5000);
   }
 }

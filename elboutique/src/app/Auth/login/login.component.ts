@@ -88,6 +88,7 @@ export class LoginComponent {
   handleSuccess(response: any) {
     this.nextStep();
     localStorage.setItem('user_info', JSON.stringify(response));
+
     this.showToastMessage('Welcome! Redirecting to home page...', 'Success');
     setTimeout(() => {
       this.router.navigateByUrl('/');

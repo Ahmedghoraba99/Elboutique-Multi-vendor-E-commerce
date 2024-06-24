@@ -14,6 +14,16 @@ import { VendorsComponent } from './dashboard/vendors/vendors.component';
 import { ProductsComponent } from './dashboard/products/products.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
 import { OverviewComponent } from './dashboard/overview/overview.component';
+import { CheckMailComponent } from './Auth/check-mail/check-mail.component';
+import { CongsComponent } from './Auth/congs/congs.component';
+import { checkMailGuard } from './guards/check-mail.guard';
+import { authGuard } from './guards/auth.guard';
+import { UserComponent } from './profile/user/user.component';
+import { AccountComponent } from './profile/user/account/account.component';
+import { OrdersComponent as UserOrdersComponent } from './profile/user/orders/orders.component';
+import { WishListComponent as UserWishListComponent } from './profile/user/wish-list/wish-list.component';
+import { PaymentComponent } from './profile/user/payment/payment.component';
+import { ChangePasswordComponent as UserChangePasswordComponent } from './profile/user/change-password/change-password.component';
 export const routes: Routes = [
   {
     path: '',
@@ -61,6 +71,7 @@ export const routes: Routes = [
     path: 'login',
     title: 'Login',
     component: LoginComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'wishlist',
@@ -91,6 +102,56 @@ export const routes: Routes = [
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'checkmail',
+    title: 'checkmail',
+    component: CheckMailComponent,
+    canActivate: [checkMailGuard],
+  },
+  {
+    path: 'congs',
+    title: 'congs',
+    component: CongsComponent,
+  },
+
+  {
+    path: 'u',
+    title: 'Users',
+    component: UserComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'account',
+        pathMatch: 'full',
+      },
+      {
+        path: 'account',
+        title: 'Account',
+        component: AccountComponent,
+      },
+      {
+        path: 'orders',
+        title: 'Orders',
+        component: UserOrdersComponent,
+      },
+      {
+        path: 'wishlist',
+        title: 'WishList',
+        component: UserWishListComponent,
+      },
+      {
+        path: 'payment',
+        title: 'Payment',
+        component: PaymentComponent,
+      },
+      {
+        path: 'account/change-password',
+        title: 'Change Password',
+        component: UserChangePasswordComponent,
+      },
+    ],
   },
   {
     path: '**',

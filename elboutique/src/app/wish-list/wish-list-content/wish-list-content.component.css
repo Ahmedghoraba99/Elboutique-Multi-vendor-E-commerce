@@ -128,3 +128,19 @@
     font-size: 0.8rem;
 
 }
+
+/* empty wishlist */
+.empty-wish{
+  text-align: center;
+}
+.empty-wish fa-icon{
+  color:#8d9db3;
+  font-size: 3rem;
+}
+.empty-wish p{
+  font-weight: 600;
+  color: #1a1818;
+}
+.empty-wish span{
+  color: #8d9db3;
+}

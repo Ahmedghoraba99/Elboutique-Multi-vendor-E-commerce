@@ -96,7 +96,7 @@ class ProductController extends Controller
      */
     public function show(int $product)
     {
-        // with image and vendor 
+        // with image and vendor
         $product = Product::with(['images', 'vendor'])->find($product);
         return response()->json($product);
     }

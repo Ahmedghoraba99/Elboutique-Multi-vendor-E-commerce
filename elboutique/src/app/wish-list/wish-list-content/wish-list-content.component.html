@@ -1,12 +1,12 @@
 <div class="container text-capitalize">
   <div class="row">
-    <div class="wishList-section px-2">
+    <div class="wishList-section px-2 my-5">
       <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
         <h1>Total Items</h1>
         <span>( {{ userWishlist.length }} Items)</span>
       </div>
       <div class="wishList-content p-4">
-        <div class="row">
+        <div class="row my-3">
           <!-- prodcut-card -->
           @for (product of userWishlist; track $index) {
           <div class="col-md-4">
@@ -74,9 +74,18 @@
               </div>
             </div>
           </div>
+          }@empty {
+           <div class="empty-wish my-2">
+            <fa-icon [icon]="faHeartBroken"></fa-icon>
+            <p>Your Wihslist is Empty!</p>
+            <span class="my-3 text-capitalize ">
+              Looks like you haven't added anything to
+              your cart yet
+             
+            </span>
+           </div>
           }
-          <div class="col-md-4"></div>
-          <div class="col-md-4"></div>
+        
         </div>
       </div>
     </div>

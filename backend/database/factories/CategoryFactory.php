@@ -21,6 +21,7 @@ class CategoryFactory extends Factory
             'name' => $this->faker->unique()->word(),
 
             'description' => $this->faker->text(200),
+            'image' => $this->faker->imageUrl(640, 480, 'animals', true, 'cats', true),
         ];
     }
 }

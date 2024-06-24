@@ -1,0 +1,26 @@
+.footer-sectoin{
+    background-color: var(--accent-color-3);
+}
+.footer-copyright{
+    background-color: var(--primary-color);
+    color: var(--accent-color-1);
+    font-size: 14px;
+    font-weight: 400;
+}
+.footer-categories a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: ease-in-out 0.3s ;
+    padding: 10px;
+    display: block;
+    text-transform: capitalize;
+}
+.footer-categories a:hover{
+    color: var(--accent-color-2);
+    transform: translateX(20px);
+    font-weight: 600;
+}
+.text-footer{
+    color: var(--accent-color-2);
+    font-weight: 600;
+}

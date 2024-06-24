@@ -46,6 +46,6 @@ class CartController extends Controller
             return response()->json(["message"=> "Customer Doesn't exist"],404);
         }
         $cartProducts = $customer->cartProducts()->with(['images','tags','vendor'])->get();
-        return response()->json(['cart'=>$cartProducts],200);
+        return response()->json($cartProducts,200);
     }
 }

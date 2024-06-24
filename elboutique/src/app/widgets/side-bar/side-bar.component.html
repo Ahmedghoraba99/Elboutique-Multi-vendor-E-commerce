@@ -6,8 +6,9 @@
     <i class="fas fa-times"></i>
     }
 </button>
-<div class="sidebar " [ngClass]="{ 'collapse': isCollapsed }">
-    <div class="logo-details">
+<div class="sidebar primary-bg-color h-100" [ngClass]="{ 'collapse': isCollapsed }">
+    <div class="logo-details" [routerLink]="['/']">
+        <i class="text-white fa-solid fa-store"></i>
         <span class="logo-light">Elboutique</span>
     </div>
     <hr class="hr" />
