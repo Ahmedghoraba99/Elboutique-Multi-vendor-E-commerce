@@ -5,7 +5,7 @@
 }
 .product-description-section {
   background-color: var(--accent-color-3);
-  padding: 1rem 3rem;
+  padding: 2rem 3rem;
   border-radius: 0.5rem;
 }
 
@@ -69,12 +69,13 @@
   width: 3rem;
   background-color: #fff;
   border-color: rgb(126, 133, 155);
-  padding: 0.3rem;
+  padding: 0 0.3rem;
   border-radius: 0.25em;
   box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
   font-weight: 600;
   text-align: center;
+  margin: 0 10px
 }
 select::-ms-expand {
   display: none;
@@ -88,4 +89,23 @@ select option {
 }
 .product-description-info p {
   color: #1a181882;
+}
+.vendor-profile fa-icon{
+  color: green;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+.vendor-email{
+  font-size: 14px;
+}
+.amount-stock-low{
+ color: var(--accent-color-2);
+ font-size: 12px;
+ font-weight: 600;
+}
+.amount-stock-available{
+  color: green;
+ font-size: 12px;
+ font-weight: 600;
 }
