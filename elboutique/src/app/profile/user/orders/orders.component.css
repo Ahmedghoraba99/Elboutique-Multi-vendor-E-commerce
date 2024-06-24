@@ -7,7 +7,7 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
   border: 1px solid var(--secondary-color);
   max-width: 900px;
-  margin: 0 auto;
+  margin: 1rem auto;
   h6 {
     font-size: 0.8rem;
   }
@@ -28,9 +28,8 @@
 .order-card .order-item {
   position: relative;
   border-radius: 0.25rem;
-  margin-top: 1rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  margin: 0;
+  padding: 0.5rem;
   color: var(--primary-color);
   font-size: 0.8rem;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
@@ -68,5 +67,10 @@
   height: 6rem;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  padding-left: 1rem;
+  margin: 0 !important;
+}
+@media (max-width: 768px) {
+  .view-product span {
+    display: none;
+  }
 }

@@ -2,7 +2,7 @@
 <div class="container-fluid my-5">
   <div class="row">
     <swiper-container
-      slides-per-view="4"
+      slides-per-view="5"
       speed="500"
       loop="true"
       space-between="30"
@@ -13,20 +13,20 @@
           }
           ,
           "780":{
-            "slidesPerView": 4,
-            "spaceBetween": 30
+            "slidesPerView": 5,
+            "spaceBetween": 10
           }
         }'
     >
       <swiper-slide *ngFor="let product of products">
         <a routerLink="/prdoucts/{{ product.id }}">
           <div class="d-flex flex-column">
-            <div class="big-deal-product-data p-2">
+            <div class="big-deal-product-data px-2">
               <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
-              >
-                <div class="big-deal-product-big-tag">
-                  <span *ngIf="product.sale">Deal {{ product.sale }}% Off</span>
+                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center" >
+              
+                <div [ngClass]="{'empty-tag': !product.sale}" class="big-deal-product-big-tag">            
+                 <span *ngIf="product.sale">Deal {{ product.sale }}% Off</span>
                 </div>
                 <div class="products-wish">
                   <fa-icon [icon]="faHeart"></fa-icon>
@@ -35,7 +35,7 @@
               <div class="big-deal-product-slider">
                 <div class="swiper mySwiper big-deal-product-swiper">
                   <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                    <swiper-container>
+                    <swiper-container spacebetween="30 " slides-per-view="1" >
                       <swiper-slide
                         *ngFor="let image of product.images"
                         class="swiper-slide big-deal-product-swiper-slider"
