@@ -7,10 +7,12 @@ import { Subscription } from 'rxjs';
 import { WishlistService } from '../../service/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../service/cart.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-product-information',
   standalone: true,
-  imports: [ProductSliderComponent, NgIf, NgClass, NgFor],
+  imports: [FontAwesomeModule, ProductSliderComponent, NgIf, NgClass, NgFor],
   templateUrl: './product-information.component.html',
   styleUrl: './product-information.component.css',
 })
@@ -26,6 +28,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     this.addToCartSub?.unsubscribe();
     this.addToWishlistSub?.unsubscribe();
   }
+  faCircleCheck=faCircleCheck;
   product: any = {};
   addToWishlistSub: Subscription | null = null;
   addToCartSub: Subscription | null = null;

@@ -7,11 +7,11 @@ import { NgFor, NgIf } from '@angular/common';
 import { ProductDetailsService } from '../../service/product-details.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-similarproduct',
   standalone: true,
-  imports: [FontAwesomeModule, NgFor, NgIf, RouterLink],
+  imports: [FontAwesomeModule, NgFor, NgIf, RouterLink ,CommonModule],
   templateUrl: './similarproduct.component.html',
   styleUrl: './similarproduct.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
