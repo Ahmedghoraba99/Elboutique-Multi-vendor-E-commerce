@@ -24,6 +24,11 @@ import { OrdersComponent as UserOrdersComponent } from './profile/user/orders/or
 import { WishListComponent as UserWishListComponent } from './profile/user/wish-list/wish-list.component';
 import { PaymentComponent } from './profile/user/payment/payment.component';
 import { ChangePasswordComponent as UserChangePasswordComponent } from './profile/user/change-password/change-password.component';
+import { VendorComponent } from './profile/vendor/vendor.component';
+import { OverviewComponent as VendorOverviewComponent } from './profile/vendor/overview/overview.component';
+import { ProductsComponent as VendorProductsComponent } from './profile/vendor/products/products.component';
+import { AccountComponent as VendorAccountComponent } from './profile/vendor/account/account.component';
+import { ChangePasswordComponent as VendorChangePasswordComponent } from './profile/vendor/change-password/change-password.component';
 export const routes: Routes = [
   {
     path: '',
@@ -150,6 +155,34 @@ export const routes: Routes = [
         path: 'account/change-password',
         title: 'Change Password',
         component: UserChangePasswordComponent,
+      },
+    ],
+  },
+  {
+    path: 'v',
+    title: 'Vendor',
+    component: VendorComponent,
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: 'overview',
+        title: 'Overview',
+        component: VendorOverviewComponent,
+      },
+      {
+        path: 'products',
+        title: 'Products',
+        component: VendorProductsComponent,
+      },
+      {
+        path: 'account',
+        title: 'Account',
+        component: VendorAccountComponent,
+      },
+      {
+        path: 'account/change-password',
+        title: 'Change Password',
+        component: VendorChangePasswordComponent,
       },
     ],
   },

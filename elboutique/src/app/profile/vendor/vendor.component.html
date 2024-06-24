@@ -1,1 +1,6 @@
-<p>vendor works!</p>
+<div class="d-flex">
+    <app-side-bar [navLinks]="navLinks"></app-side-bar>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
