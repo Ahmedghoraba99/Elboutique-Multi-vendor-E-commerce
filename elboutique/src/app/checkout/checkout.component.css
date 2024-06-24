@@ -182,3 +182,11 @@ swiper-container {
 .btn-wishlist-delete fa-icon {
   margin: 0 0.2rem;
 }
+/* empty cart */
+.empty-cart fa-icon{
+  color: #8d9db3;
+  font-size: 3rem;
+}
+.empty-cart span{
+  color:#8d9db3;
+}
