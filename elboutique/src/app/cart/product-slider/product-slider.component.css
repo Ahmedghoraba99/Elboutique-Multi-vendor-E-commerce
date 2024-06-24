@@ -9,23 +9,30 @@ swiper-slide img{
     width: 30rem !important;
 } */
 
-.myswiper2 {
+.myswiper2  {
     width: 10rem;
-    height: 43rem;
+    height: 30rem;
     box-sizing: border-box;
     padding: 10px; 
   }
-  @media (max-width: 768px) {
+
+  .myswiper {
+    height: 30rem;
+    width: 100%;
+    padding: 10px;
+  }
+@media (max-width: 768px) {
     .myswiper2{
         display: none;
        
     }
     .myswiper swiper-slide img{
-        width: 70%;
+        width: 100%;
         height: 51%;
         object-fit: cover;
         background-position: center;
         background-size: contain;
+        object-fit: cover;
     }
     swiper-slide{
         display: flex ;
@@ -42,6 +49,11 @@ swiper-slide img{
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 0.6rem;
+    object-fit: cover;
+}
+
+.myswiper2 swiper-slide img{
+    height: 100%;
 }
 .myswiper2 swiper-slide{
     opacity: 0.6;
@@ -55,3 +67,4 @@ swiper-slide img{
     width: 1em;
     border-radius: 1rem;
 }
+
