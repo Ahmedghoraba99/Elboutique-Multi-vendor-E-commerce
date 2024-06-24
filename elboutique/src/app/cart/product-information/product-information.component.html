@@ -6,16 +6,15 @@
     <div class="col-md-5">
       <div class="product-description-section">
         <div
-          class="prodcut-description-data d-flex flex-column justify-content-evenly gap-4"
+          class="prodcut-description-data d-flex flex-column justify-content-evenly"
         >
-          <div class="product-description-info">
+          <div class="product-description-info my-3">
             <h1 class="product-description-h1">{{ product.name }}</h1>
             <p>
               {{ product.description }}
             </p>
           </div>
           <div class="product-description-pricing d-flex align-items-center">
-            <!-- condotional render if there's a sale -->
             <div *ngIf="product.sale">
               <span>price : </span>
               <strong class="mx-2 text-decoration-line-through"
@@ -27,47 +26,44 @@
               }}</strong>
             </div>
             <div *ngIf="!product.sale">
-              <strong class="mx-2">{{ product.price }}</strong>
+              <span>price : </span>
+              <strong class="mx-2">{{ product.price }}
+              </strong>
             </div>
             <sub class="ms-1">inclusive of VAT</sub>
           </div>
           <div class="product-description-amount">
-            <div
-              [ngClass]="{
-                'text-danger': product.stock < 10,
-                'text-success': product.stock >= 10
-              }"
-            >
-              {{
-                product.stock < 10
-                  ? "Warning: Low stock: " + product.stock
-                  : "Available: " + product.stock
-              }}
-            </div>
-            <!-- amount to be specified in cart -->
+           
             <span>Amount</span>
             <select class="m-3" name="" id="" #select>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
+            <span
+            [ngClass]="{
+              'amount-stock-low': product.stock < 10, 'amount-stock-available': product.stock >= 10}"
+          >
+            {{ product.stock < 10? "Only " + product.stock + " Available !": "Available  " + product.stock}}
+            </span>
           </div>
-          <div class="product-description-vendor">
+          <div class="product-description-vendor my-2">
             <div class="vendor-data d-flex align-items-center p-3">
-              <div class="vendor-profile">
+              <div class="vendor-profile position-relative">
                 <img src="../../../assets/images/defaultAvatar.webp" alt="" />
+                <fa-icon [icon] ="faCircleCheck"  *ngIf="product.vendor.national_id"></fa-icon>
+
               </div>
               <div class="vendor-profile-info ms-3">
                 <h5>
                   <a class="" href="">{{ product.vendor.name }}</a>
                 </h5>
-                <p class="text-success" *ngIf="product.vendor.national_id">
-                  Verfied Seller
-                </p>
+                <p class="vendor-email m-0 p-0">{{product.vendor.email}}</p>
+      
               </div>
             </div>
           </div>
-          <div class="product-adding d-flex flex-row gap-5">
+          <div class="product-adding d-flex flex-row gap-5 my-4">
             <div
             #element
               class="product-wish d-flex justify-content-center align-items-center px-4 text-light"
