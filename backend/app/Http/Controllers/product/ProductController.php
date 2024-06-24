@@ -8,6 +8,8 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\product_images;
+use GuzzleHttp\Psr7\Request;
+use Illuminate\Http\Request as DefalutRequest;
 
 class ProductController extends Controller
 {
@@ -218,5 +220,59 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
+    }
+
+    //search function
+    public function searchProduct(DefalutRequest $request){
+        $query = Product::query();
+
+        //categoryname
+        if ($request->has('category_name')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->category_name . '%');
+            });
+        }
+
+        //category_id
+        if($request->has('category_id')){
+            $query->where('category_id', $request->category_id);
+        }
+
+        //min max price
+        if ($request->has('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->has('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        //search
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        //sorting
+        if ($request->has('sort_by')) {
+            if ($request->sort_by == 'newest') {
+                $query->orderBy('created_at', 'desc');
+            } elseif ($request->sort_by == 'highest_price') {
+                $query->orderBy('price', 'desc');
+            } elseif ($request->sort_by == 'lowest_price') {
+                $query->orderBy('price', 'asc');
+            }
+        }
+
+        //tags
+        if ($request->has('tags')) {
+            $tags = explode(',', $request->tags);
+            $query->whereHas('tags', function ($q) use ($tags) {
+                $q->whereIn('name', $tags);
+            });
+        }
+
+        $products = $query->get();
+
+        return response()->json($products, 200);
+
     }
 }

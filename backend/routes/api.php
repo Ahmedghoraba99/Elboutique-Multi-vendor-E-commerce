@@ -50,7 +50,7 @@ Route::get('/product/category/{id}', [ProductController::class, "getProductsByCa
 Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
 Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
 Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
-
+Route::get('/product/search', [ProductController::class,"searchProduct"]);
 
 
 // Order related routes
