@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart.service';
 import { WishlistService } from '../service/wishlist.service';
+import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -19,6 +20,7 @@ import { WishlistService } from '../service/wishlist.service';
 export class CheckoutComponent implements OnInit, OnDestroy {
   faHeart = faHeart;
   faTrashCan = faTrashCan;
+  faShoppingBasket=faShoppingBasket;
   customerCart: any = [];
   addtoWishlistSub: Subscription | null = null;
   getCartSub: Subscription | null = null;
