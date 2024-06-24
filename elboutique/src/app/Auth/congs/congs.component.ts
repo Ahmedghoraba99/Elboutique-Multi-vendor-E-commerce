@@ -17,6 +17,7 @@ export class CongsComponent implements OnInit {
     this.authService.verification(link, token).subscribe(
       (data) => {
         this.show = true;
+        localStorage.removeItem('needactivation');
         console.log(data);
       },
       (error) => {

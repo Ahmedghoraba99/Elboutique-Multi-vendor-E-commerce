@@ -50,7 +50,7 @@ export class VendorFormComponent {
           ],
         ],
         national_id: [null, [Validators.required]],
-        address: ['', Validators.required],
+        address: ['', [Validators.required, Validators.minLength(10)]],
         password: [
           '',
           [
@@ -86,6 +86,7 @@ export class VendorFormComponent {
 
       this.authService.register('vendors', from).subscribe(
         (res) => {
+          localStorage.setItem('needactivation', 'true');
           this.showToastMessage(
             'Welcome! Redirecting to checkmail page...',
             'vendor created successfully we sent a verification email to you please check your inbox'
