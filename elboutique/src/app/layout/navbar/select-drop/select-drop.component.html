@@ -1,7 +1,7 @@
 <div class="selectDrop position-relative">
     <span class="text-capitalize open-select" (click)="toggleDropdown()">
       {{ selectedItem }}
-      <fa-icon [icon]="faChevronDown"></fa-icon>
+      <fa-icon [icon]="faChevronDown" class=""></fa-icon>
     </span>
     <div class="select-Drop" [ngClass]="{ 'd-none': !isDropdownOpen }">
       <div class="search-feild">

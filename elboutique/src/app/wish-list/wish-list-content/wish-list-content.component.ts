@@ -2,16 +2,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WishlistService } from '../../service/wishlist.service';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faHeartBroken } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-wish-list-content',
   standalone: true,
-  imports: [],
+  imports: [FontAwesomeModule],
   templateUrl: './wish-list-content.component.html',
   styleUrl: './wish-list-content.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class WishListContentComponent implements OnInit, OnDestroy {
+  faHeartBroken=faHeartBroken;
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
