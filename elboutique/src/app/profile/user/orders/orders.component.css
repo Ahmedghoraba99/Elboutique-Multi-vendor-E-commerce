@@ -67,7 +67,6 @@
   height: 6rem;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  /* padding-left: 1rem; */
   margin: 0 !important;
 }
 @media (max-width: 768px) {

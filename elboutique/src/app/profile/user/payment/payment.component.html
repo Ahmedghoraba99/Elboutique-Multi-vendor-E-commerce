@@ -1,1 +1,95 @@
-<p>payment works!</p>
+<div class="h6 text-uppercase">Payment Methods</div>
+<hr class="hr">
+<div class="custom-btn-1" data-bs-toggle="modal" data-bs-target="#paymentModal">
+    Add Payment Method
+</div>
+<div class="card-container">
+    <header>
+        <span class="logo">
+            <h5>Master Card</h5>
+        </span>
+    </header>
+    <div class="card-details">
+        <div class="name-number">
+            <h6>Card Number</h6>
+            <h5 class="number">8050 5040 2030 3020</h5>
+            <h5 class="name">Prem Kumar Shahi</h5>
+        </div>
+        <div class="valid-date">
+            <h6>Valid Thru</h6>
+            <h5>05/28</h5>
+        </div>
+    </div>
+    <div class="row gap-3">
+        <button type="button" class="col delete-card btn btn-link text-white" (click)="confirmDelete()">
+            <i class="fa-solid fa-trash"></i>
+            <span class="mx-2">Delete</span>
+        </button>
+    </div>
+</div>
+
+<!-- add Modal -->
+<div class="modal fade" id="paymentModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="paymentModalLabel">Add Payment Method</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+                    <div class="mb-3">
+                        <label for="cardNumber" class="form-label">Card Number</label>
+                        <input type="text" id="cardNumber" class="form-control" formControlName="cardNumber">
+                        <div
+                            *ngIf="paymentForm.get('cardNumber')?.invalid && (paymentForm.get('cardNumber')?.dirty || paymentForm.get('cardNumber')?.touched)">
+                            <small class="text-danger" *ngIf="paymentForm.get('cardNumber')?.errors?.['required']">Card
+                                Number is required.</small>
+                            <small class="text-danger"
+                                *ngIf="paymentForm.get('cardNumber')?.errors?.['pattern']">Invalid card number.</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cardHolder" class="form-label">Card Holder</label>
+                        <input type="text" id="cardHolder" class="form-control" formControlName="cardHolder">
+                        <div
+                            *ngIf="paymentForm.get('cardHolder')?.invalid && (paymentForm.get('cardHolder')?.dirty || paymentForm.get('cardHolder')?.touched)">
+                            <small class="text-danger" *ngIf="paymentForm.get('cardHolder')?.errors?.['required']">Card
+                                Holder is required.</small>
+                            <small class="text-danger" *ngIf="paymentForm.get('cardHolder')?.errors?.['minlength']">Card
+                                Holder name is too short.</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expiryDate" class="form-label">Expiry Date (MM/YY)</label>
+                        <input type="text" id="expiryDate" class="form-control" formControlName="expiryDate">
+                        <div
+                            *ngIf="paymentForm.get('expiryDate')?.invalid && (paymentForm.get('expiryDate')?.dirty || paymentForm.get('expiryDate')?.touched)">
+                            <small class="text-danger"
+                                *ngIf="paymentForm.get('expiryDate')?.errors?.['required']">Expiry Date is
+                                required.</small>
+                            <small class="text-danger"
+                                *ngIf="paymentForm.get('expiryDate')?.errors?.['pattern']">Invalid expiry date.</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cvv" class="form-label">CVV</label>
+                        <input type="text" id="cvv" class="form-control" formControlName="cvv">
+                        <div
+                            *ngIf="paymentForm.get('cvv')?.invalid && (paymentForm.get('cvv')?.dirty || paymentForm.get('cvv')?.touched)">
+                            <small class="text-danger" *ngIf="paymentForm.get('cvv')?.errors?.['required']">CVV is
+                                required.</small>
+                            <small class="text-danger" *ngIf="paymentForm.get('cvv')?.errors?.['pattern']">Invalid
+                                CVV.</small>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn custom-btn-1" [disabled]="paymentForm.invalid"
+                        data-bs-dismiss="modal">Add Payment
+                        Method</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
