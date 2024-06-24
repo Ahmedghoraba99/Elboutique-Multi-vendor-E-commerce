@@ -15,7 +15,6 @@
             </p>
           </div>
           <div class="product-description-pricing d-flex align-items-center">
-            <!-- condotional render if there's a sale -->
             <div *ngIf="product.sale">
               <span>price : </span>
               <strong class="mx-2 text-decoration-line-through"
@@ -27,7 +26,9 @@
               }}</strong>
             </div>
             <div *ngIf="!product.sale">
-              <strong class="mx-2">{{ product.price }}</strong>
+              <span>price : </span>
+              <strong class="mx-2">{{ product.price }}
+              </strong>
             </div>
             <sub class="ms-1">inclusive of VAT</sub>
           </div>

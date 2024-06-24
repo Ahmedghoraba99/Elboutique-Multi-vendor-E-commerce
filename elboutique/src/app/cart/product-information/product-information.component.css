@@ -5,8 +5,8 @@
 }
 .product-description-section {
   background-color: var(--accent-color-3);
-  padding: 3rem;
-  border: 2rem;
+  padding: 1rem 3rem;
+  border-radius: 0.5rem;
 }
 
 .product-description-pricing,
