@@ -75,14 +75,20 @@
             </div>
           </div>
           }@empty {
-           <div class="empty-wish my-2">
-            <fa-icon [icon]="faHeartBroken"></fa-icon>
-            <p>Your Wihslist is Empty!</p>
-            <span class="my-3 text-capitalize ">
-              Looks like you haven't added anything to
-              your cart yet
-             
-            </span>
+           <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="empty-wish my-2 text-center">
+                  <fa-icon [icon]="faHeartBroken"></fa-icon>
+                  <p>Your Wihslist is Empty!</p>
+                  <span class="my-3 text-capitalize ">
+                    Looks like you haven't added anything to
+                    your wishlist yet
+                   
+                  </span>
+                 </div>
+              </div>
+            </div>
            </div>
           }
         
