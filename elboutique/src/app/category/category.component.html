@@ -12,6 +12,9 @@
         (ngModelChange)="orderBy($event)"
         id=""
       >
+
+
+
         <option [ngValue]="'recent'">Date (Newest)</option>
         <option [ngValue]="'sale'">Sale (Highest)</option>
       </select>
@@ -25,6 +28,7 @@
         (ngModelChange)="orderByPrice($event)"
         id=""
       >
+
         <option value="highToLow">Hight to Low</option>
         <option value="lowToHigh">Low to Hight</option>
       </select>
@@ -34,7 +38,7 @@
     <div class="col-sm-4 col-md-3 my-3" *ngFor="let product of products">
       <a>
         <div class="d-flex flex-column">
-          <div class="big-deal-product-data p-2">
+          <div class="big-deal-product-data p-3">
             <div
               class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
             >
@@ -52,7 +56,7 @@
                   <input
                     class="like"
                     type="checkbox"
-                    title="like"
+                    title="Wishlist"
                     (change)="toggleWishList($event)"
                   />
                   <div class="checkmark">
@@ -81,7 +85,7 @@
             <div class="big-deal-product-slider">
               <div class="swiper mySwiper big-deal-product-swiper">
                 <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                  <swiper-container>
+                  <swiper-container class="m-1"  pagination="true" >
                     <swiper-slide
                       class="swiper-slide big-deal-product-swiper-slider"
                       *ngFor="let image of product.images"
@@ -93,7 +97,7 @@
                     </swiper-slide>
                   </swiper-container>
                 </div>
-                <div class="swiper-pagination"></div>
+                <!-- <div class="swiper-pagination"></div> -->
               </div>
             </div>
             <div class="big-deal-product-detail">
@@ -115,7 +119,7 @@
                         <input
                           class="like-cart"
                           type="checkbox"
-                          title="like"
+                          title="Cart"
                           (change)="toggleCart($event)"
                         />
                         <div class="checkmark-cart">
@@ -123,21 +127,27 @@
                             xmlns="http://www.w3.org/2000/svg"
                             class="outline"
                             viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
                           >
-                            <path
-                              d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
-                            ></path>
+                            <path d="M6 6h15l-1.5 9H6"></path>
+                            <path d="M6 6l-1-3H3"></path>
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
                           </svg>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="filled"
                             viewBox="0 0 24 24"
+                            fill="currentColor"
                           >
-                            <path
-                              d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
-                            ></path>
+                            <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
                           </svg>
                         </div>
+                        
                       </div>
                     </div>
                   </div>
