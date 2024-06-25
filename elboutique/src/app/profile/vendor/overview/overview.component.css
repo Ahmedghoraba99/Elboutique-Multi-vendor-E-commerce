@@ -1,0 +1,11 @@
+.overview {
+  .row {
+    .col {
+      background-color: var(--accent-color-3);
+      border: 2px solid var(--accent-color-1);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin: 1rem;
+    }
+  }
+}

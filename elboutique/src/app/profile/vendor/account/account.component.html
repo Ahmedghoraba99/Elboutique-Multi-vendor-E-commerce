@@ -1,1 +1,60 @@
 <div class="h6 text-uppercase">Personal Information</div>
+<hr class="hr">
+<div class="row">
+    <div class="d-flex justify-content-between">
+        <div class="profile-img-container">
+            <img [src]="profileImage" alt="profile image">
+            <button *ngIf="isEditable" type="button" class="icon" (click)="openImageInput()">
+                <i class="fa-solid fa-camera"></i>
+                <span class="visually-hidden">image</span>
+            </button>
+        </div>
+        <button type="button" class="btn btn-link primary-color text-decoration-none" (click)="toggleEdit()">
+            <i class="fa-solid fa-pen-to-square"></i> Change Profile Information
+        </button>
+    </div>
+
+    <form [formGroup]="profileForm" class="form row my-3">
+        <input type="file" name="image" id="image" hidden #imageInput (change)="onImageChange($event)">
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" formControlName="name" placeholder="Enter your name"
+                aria-label="Name">
+            <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="text-danger">
+                Name is required and must be at least 2 characters.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" class="form-control" id="phone" formControlName="phone"
+                placeholder="Enter your phone number" aria-label="Phone">
+            <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-danger">
+                Phone is required and must be a valid 10-digit number.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" formControlName="email" placeholder="Enter your email"
+                aria-label="Email">
+            <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger">
+                Email is required and must be a valid email address.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="idFront">ID Image Front</label>
+            <input type="file" class="form-control" id="idFront" (change)="onIdFrontChange($event)">
+        </div>
+
+        <div class="form-group">
+            <label for="idBack">ID Image Back</label>
+            <input type="file" class="form-control" id="idBack" (change)="onIdBackChange($event)">
+        </div>
+
+        <button *ngIf="isEditable" type="button" class="btn primary-bg-color w-auto ms-auto"
+            (click)="saveProfile()">Save</button>
+    </form>
+</div>
