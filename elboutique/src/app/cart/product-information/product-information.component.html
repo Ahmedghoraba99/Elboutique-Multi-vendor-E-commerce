@@ -16,28 +16,34 @@
           </div>
           <div class="product-description-pricing d-flex align-items-center">
             <div *ngIf="product.sale">
-              <span>price : </span>
+              <span class="text-capitalize" >price Before : </span>
               <strong class="mx-2 text-decoration-line-through"
                 >{{ product.price }}
               </strong>
-              <span>{{ product.sale }}% OFF</span>
+             <div class="new-price">
+              <span class="text-capitalize">price now : </span>
               <strong class="mx-2 text-danger fw-bold">{{
                 product.price - (product.price * product.sale) / 100
               }}</strong>
+              <sup class="disount-sup">{{ product.sale }}% OFF</sup>
+              <sub class="ms-1">inclusive of VAT</sub>
+
+             </div>
             </div>
             <div *ngIf="!product.sale">
               <span>price : </span>
               <strong class="mx-2">{{ product.price }}
               </strong>
+              <sub class="ms-1">inclusive of VAT</sub>
+
             </div>
-            <sub class="ms-1">inclusive of VAT</sub>
           </div>
           <div class="product-description-amount">
            
             <span>Amount</span>
             <select class="m-3" name="" id="" #select>
              @for(item of getStock(product.stock) ; track $index ){
-              <option value="{{item}}">{{item}}</option>
+              <option  value="{{item}}">{{item}}</option>
              }
             </select>
             <span
