@@ -47,11 +47,16 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
   }
 
   addToCart(select: HTMLSelectElement) {
+    const selectedValue = String(select.value);
+    console.log(typeof selectedValue);
     const sentBody = {
       products: {
-        [`${this.product.id}`]: select.value,
+        [`${this.product.id}`]:selectedValue,
       },
     };
+    console.log("this is sentbody :")
+    console.log(sentBody);
+    
     this.addToCartSub = this.cartService
       .addToCustomerCart(sentBody)
       .subscribe((res) => {
