@@ -38,7 +38,8 @@ class VendorController extends Controller
         $validatedData['password'] = bcrypt($validatedData['password']);
         $vendor = Vendor::create($validatedData);
         event(new Registered($vendor));
-        return response()->json(['message' => 'vendor created successfully we sent a verification email to you please check your inbox', 'vendor' => $vendor], 201);
+        return $this->sendSuccessResponse("created successfully we sent a verification email to you please check your inbox",$vendor);
+        // return response()->json(['message' => 'vendor created successfully we sent a verification email to you please check your inbox', 'vendor' => $vendor], 201);
 
     }
 
@@ -66,8 +67,9 @@ class VendorController extends Controller
             $validatedData['national_id'] = $this->uploadImage('national_id',$request,"vendors/national_id",$vendor);
         }
         $vendor->update($validatedData);
+        return $this->sendSuccessResponse("Vendor updated successfully",$vendor);
         
-        return response()->json(['message' => 'Vendor updated successfully', 'vendor' => $vendor], 201);
+        // return response()->json(['message' => 'Vendor updated successfully', 'vendor' => $vendor], 201);
 
     }
 
@@ -88,4 +90,20 @@ class VendorController extends Controller
         }
         $vendor->delete();
     }
+
+   public function activateVendor(Vendor $vendor)
+{
+    $vendor->update(['active' => "true"]) ;
+    return $this->sendSuccessResponse("  Vendor has actived successfully banned.",$vendor);
+}
+   public function banVendor(Vendor $vendor)
+{
+    $vendor->update(['banned' => "true"]) ;
+    return $this->sendSuccessResponse("Vendor has been successfully banned.",$vendor);
+}
+
+private function sendSuccessResponse($message='Success',$vendor=null)
+{
+    return response()->json(['message' => "$message", 'data' => $vendor], 201);
+}
 }

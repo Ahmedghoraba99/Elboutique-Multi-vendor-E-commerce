@@ -42,14 +42,20 @@ return [
         ],
 
         'vendor' => [
-            'driver' => 'session',
+            'driver' => 'sanctum',
             'provider' => 'vendors',
         ],
     
         'customer' => [
-            'driver' => 'session',
+            'driver' => 'sanctum',
             'provider' => 'customers',
         ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
+         
+
     
          
     ],
@@ -81,6 +87,10 @@ return [
         'customers' => [
             'driver' => 'eloquent',
             'model' => App\Models\Customer::class,
+        ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
 
         // 'users' => [
@@ -123,6 +133,13 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ]
+
 
 
     ],
