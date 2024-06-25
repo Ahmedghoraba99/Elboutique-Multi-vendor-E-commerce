@@ -23,6 +23,11 @@ trait AuthTrait {
         return   $imageName ;
     }
 
+    public function banUser($model=null, ){
+
+
+    }
+
    
 
    
