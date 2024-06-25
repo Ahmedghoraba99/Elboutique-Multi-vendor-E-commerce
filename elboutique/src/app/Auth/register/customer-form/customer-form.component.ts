@@ -114,7 +114,7 @@ export class CustomerFormComponent {
   }
 
   handleSuccess() {
-    localStorage.setItem('needactivation', 'true');
+    sessionStorage.setItem('needactivation', 'true');
     this.showToastMessage(
       'Welcome! Redirecting to checkmail page...',
       'customer created successfully we sent a verification email to you please check your inbox'
