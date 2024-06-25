@@ -33,6 +33,7 @@ class UpdateProductRequest extends FormRequest
             "images.*" => "sometimes|image|mimes:jpeg,png,jpg|max:2048", // Added max file size validation
             "vendor_id" => "sometimes|string|exists:vendors,id",
             "sale" => "sometimes|numeric|min:0",
+            "is_featured" => "sometimes|boolean"
         ];
     }
 }

@@ -24,6 +24,7 @@ class StoreOrderRequest extends FormRequest
         return [
             "customer_id"=>["required","exists:customers,id"],
             "status"=> ["required","in:arrived,midway"],
+            "total" => ["required", "numeric"],
         ];
     }
 }

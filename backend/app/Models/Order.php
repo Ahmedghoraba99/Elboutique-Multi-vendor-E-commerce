@@ -9,7 +9,7 @@ class Order extends Model
 {
     use HasFactory;
 
-protected $fillable = ['customer_id','status'] ;
+protected $fillable = ['customer_id','status',"total"] ;
     function customers(){
         return $this->belongsTo(Customer::class);
     }

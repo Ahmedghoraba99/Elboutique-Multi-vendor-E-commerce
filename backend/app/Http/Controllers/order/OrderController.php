@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Customer;
 use App\Models\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -19,16 +20,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return OrderResource::collection(Order::all());
+        return OrderResource::collection(Order::with('products')->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -38,6 +32,7 @@ class OrderController extends Controller
         $order= Order::create([
             'customer_id'=>$request->customer_id,
             'status'=>$request->status,
+            "total" => $request->total
         ]);
         return response()->json([
             "message" => 'Order Added',
@@ -50,20 +45,13 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order=Order::find($id);
+        $order=Order::with('products')->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-        return new OrderResource($order);
+        return response()->json($order,200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -77,6 +65,7 @@ class OrderController extends Controller
         $order->update([
             'customer_id'=>$request->customer_id,
             'status'=>$request->status,
+            "total" => $request->total
         ]);
         return response()->json(['message' => 'Order updated successfully'], 200);
     }
@@ -87,7 +76,6 @@ class OrderController extends Controller
     public function destroy($id)
     {
 
-        // $order->deleteOrFail();
         $deleted = Order::destroy($id);
         if ($deleted === 0) {
             return response()->json(['message' => "Order Doesn't Exist"], 404);
@@ -95,5 +83,8 @@ class OrderController extends Controller
         return response()->json(["message"=> "Order Deleted"]);
     }
 
-    
+    public function getUserOrders($id){
+        $orders = Order::where('customer_id',$id)->with('products')->get();
+        return response()->json(["orders"=>$orders]);
+    }
 }
