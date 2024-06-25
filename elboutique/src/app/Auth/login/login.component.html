@@ -41,7 +41,7 @@
                                 </button>
                                 <button type="button" (click)="selectUserType('admin')" class="user-type-option"
                                     [ngClass]="{'selected': loginForm.value.userType === 'admin'}">
-                                    <img src="assets/images/vendor.gif" alt="Admin" class="user-type-image">
+                                    <img src="assets/images/admin.gif" alt="Admin" class="user-type-image">
                                     <p class="form-check-label">Admin</p>
                                 </button>
                             </div>
@@ -83,7 +83,7 @@
                         <a routerLink="/login/forget-password"
                             class="text-muted btn-link my-3 d-block text-start cursor-pointer">Forgot Password?</a>
                         <button type="button" class="btn secondary-bg-color" (click)="prevStep()">Back</button>
-                        <button type="submit" class="btn primary-bg-color float-end"  >Login</button>
+                        <button type="submit" class="btn primary-bg-color float-end">Login</button>
                     </div>
                     }
                     @else if (currentStep === 2) {

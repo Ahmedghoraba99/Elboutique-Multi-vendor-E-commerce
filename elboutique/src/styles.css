@@ -237,9 +237,9 @@ hr {
 }
 /* end of btns */
 
-.modal-backdrop {
+/* .modal-backdrop {
   z-index: -1;
-}
+} */
 .max-width-md {
   max-width: 350px;
 }

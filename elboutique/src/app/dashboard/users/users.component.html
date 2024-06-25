@@ -1,1 +1,29 @@
-<p>users works!</p>
+<div class="h6 text-uppercase">Customers</div>
+<hr class="hr">
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let customer of customers">
+                <td>{{ customer.id }}</td>
+                <td>{{ customer.name }}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phone || '-' }}</td>
+                <td>{{ customer.addresses || '-' }}</td>
+                <td>
+                    <button (click)="deleteCustomer(customer.id)" class="btn btn-danger"><i
+                            class="fa-solid fa-trash"></i> <span class="visually-hidden">Delete</span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
