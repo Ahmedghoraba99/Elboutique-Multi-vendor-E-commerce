@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AddReviewComponent } from '../add-review/add-review.component';
 
 @Component({
   selector: 'app-user-orders',
