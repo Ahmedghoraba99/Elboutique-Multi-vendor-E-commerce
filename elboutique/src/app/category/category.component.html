@@ -36,7 +36,6 @@
   </div>
   <div class="row" *ngFor="let products of productsGroup">
     <div class="col-sm-4 col-md-3 my-3" *ngFor="let product of products">
-      <a class="sss" routerLink="/products/{{ product.id }}">
         <div class="d-flex flex-column">
           <div class="big-deal-product-data p-3">
             <div
@@ -84,6 +83,8 @@
             </div>
             <div class="big-deal-product-slider">
               <div class="swiper mySwiper big-deal-product-swiper">
+                <a class="sss" routerLink="/products/{{ product.id }}">
+
                 <div class="swiper-wrapp" id="big-deal-product-wrapper">
                   <swiper-container class="m-1"  pagination="true" >
                     <swiper-slide
@@ -97,6 +98,7 @@
                     </swiper-slide>
                   </swiper-container>
                 </div>
+                </a>
                 <!-- <div class="swiper-pagination"></div> -->
               </div>
             </div>
@@ -156,7 +158,6 @@
             </div>
           </div>
         </div>
-      </a>
     </div>
   </div>
   <!-- load more button -->

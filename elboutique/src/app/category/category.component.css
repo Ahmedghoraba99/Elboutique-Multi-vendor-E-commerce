@@ -162,6 +162,8 @@ a {
   cursor: pointer;
   width: 2rem;
   height: 2rem;
+  top: -7px;
+  right: -9px;
 }
 
 .con-like .outline,
@@ -246,7 +248,4 @@ a {
 
 .swiper-slide{
   padding: 5px;
-}
-.swiper-pagination-bullet-active{
-  color: var(--accent-color-2)!important;
 }
