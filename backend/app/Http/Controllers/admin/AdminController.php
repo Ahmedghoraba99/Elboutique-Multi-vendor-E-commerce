@@ -28,7 +28,7 @@ class AdminController extends Controller
         $validatedData = $request->validated();
 
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,"admins");
+            $validatedData['image'] = $this->uploadImage('image',$request,"admins");
         }
         $validatedData['password'] = bcrypt($validatedData['password']);
         $admin = Admin::create($validatedData);
@@ -55,7 +55,7 @@ class AdminController extends Controller
     {
         $validatedData =$request->validated();
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,"admins",$admin);
+            $validatedData['image'] = $this->uploadImage('image',$request,"admins",$admin);
         }
         $admin->update( $validatedData);
     return response()->json(['message' => 'Admin updated successfully', 'admin' =>  $admin], 201);

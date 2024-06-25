@@ -11,7 +11,7 @@ class CustomerAddress extends Model
     use HasApiTokens,HasFactory;
 
     protected $fillable = [
-        'Governate',
+        'governorate',
         'city',
         'street',
         'house_number',

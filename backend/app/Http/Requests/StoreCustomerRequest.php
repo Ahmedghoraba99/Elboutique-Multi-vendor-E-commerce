@@ -37,9 +37,9 @@ class StoreCustomerRequest extends FormRequest
     'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
     'addresses' => 'required|sometimes|array',
-    'addresses.*.city' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
-    'addresses.*.street' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
-    'addresses.*.Governate' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+    'addresses.*.city' => 'required|string|min:4|max:255|regex:/^(?=.*[A-Za-z])[A-Za-z0-9 _]+$/',
+    'addresses.*.street' => 'required|string|min:4|max:255|regex:/^(?=.*[A-Za-z])[A-Za-z0-9 _]+$/',
+    'addresses.*.governorate' => 'required|string|min:4|max:255|regex:/^(?=.*[A-Za-z])[A-Za-z0-9 _]+$/',
     'addresses.*.house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',
     'phones' => 'required|sometimes|array',
     'phones.*.phoneNumper'=> [

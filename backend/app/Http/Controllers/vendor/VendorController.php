@@ -30,10 +30,10 @@ class VendorController extends Controller
         $validatedData = $request->validated();
         
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,"vendors");
+            $validatedData['image'] = $this->uploadImage('image',$request,"vendors");
         }
         if( $request->hasFile('national_id')){
-            $validatedData['national_id'] = $this->uploadImage($request,"vendors/national_id");
+            $validatedData['national_id'] = $this->uploadImage('national_id',$request,"vendors/national_id");
         }
         $validatedData['password'] = bcrypt($validatedData['password']);
         $vendor = Vendor::create($validatedData);
@@ -58,12 +58,12 @@ class VendorController extends Controller
     {
         $validatedData = $request->validated();
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,"vendors",$vendor);
+            $validatedData['image'] = $this->uploadImage('image',$request,"vendors",$vendor);
         }
 
         if( $request->hasFile('national_id')){
             
-            $validatedData['national_id'] = $this->uploadImage($request,"vendors/national_id",$vendor);
+            $validatedData['national_id'] = $this->uploadImage('national_id',$request,"vendors/national_id",$vendor);
         }
         $vendor->update($validatedData);
         

@@ -22,7 +22,7 @@ class StoreCustomerAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Governate' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
+            'governorate' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
             'city' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
             'street' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
             'house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',

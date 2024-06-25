@@ -27,11 +27,13 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
+        
         DB::beginTransaction();
         try {
         $validatedData = $request->validated();
+        
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,"customers");
+            $validatedData['image'] = $this->uploadImage('image',$request,"customers");
         }
         $validatedData['password'] = bcrypt($validatedData['password']);
         // $phones = $validatedData['phones'] ?? [];
@@ -39,6 +41,7 @@ class CustomerController extends Controller
         $customer = Customer::create($validatedData);
         $addresses=$this->checkForAddressesExisting($validatedData);
         if (!empty($addresses)) {
+            // return response()->json( $addresses);
             $customer->addresses()->createMany($addresses);
         }
         $phones=$this->checkForPhonesExisting($validatedData);
@@ -75,7 +78,7 @@ class CustomerController extends Controller
         try {
         $validatedData =$request->validated();
         if($request->hasfile('image')){
-            $validatedData['image'] = $this->uploadImage($request,"customers",$customer);
+            $validatedData['image'] = $this->uploadImage('image',$request,"customers",$customer);
         }
         $addresses=$this->checkForAddressesExisting($validatedData);   
         $updateAddressesResult=$this->updateAddresses($addresses,$customer);
@@ -116,6 +119,7 @@ class CustomerController extends Controller
 
     public function checkForAddressesExisting(&$validatedData){
         if (isset($validatedData['addresses'])) {
+             
             $addresses = $validatedData['addresses'];
             unset($validatedData['addresses']);
             return $addresses;
