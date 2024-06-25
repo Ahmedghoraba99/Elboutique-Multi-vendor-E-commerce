@@ -190,3 +190,129 @@ swiper-container {
 .empty-cart span{
   color:#8d9db3;
 }
+
+/*  */
+
+
+
+.order-section{
+  border-radius: 0.3rem;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: var(--accent-color-3);
+  border-radius: 0.5rem;
+}
+.order-summery h1{
+font-weight: bold;
+font-size: 1.3rem;
+}
+.tatla-price {
+  border-top: 1px solid var(--accent-color-1);
+  
+}
+
+.price{
+  color: var(--accent-color-2);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.checkout-btn button{
+  background-color: var(--accent-color-2);
+  color: var(--accent-color-3);
+  font-size:1.2rem ;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: opacity 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+
+
+
+/* inputs style */
+
+textarea:focus,
+input:focus {
+outline: none;
+}
+
+
+/*  */
+
+
+
+.card-number ,.card-name {
+  width: 100%;
+  height: 50px;
+}
+
+.card-number::placeholder {
+  color: #b5b5b5;
+}
+
+input::placeholder {
+  color: #b5b5b5;
+}
+
+.name {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.expiration-date {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.ccv {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+input {
+  border: none;
+  font-size: 16px;
+  height: 26px;
+  color:var(--accent-color-3);
+  background: 0;
+  padding: 0;
+  width: 0;
+  border-bottom: 1px solid var(--accent-color-3);
+  color: var(--accent-color-3);
+}
+
+.payment-card label {
+  color: var(--accent-color-3);
+  font-weight: normal;
+  pointer-events: none;
+  display: block;
+  padding-bottom: 2px;
+  font-weight: 600;
+}
+
+
+.error{
+  font-size: 13px;
+  margin: 10px 0;
+  color: var(--accent-color-2);
+}
+
+.payment-option label{
+  display: inline;
+
+}
+#card , #cash{
+  width: 1rem;
+}
+.payment-option fa-icon{
+  margin: 9px;
+font-size: 1.5rem;
+}
+
+input[type='radio'] {
+  accent-color:var(--accent-color-2);
+}

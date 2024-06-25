@@ -5,7 +5,7 @@ export interface Customer {
 
 export interface Review {
   id: number;
-  rate: number; 
+  rate: number;
   comment: string;
   customer: Customer;
   created_at: string;
@@ -14,4 +14,11 @@ export interface Review {
 
 export interface ReviewResponse {
   data: Review[];
+}
+
+export interface AddReview{
+  rate: number;
+  comment: string;
+  customer_id: number|null;
+  product_id: number;
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
- 
+
 use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
 use App\Models\Customer;
@@ -13,29 +13,29 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-     public function login(LoginRequest $request) {
-      
-    $user = $this->getUserByRole($request->role, $request->email);
+    public function login(LoginRequest $request) {
 
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
+        $user = $this->getUserByRole($request->role, $request->email);
+
+        if (! $user || ! Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+        else if( !($user instanceof Admin) and !$user->hasVerifiedEmail()   ){
+            return response()->json(['error' => 'Email not verified.'], 400);
+        }
+        if ($user->tokens()->count() >= 5) {
+            $user->tokens()->first()->delete();
+        }
+
+        return response()->json([
+            'token' => $user->createToken($user->name||$user->lname)->plainTextToken,
+            'id' => $user->id,
+            'role' => $request->role,
         ]);
     }
-    else if( !($user instanceof Admin) and !$user->hasVerifiedEmail()   ){
-        return response()->json(['error' => 'Email not verified.'], 400);
-    }
-    if ($user->tokens()->count() >= 5) {
-        $user->tokens()->first()->delete();
-    }
 
-    return response()->json([
-        'token' => $user->createToken($user->name||$user->lname)->plainTextToken,
-        'id' => $user->id,
-        'role' => $request->role,
-    ]);
-}   
-     
 
     public function logout(Request $request) {
         $request->user()->currentAccessToken()->delete();

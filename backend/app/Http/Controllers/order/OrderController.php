@@ -84,7 +84,7 @@ class OrderController extends Controller
     }
 
     public function getUserOrders($id){
-        $orders = Order::where('customer_id',$id)->with('products')->get();
+        $orders = Order::where('customer_id',$id)->with(['products','products.images'])->get();
         return response()->json(["orders"=>$orders]);
     }
 }
