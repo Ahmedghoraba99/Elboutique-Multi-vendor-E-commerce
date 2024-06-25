@@ -1,1 +1,120 @@
-<p>products works!</p>
+<div class="h6 text-uppercase">Products</div>
+<hr class="hr">
+<div class="custom-btn-1 my-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
+    Add new product
+</div>
+<div class="table-responsive overflow-auto">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Category</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products; let i = index">
+                <th scope="row">{{ i + 1 }}</th>
+                <td>{{ product.name }}</td>
+                <td>{{ product.price | currency }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.stock }}</td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-sm me-2" (click)="editProduct(i)"><i
+                            class="fa-solid fa-pen-to-square"></i>
+                        <span class="visually-hidden">Edit</span>
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="confirmDelete(i)"><i
+                            class="fa-solid fa-trash"></i><span class="visually-hidden">Delete</span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="addProductModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addProductModalLabel">{{ isEditing ? 'Edit' : 'Add' }} Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+                    <div class="d-flex justify-content-between">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" id="name" class="form-control" formControlName="name">
+                            <div
+                                *ngIf="productForm.get('name')?.invalid && (productForm.get('name')?.dirty || productForm.get('name')?.touched)">
+                                <small class="text-danger" *ngIf="productForm.get('name')?.errors?.['required']">Name is
+                                    required.</small>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select id="category" class="form-control" formControlName="category">
+                                <option value="" disabled selected>Select Category</option>
+                                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                            </select>
+                            <div
+                                *ngIf="productForm.get('category')?.invalid && (productForm.get('category')?.dirty || productForm.get('category')?.touched)">
+                                <small class="text-danger"
+                                    *ngIf="productForm.get('category')?.errors?.['required']">Category is
+                                    required.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" id="price" class="form-control" formControlName="price">
+                            <div
+                                *ngIf="productForm.get('price')?.invalid && (productForm.get('price')?.dirty || productForm.get('price')?.touched)">
+                                <small class="text-danger" *ngIf="productForm.get('price')?.errors?.['required']">Price
+                                    is
+                                    required.</small>
+                                <small class="text-danger" *ngIf="productForm.get('price')?.errors?.['pattern']">Invalid
+                                    price format.</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" id="quantity" class="form-control" formControlName="quantity">
+                            <div
+                                *ngIf="productForm.get('quantity')?.invalid && (productForm.get('quantity')?.dirty || productForm.get('quantity')?.touched)">
+                                <small class="text-danger"
+                                    *ngIf="productForm.get('quantity')?.errors?.['required']">Quantity is
+                                    required.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <select id="stock" class="form-control" formControlName="stock">
+                            <option value="" disabled selected>Select Stock Status</option>
+                            <option value="In Stock">In Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                        <div
+                            *ngIf="productForm.get('stock')?.invalid && (productForm.get('stock')?.dirty || productForm.get('stock')?.touched)">
+                            <small class="text-danger" *ngIf="productForm.get('stock')?.errors?.['required']">Stock
+                                status is required.</small>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn primary-bg-color" [disabled]="productForm.invalid"
+                        data-bs-dismiss="modal">{{ isEditing ?
+                        'Edit' : 'Add' }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
