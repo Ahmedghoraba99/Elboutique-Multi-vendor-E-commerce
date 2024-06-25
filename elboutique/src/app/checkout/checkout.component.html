@@ -59,22 +59,28 @@
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="product-amount-price">
-                          <div
-                            class="product-info-anmount d-flex align-items-center"
-                          >
-                            <span class="me-2">
-                              Quntity : {{ product.cart_table.quantity }}
-                            </span>
-                            <!-- <select
-                                class="form-select"
-                                aria-label="Default select example"
-                                name=""
-                                id=""
+                          <div class="product-amount-price">
+                            <div
+                              class="product-info-amount d-flex align-items-center"
+                            >
+                              <span class="me-2">Quantity:</span>
+                              <select
+                                class="form-select w-25"
+                                (change)="update(product)"
                               >
-                                <option selected value="1">1</option>
-                              </select> -->
+                                @for(item of getstock(product.stock) ; track
+                                $index){ @if(item ==
+                                product.cart_table.quantity){
+                                <option selected value="{{ item }}">
+                                  {{ item }}
+                                </option>
+
+                                }
+                                <option value="{{ item }}">{{ item }}</option>
+
+                                }
+                              </select>
+                            </div>
                           </div>
                         </div>
                         <div

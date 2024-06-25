@@ -18,30 +18,18 @@
                   <div class="swiper mySwiper big-deal-product-swiper">
                     <div class="swiper-wrapp" id="big-deal-product-wrapper">
                       <swiper-container pagination="true">
-                        <swiper-slide
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            src="../../../assets/images/bigdeals.avif"
-                            alt="product-Name"
-                          />
-                        </swiper-slide>
-                        <swiper-slide
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            src="../../../assets/images/bigdeals.avif"
-                            alt="product-Name"
-                          />
-                        </swiper-slide>
-                        <swiper-slide
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            src="../../../assets/images/bigdeals.avif"
-                            alt="product-Name"
-                          />
-                        </swiper-slide>
+                       @for(image of product.images ;track $index){
+                          <swiper-slide
+                        class="swiper-slide big-deal-product-swiper-slider"
+                      >
+                        <img
+                          [src]="'http://localhost:8000/storage/' + image.image"
+                          alt="{{ product.name }}"
+                        />
+                      </swiper-slide>
+                        
+                       }
+                        
                       </swiper-container>
                     </div>
                   </div>
@@ -60,6 +48,14 @@
                     </div>
                   </div>
                 </div>
+                <!-- wihslist amount -->
+                 <div class="wishlist-amount">
+                  <span>Amount : </span>
+                  <select class="form-select w-25" name="" id="">
+                    <option value="">1</option>
+                  </select>
+                 </div>
+                <!-- wihslist action -->
                 <div
                   class="wishlist-actions d-flex flex-row justify-content-evenly text-capitalize"
                 >
@@ -71,6 +67,7 @@
                     Remove
                   </button>
                 </div>
+
               </div>
             </div>
           </div>

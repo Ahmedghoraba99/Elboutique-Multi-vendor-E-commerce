@@ -45,16 +45,16 @@ class Product extends Model
     }
     public function attributes()
     {
-        return $this->belongsToMany(Attributes::class)->withPivot([
+        return $this->belongsToMany(Attributes::class, 'product_attributes')->withPivot([
             'color',
             'size',
             'weight',
             'width',
             'height',
-            'material',
-            'size'
+            'material'
         ]);
     }
+
     public function orders()
     {
         return $this->belongsToMany(Order::class)->withPivot('quantity');

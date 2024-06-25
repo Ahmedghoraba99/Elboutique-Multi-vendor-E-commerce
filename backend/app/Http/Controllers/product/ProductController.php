@@ -167,6 +167,7 @@ class ProductController extends Controller
             $products = Product::where('is_featured', true)
                 ->with('images')
                 ->with('tags')
+                ->with("vendor")
                 ->get();
 
             return response()->json($products);

@@ -6,6 +6,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeartBroken } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-wish-list-content',
   standalone: true,
@@ -16,6 +18,7 @@ import { faHeartBroken } from '@fortawesome/free-solid-svg-icons';
 })
 export class WishListContentComponent implements OnInit, OnDestroy {
   faHeartBroken=faHeartBroken;
+  faShoppingBasket=faShoppingBasket;
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];

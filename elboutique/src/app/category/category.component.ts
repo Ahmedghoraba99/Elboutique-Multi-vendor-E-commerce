@@ -4,7 +4,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule, NgFor } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductCategoryService } from '../service/product-category.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [FontAwesomeModule, FormsModule, CommonModule],
+  imports: [FontAwesomeModule, FormsModule, RouterLink, CommonModule],
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -20,8 +20,8 @@ import { FormsModule } from '@angular/forms';
 export class CategoryComponent {
   faChevronRight = faChevronRight;
   productsPerPage: number = 10;
-  products: any = []; // Initialize products with an empty data array
-  productsGroup: any[] = []; // Initialize products with an empty data array
+  products: any = []; 
+  productsGroup: any[] = [];
 
   orderByValue = '';
   orderByPriceValue = '';

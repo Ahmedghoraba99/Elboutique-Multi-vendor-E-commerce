@@ -39,9 +39,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
       this.customerCart = cart;
       
+      console.log(cart);
     });
   }
 
+  getstock(stock : number ){
+    return Array.from({ length: stock }, (_, i) => i + 1);
+  }
+  // make the update
+  update(product:any){}
+  // 
   addToast() {
     this.Toaster.success('Product added to Wishlist', 'Added');
   }
