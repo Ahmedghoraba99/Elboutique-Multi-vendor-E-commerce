@@ -36,7 +36,7 @@
   </div>
   <div class="row" *ngFor="let products of productsGroup">
     <div class="col-sm-4 col-md-3 my-3" *ngFor="let product of products">
-      <a>
+      <a class="sss" routerLink="/products/{{ product.id }}">
         <div class="d-flex flex-column">
           <div class="big-deal-product-data p-3">
             <div

@@ -1,13 +1,15 @@
 <div class="container-fluid my-5">
+  <div class="row">
     <div class="row">
-      <div class="row">
-        <div class="shop-now-header my-2">
-          <h2 class="fw-bold ms-4">Shop Now</h2>
-        </div>
-        <div class="shop-now-slider my-4">
-          <div class="swiper mySwiper shop-now-swiper">
-            <div class="">
-              <swiper-container pangitnation="true" slides-per-view="4"
+      <div class="shop-now-header my-2">
+        <h2 class="fw-bold ms-4">Shop Now</h2>
+      </div>
+      <div class="shop-now-slider my-4">
+        <div class="swiper mySwiper shop-now-swiper">
+          <div class="">
+            <swiper-container
+              pangitnation="true"
+              slides-per-view="4"
               breakpoints='{
                 "350": {
                   "slidesPerView": 2,
@@ -19,23 +21,22 @@
                   "spaceBetween":0
                 }
               }'
-          >
-          @for(item of categories ; track item.id){
-            <swiper-slide class="swiper-slide shop-now-swiper-slider">  
-              <span >{{item.name}}</span>
-              <img src="http://localhost:8000/storage/{{item.image}}" alt="{{item.name}}">
-
-            </swiper-slide>
-          }
-             
-                
-              </swiper-container>
+            >
+              @for(item of categories ; track item.id){
+              <swiper-slide class="swiper-slide shop-now-swiper-slider">
+                <span>{{ item.name }}</span>
+                <a routerLink="/categories/{{ item.id }}">
+                  <img
+                    src="http://localhost:8000/storage/{{ item.image }}"
+                    alt="{{ item.name }}"
+                  />
+                </a>
+              </swiper-slide>
+              }
+            </swiper-container>
+          </div>
         </div>
       </div>
     </div>
-    
-              
-            </div>
-    </div>
+  </div>
 </div>
-  
