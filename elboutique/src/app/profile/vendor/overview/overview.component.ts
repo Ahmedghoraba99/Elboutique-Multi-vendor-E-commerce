@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-overview',
+  selector: 'app-vendor-overview',
   standalone: true,
   imports: [],
   templateUrl: './overview.component.html',
-  styleUrl: './overview.component.css'
+  styleUrl: './overview.component.css',
 })
-export class OverviewComponent {
-
-}
+export class OverviewComponent {}

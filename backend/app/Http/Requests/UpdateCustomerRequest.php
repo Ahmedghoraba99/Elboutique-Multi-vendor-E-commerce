@@ -45,7 +45,7 @@ class UpdateCustomerRequest extends FormRequest
                     "addresses.*.id"=>'sometimes|integer|exists:customer_addresses,id',
                     'addresses.*.city' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
                     'addresses.*.street' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
-                    'addresses.*.Governate' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
+                    'addresses.*.governorate' => 'required|string|min:4|max:255|regex:/^[a-zA-Z ,.\'-]+$/',
                     'addresses.*.house_number' => 'sometimes|numeric|min:1|regex:/^[1-9]\d*$/',
                     'addresses.*.customer_id' => 'sometimes|integer|exists:customers,id',
                     'phones' => 'sometimes|array',

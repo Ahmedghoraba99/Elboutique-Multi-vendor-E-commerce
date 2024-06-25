@@ -19,7 +19,7 @@ class ProductController extends Controller
     public function index()
     {
         // get all products with images and tags
-        $products = Product::with(['images', 'tags'])->paginate(15);
+        $products = Product::with(['images', 'tags'])->paginate(16);
         return response()->json($products);
     }
 
@@ -81,7 +81,7 @@ class ProductController extends Controller
      */
     public function getProductsByCategory(int $categoryId)
     {
-        $products = Product::with(["images", "vendor"])->where('category_id', $categoryId)->paginate(5);
+        $products = Product::with(["images", "vendor", "category"])->where('category_id', $categoryId)->paginate(8);
         return response()->json($products);
     }
     // Custom
@@ -223,7 +223,8 @@ class ProductController extends Controller
     }
 
     //search function
-    public function searchProduct(DefalutRequest $request){
+    public function searchProduct(DefalutRequest $request)
+    {
         $query = Product::query();
 
         //categoryname
@@ -234,7 +235,7 @@ class ProductController extends Controller
         }
 
         //category_id
-        if($request->has('category_id')){
+        if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
@@ -273,6 +274,5 @@ class ProductController extends Controller
         $products = $query->get();
 
         return response()->json($products, 200);
-
     }
 }

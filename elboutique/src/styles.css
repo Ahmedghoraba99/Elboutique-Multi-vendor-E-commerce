@@ -195,3 +195,51 @@ hr {
   color: #333;
   background-color: #333;
 }
+
+/* start of btns */
+.custom-btn-1 {
+  background-color: var(--accent-color-3);
+  color: var(--primary-color);
+  font-size: 0.75rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--secondary-color);
+  padding: 0.25rem 0.8rem;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  font-weight: 600;
+  text-decoration: none;
+  width: max-content;
+}
+
+.custom-btn-1:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
+.custom-btn-2 {
+  background-color: var(--accent-color-2);
+  color: var(--accent-color-1);
+  font-size: 0.75rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--secondary-color);
+  padding: 0.25rem 0.8rem;
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  font-weight: 600;
+  text-decoration: none;
+  width: max-content;
+}
+
+.custom-btn-2:hover {
+  background-color: var(--accent-color-1);
+  color: var(--accent-color-2);
+}
+/* end of btns */
+
+.modal-backdrop {
+  z-index: -1;
+}
+.max-width-md {
+  max-width: 350px;
+}

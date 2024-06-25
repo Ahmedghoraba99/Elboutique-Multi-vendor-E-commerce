@@ -13,36 +13,31 @@ export class HomeService {
   getFeaturedProducts(): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/product/featured`)
-      .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
+      .pipe(tap((data) => data));
   }
 
   getOnSaleProducts(): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/product/onsale`)
-      .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
+      .pipe(tap((data) => data));
   }
 
   getNewArrivalsProducts(): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/product/newarrivals`)
-      .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
+      .pipe(tap((data) => data));
   }
 
   getProductsInCategory(categoryId: number): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/product/category/${categoryId}`)
-      .pipe(
-        tap((data) => {
-          console.log(categoryId);
-          console.log('Data form product cat: ', JSON.stringify(data));
-        })
-      );
+      .pipe(tap((data) => data));
   }
 
   getAllCategories(): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/categories`)
-      .pipe(tap((data) => console.log('All: ', JSON.stringify(data))));
+      .pipe(tap((data) => data));
   }
 
   constructor() {}
