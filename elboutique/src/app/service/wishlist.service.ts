@@ -7,8 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class WishlistService {
   private baseUrl = 'http://127.0.0.1:8000/api/customer';
-  private userID = 1;
-
+  private userInfo = localStorage.getItem('user_info');
+  private userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
+  
   constructor(private http: HttpClient) {}
 
   getUserWishlist(): Observable<any> {

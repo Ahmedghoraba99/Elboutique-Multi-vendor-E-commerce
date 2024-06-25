@@ -1,73 +1,73 @@
-<div class="container text-capitalize ">
+<div class="container text-capitalize">
   <h1 class="my-4 py-5">My Cart</h1>
   <div class="row">
-    <div class="wishList-section  px-2 my-5 px-2">
+    <div class="wishList-section px-2 my-5 px-2">
       <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
         <h1>Cart Items</h1>
         <span>( {{ customerCart.length }} Items)</span>
       </div>
       <div class="wishList-content p-4 d-flex">
         @if(customerCart.length > 0){
-          <div class="row justify-content-start">
-            @for (product of customerCart; track $index) {
-            <div class="col-lg-8 col-md-6">
-              <div class="col-md-12 mb-3">
-                <div class="d-flex flex-column">
-                  <div
-                    class="big-deal-product-data d-flex flex-row flex-wrap gap-2 align-items-center p-4"
-                  >
-                    <div class="big-deal-product-slider">
-                      <div class="swiper mySwiper big-deal-product-swiper">
-                        <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                          <swiper-container pagination="true">
-                            @for (image of product.images; track $index) {
-                            <swiper-slide
-                              class="swiper-slide big-deal-product-swiper-slider"
-                            >
-                              <img
-                                src="http://127.0.0.1:8000/storage/{{
-                                  image.image
-                                }}"
-                                alt="product-Name"
-                              />
-                            </swiper-slide>
-                            }
-                          </swiper-container>
-                        </div>
+        <div class="row justify-content-start">
+          @for (product of customerCart; track $index) {
+          <div class="col-lg-8 col-md-6">
+            <div class="col-md-12 mb-3">
+              <div class="d-flex flex-column">
+                <div
+                  class="big-deal-product-data d-flex flex-row flex-wrap gap-2 align-items-center p-4"
+                >
+                  <div class="big-deal-product-slider">
+                    <div class="swiper mySwiper big-deal-product-swiper">
+                      <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                        <swiper-container pagination="true">
+                          @for (image of product.images; track $index) {
+                          <swiper-slide
+                            class="swiper-slide big-deal-product-swiper-slider"
+                          >
+                            <img
+                              src="http://127.0.0.1:8000/storage/{{
+                                image.image
+                              }}"
+                              alt="product-Name"
+                            />
+                          </swiper-slide>
+                          }
+                        </swiper-container>
                       </div>
                     </div>
-                    <div class="containter">
-                      <div class="row flex-wrap">
-                        <div
-                          class="big-deal-product-detail d-flex flex-column justify-content-between"
-                        >
-                          <div class="big-deal-detail-header">
-                            <div class="big-deal-detail-data">
-                              <span> {{ product.name }} </span>
-                            </div>
-                            <div class="big-deal-info d-flex flex-column my-2">
-                              <span class="my-2 seller-name"
-                                ><span class="sold">Sold By : </span>
-                                {{ product.vendor.name }}</span
-                              >
-                              <div class="product-info-price">
-                                <div class="big-deal-price">
-                                  <span class="me-2">EGP</span>
-                                  <strong class="fs-4">{{
-                                    product.price
-                                  }}</strong>
-                                </div>
+                  </div>
+                  <div class="containter">
+                    <div class="row flex-wrap">
+                      <div
+                        class="big-deal-product-detail d-flex flex-column justify-content-between"
+                      >
+                        <div class="big-deal-detail-header">
+                          <div class="big-deal-detail-data">
+                            <span> {{ product.name }} </span>
+                          </div>
+                          <div class="big-deal-info d-flex flex-column my-2">
+                            <span class="my-2 seller-name"
+                              ><span class="sold">Sold By : </span>
+                              {{ product.vendor.name }}</span
+                            >
+                            <div class="product-info-price">
+                              <div class="big-deal-price">
+                                <span class="me-2">EGP</span>
+                                <strong class="fs-4">{{
+                                  product.price
+                                }}</strong>
                               </div>
                             </div>
                           </div>
-                          <div class="product-amount-price">
-                            <div
-                              class="product-info-anmount d-flex align-items-center"
-                            >
-                              <span class="me-2">
-                                Quntity : {{ product.cart_table.quantity }}
-                              </span>
-                              <!-- <select
+                        </div>
+                        <div class="product-amount-price">
+                          <div
+                            class="product-info-anmount d-flex align-items-center"
+                          >
+                            <span class="me-2">
+                              Quntity : {{ product.cart_table.quantity }}
+                            </span>
+                            <!-- <select
                                 class="form-select"
                                 aria-label="Default select example"
                                 name=""
@@ -75,33 +75,32 @@
                               >
                                 <option selected value="1">1</option>
                               </select> -->
-                            </div>
                           </div>
-                          <div
-                            class="wishlist-actions d-flex flex-row justify-content-between text-capitalize mt-4"
+                        </div>
+                        <div
+                          class="wishlist-actions d-flex flex-row justify-content-between text-capitalize mt-4"
+                        >
+                          <button
+                            class="btn btn-wishlist"
+                            (click)="AddToWishlist(product.id)"
                           >
-                            <button
-                              class="btn btn-wishlist"
-                              (click)="AddToWishlist(product.id)"
-                            >
-                              <fa-icon
-                                class="animated-heart"
-                                [icon]="faHeart"
-                              ></fa-icon>
-                              Add to WishList
-                            </button>
-  
-                            <button
-                              class="btn btn-wishlist-delete"
-                              (click)="DeleteFromCart(product.id)"
-                            >
-                              <fa-icon
-                                class="animated-heart"
-                                [icon]="faTrashCan"
-                              ></fa-icon
-                              >Remove
-                            </button>
-                          </div>
+                            <fa-icon
+                              class="animated-heart"
+                              [icon]="faHeart"
+                            ></fa-icon>
+                            Add to WishList
+                          </button>
+
+                          <button
+                            class="btn btn-wishlist-delete"
+                            (click)="DeleteFromCart(product.id)"
+                          >
+                            <fa-icon
+                              class="animated-heart"
+                              [icon]="faTrashCan"
+                            ></fa-icon
+                            >Remove
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -109,27 +108,26 @@
                 </div>
               </div>
             </div>
-            }
           </div>
-          <div class="col-lg-4 col-md-6 summary">
-            <app-summary-order></app-summary-order>
+          }
+        </div>
+        <div class="col-lg-4 col-md-6 summary">
+          <app-summary-order [cartProduct]="customerCart"></app-summary-order>
+        </div>
+        } @else {
+
+        <div class="col-lg-12 col-md-12 w-100">
+          <div
+            class="empty-cart my-2 d-flex flex-column justify-content-center align-items-center"
+          >
+            <fa-icon class="my-2" [icon]="faShoppingBasket"></fa-icon>
+            <p class="text-capitalize">Your cart is Empty!</p>
+            <span class="my-3"
+              >Looks like you haven't added anything to your cart yet
+            </span>
           </div>
+        </div>
         }
-       
-         
-        
-        @else {
-          
-          <div class="col-lg-12 col-md-12 w-100">
-            <div class="empty-cart my-2 d-flex flex-column justify-content-center align-items-center">
-              <fa-icon class="my-2" [icon]="faShoppingBasket"></fa-icon>
-              <p class="text-capitalize">Your cart is Empty!</p>
-              <span class="my-3">Looks like you haven't added anything to your cart yet </span>
-            </div>
-           
-          </div>
-        }
-        
       </div>
     </div>
   </div>
