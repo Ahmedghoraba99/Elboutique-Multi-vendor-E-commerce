@@ -20,16 +20,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return OrderResource::collection(Order::all());
+        return OrderResource::collection(Order::with('products')->get());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -52,20 +45,13 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order=Order::find($id);
+        $order=Order::with('products')->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
-        return new OrderResource($order);
+        return response()->json($order,200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -90,7 +76,6 @@ class OrderController extends Controller
     public function destroy($id)
     {
 
-        // $order->deleteOrFail();
         $deleted = Order::destroy($id);
         if ($deleted === 0) {
             return response()->json(['message' => "Order Doesn't Exist"], 404);
