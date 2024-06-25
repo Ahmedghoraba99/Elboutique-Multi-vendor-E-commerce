@@ -1,7 +1,10 @@
 
-<button class="btn btn-primary mt-2" data-bs-toggle="modal"
-        data-bs-target="#modalId">Button</button>
-<!-- Modal -->
+<!-- <div class="">
+  <button class="btn btn-link   mt-2 primary-color" data-bs-toggle="modal" data-bs-target="#modalId"><i class="fa-solid fa-message me-2"></i>add review</button>
+</div> -->
+
+
+
 <div
   class="modal fade"
   id="modalId"
@@ -48,20 +51,20 @@
                 Comment is required.
               </div>
             </div>
-            <div class="form-group">
-              <label for="customer_id">Customer ID</label>
-              <input type="text" id="customer_id" formControlName="customer_id" class="form-control">
+            <!-- <div class="form-group">
+              <label for="customer_id"></label>
+              <input type="hidden" id="customer_id" formControlName="customer_id" class="form-control" [ngModel]="customer_id">
               <div *ngIf="reviewForm.get('customer_id')?.invalid && reviewForm.get('customer_id')?.touched" class="text-danger">
                 Customer ID is required.
               </div>
-            </div>
-            <div class="form-group">
-              <label for="product_id">Product ID</label>
-              <input type="text" id="product_id" formControlName="product_id" class="form-control">
+            </div> -->
+            <!-- <div class="form-group">
+              <label for="product_id"></label>
+              <input type="hidden" id="product_id" formControlName="product_id" class="form-control" [ngModel]="product_id" >
               <div *ngIf="reviewForm.get('product_id')?.invalid && reviewForm.get('product_id')?.touched" class="text-danger">
                 Product ID is required.
               </div>
-            </div>
+            </div> -->
             <button type="submit" class="btn btn-primary mt-2" [disabled]="reviewForm.invalid">Submit</button>
           </form>
           <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>

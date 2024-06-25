@@ -19,6 +19,6 @@ export interface ReviewResponse {
 export interface AddReview{
   rate: number;
   comment: string;
-  customer_id: number;
+  customer_id: number|null;
   product_id: number;
 }
