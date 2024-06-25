@@ -13,7 +13,6 @@ import { UsersComponent } from './dashboard/users/users.component';
 import { VendorsComponent } from './dashboard/vendors/vendors.component';
 import { ProductsComponent } from './dashboard/products/products.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
-import { OverviewComponent } from './dashboard/overview/overview.component';
 import { CheckMailComponent } from './Auth/check-mail/check-mail.component';
 import { CongsComponent } from './Auth/congs/congs.component';
 import { checkMailGuard } from './guards/check-mail.guard';
@@ -42,13 +41,8 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'overview',
+        redirectTo: 'users',
         pathMatch: 'full',
-      },
-      {
-        path: 'overview',
-        title: 'Overview',
-        component: OverviewComponent,
       },
       {
         path: 'users',
