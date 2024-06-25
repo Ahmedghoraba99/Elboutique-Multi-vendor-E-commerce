@@ -19,7 +19,15 @@ class attributes extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_attributes')->withPivot('value');
+        return $this->belongsToMany(Product::class, 'product_attributes')->withPivot([
+            'color',
+            'size',
+            'weight',
+            'width',
+            'height',
+            'material'
+        ]);
     }
+
     use HasFactory;
 }
