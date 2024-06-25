@@ -20,8 +20,8 @@ import { FormsModule } from '@angular/forms';
 export class CategoryComponent {
   faChevronRight = faChevronRight;
   productsPerPage: number = 10;
-  products: any = []; // Initialize products with an empty data array
-  productsGroup: any[] = []; // Initialize products with an empty data array
+  products: any = []; 
+  productsGroup: any[] = [];
 
   orderByValue = '';
   orderByPriceValue = '';
