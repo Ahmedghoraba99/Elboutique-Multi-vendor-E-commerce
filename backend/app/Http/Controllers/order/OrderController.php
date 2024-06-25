@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Customer;
 use App\Models\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -38,6 +39,7 @@ class OrderController extends Controller
         $order= Order::create([
             'customer_id'=>$request->customer_id,
             'status'=>$request->status,
+            "total" => $request->total
         ]);
         return response()->json([
             "message" => 'Order Added',
@@ -77,6 +79,7 @@ class OrderController extends Controller
         $order->update([
             'customer_id'=>$request->customer_id,
             'status'=>$request->status,
+            "total" => $request->total
         ]);
         return response()->json(['message' => 'Order updated successfully'], 200);
     }
@@ -95,5 +98,8 @@ class OrderController extends Controller
         return response()->json(["message"=> "Order Deleted"]);
     }
 
-    
+    public function getUserOrders($id){
+        $orders = Order::where('customer_id',$id)->with('products')->get();
+        return response()->json(["orders"=>$orders]);
+    }
 }

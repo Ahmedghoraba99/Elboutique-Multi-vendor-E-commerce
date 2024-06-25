@@ -55,7 +55,7 @@ Route::get('/product/search', [ProductController::class,"searchProduct"]);
 
 // Order related routes
 Route::apiResource('orders', OrderController::class);
-
+Route::get('/orders/users/{id}',[OrderController::class,'getUserOrders']);
 Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProductToOrder']);
 Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
 Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
