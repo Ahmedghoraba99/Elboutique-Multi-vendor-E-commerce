@@ -7,7 +7,6 @@
                 <h1 class="mb-3">Average rating</h1>
                 <div class="rating-section d-flex flex-column gap-1  ">
                   <strong>{{ averageRating }} <sub>out of 5</sub></strong>
-                    <!-- add out of the total ratuing data  -->
                     <div class="average-rating-stars">
                         <fa-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
                                 icon]="faStar"
@@ -26,7 +25,7 @@
         <div class="col-md-7 my-3">
             <div class="product-review-section">
               <h1>See All The Reviews</h1>
-                <div  *ngFor="let review of reviews"  class="product-review-card mt-2">
+                <div  *ngFor="let review of reviews"  class="product-review-card mt-2  overflow-scroll">
                     <div class="reviewer-data d-flex gap-3 my-2">
                         <div class="reviewer-profile">
                             <img [src]="review.customer.image_url"  alt="">

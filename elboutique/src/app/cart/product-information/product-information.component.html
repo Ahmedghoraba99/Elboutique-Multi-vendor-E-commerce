@@ -36,9 +36,9 @@
            
             <span>Amount</span>
             <select class="m-3" name="" id="" #select>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
+             @for(item of getStock(product.stock) ; track $index ){
+              <option value="{{item}}">{{item}}</option>
+             }
             </select>
             <span
             [ngClass]="{

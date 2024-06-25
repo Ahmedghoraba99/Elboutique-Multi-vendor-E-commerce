@@ -19,7 +19,7 @@ import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 export class ProductInformationComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductDetailsService, // Inject the service in the constructor
+    private productService: ProductDetailsService, 
     private wishlistService: WishlistService,
     private toaster: ToastrService,
     private cartService: CartService
@@ -35,12 +35,17 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
   id: number = 0;
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.id = +params['id']; // Convert the id to a number
+      this.id = +params['id']; 
       this.productService.getProduct(this.id).subscribe((product) => {
         this.product = product;
       });
     });
   }
+
+  getStock(stock: number): number[] {
+    return Array.from({ length: stock }, (_, i) => i + 1);
+  }
+
   addToCart(select: HTMLSelectElement) {
     const sentBody = {
       products: {
