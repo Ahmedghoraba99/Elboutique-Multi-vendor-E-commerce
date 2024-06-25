@@ -1,415 +1,159 @@
 <div class="container my-5">
-    <div class="row my-3">
-        <h1 class="text-capitalize">Category Name</h1>
+  <div class="row my-3">
+    <h1 class="text-capitalize">{{ title }}</h1>
+  </div>
+  <div class="d-flex justify-content-end align-items-center">
+    <div class="sort-by mx-4 d-flex gap-3 align-items-center">
+      <span>Sort by</span>
+      <select
+        class="form-select"
+        name="orderBy"
+        [(ngModel)]="orderByValue"
+        (ngModelChange)="orderBy($event)"
+        id=""
+      >
+        <option [ngValue]="'recent'">Date (Newest)</option>
+        <option [ngValue]="'sale'">Sale (Highest)</option>
+      </select>
     </div>
-    <div class="d-flex justify-content-end align-items-center">
-        <div class="sort-by mx-4 d-flex gap-3 align-items-center">
-            <span>Sort by</span>
-            <select class="form-select" name="" id="">
-                <option selected value=""> Most Recent</option>
-                <option selected value=""> Most Popular </option>
-
-            </select>
-        </div>
-        <div class="sort-price mx-4 d-flex gap-3 align-items-center">
-            <span>Price</span>
-            <select class="form-select" name="" id="">
-                <option value="">Hight to Low </option>
-                <option value="">Low to Hight </option>
-
-            </select>
-        </div>
+    <div class="sort-price mx-4 d-flex gap-3 align-items-center">
+      <span>Price</span>
+      <select
+        class="form-select"
+        name=""
+        [(ngModel)]="orderByPriceValue"
+        (ngModelChange)="orderByPrice($event)"
+        id=""
+      >
+        <option value="highToLow">Hight to Low</option>
+        <option value="lowToHigh">Low to Hight</option>
+      </select>
     </div>
-    <div class="row">
-       <div class="col-sm-4 col-md-3 my-3">
-          <a>
-            <div class="d-flex flex-column">
-              <div class="big-deal-product-data p-2">
-                <div
-                  class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
-                >
-                  <div class="big-deal-product-big-tag">
-                    <span >Deal 50% Off</span>
+  </div>
+  <div class="row" *ngFor="let products of productsGroup">
+    <div class="col-sm-4 col-md-3 my-3" *ngFor="let product of products">
+      <a>
+        <div class="d-flex flex-column">
+          <div class="big-deal-product-data p-2">
+            <div
+              class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
+            >
+              <div
+                class="big-deal-product-big-tag"
+                [ngClass]="{
+                  'd-inline': product.deal,
+                  invisible: !product.sale
+                }"
+              >
+                <span>Deal {{ product.sale }}% Off</span>
+              </div>
+              <div class="products-wish">
+                <div class="con-like">
+                  <input
+                    class="like"
+                    type="checkbox"
+                    title="like"
+                    (change)="toggleWishList($event)"
+                  />
+                  <div class="checkmark">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="outline"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"
+                      ></path>
+                    </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="filled"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"
+                      ></path>
+                    </svg>
                   </div>
-                  <div class="products-wish" >
-                    <div class="con-like">
-                        <input class="like" type="checkbox" title="like"  (change)="toggleWishList($event)">
-                        <div class="checkmark">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                            <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
+                </div>
+              </div>
+            </div>
+            <div class="big-deal-product-slider">
+              <div class="swiper mySwiper big-deal-product-swiper">
+                <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                  <swiper-container>
+                    <swiper-slide
+                      class="swiper-slide big-deal-product-swiper-slider"
+                      *ngFor="let image of product.images"
+                    >
+                      <img
+                        [src]="'http://localhost:8000/storage/' + image.image"
+                        alt="{{ product.name }}"
+                      />
+                    </swiper-slide>
+                  </swiper-container>
+                </div>
+                <div class="swiper-pagination"></div>
+              </div>
+            </div>
+            <div class="big-deal-product-detail">
+              <div class="big-deal-detail-header">
+                <div class="big-deal-detail-data">
+                  <span>{{ product.name }}</span>
+                </div>
+                <div class="big-deal-info d-flex flex-column my-2">
+                  <span class="my-2"></span>
+                  <div
+                    class="big-deal-price d-flex align-items-center justify-content-between"
+                  >
+                    <div class="big-deal-price-span">
+                      <span class="ms-2">EGP</span>
+                      <strong class="fs-4">{{ product.price }}</strong>
+                    </div>
+                    <div class="products-wish">
+                      <div class="con-like-cart mt-1">
+                        <input
+                          class="like-cart"
+                          type="checkbox"
+                          title="like"
+                          (change)="toggleCart($event)"
+                        />
+                        <div class="checkmark-cart">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="outline"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
+                            ></path>
                           </svg>
-                          <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                            <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="filled"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
+                            ></path>
                           </svg>
-                       
                         </div>
                       </div>
-                  </div>
-                </div>
-                <div class="big-deal-product-slider">
-                  <div class="swiper mySwiper big-deal-product-swiper">
-                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                      <swiper-container>
-                        <swiper-slide
-                         
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            src="../../assets/images/bag.jpg"
-                            alt="dsfdf"
-                          />
-                        </swiper-slide>
-                        <swiper-slide
-                         
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            src="../../assets/images/bag.jpg"
-                            alt="dsfdf"
-                          />
-                        </swiper-slide>
-                        <swiper-slide
-                         
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            src="../../assets/images/bag.jpg"
-                            alt="dsfdf"
-                          />
-                        </swiper-slide>
-                      </swiper-container>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                  </div>
-                </div>
-                <div class="big-deal-product-detail">
-                  <div class="big-deal-detail-header">
-                    <div class="big-deal-detail-data">
-                      <span>product name</span>
-                    </div>
-                    <div class="big-deal-info d-flex flex-column my-2">
-                      <span class="my-2"></span>
-                      <div class="big-deal-price d-flex align-items-center justify-content-between">
-                        <div class="big-deal-price-span">
-                            <span class="ms-2">EGP</span>
-                        <strong class="fs-4">250</strong>
-                        </div>
-                        <div class="products-wish">
-                            <div class="con-like-cart  mt-1">
-                              <input class="like-cart" type="checkbox" title="like" (change)="toggleCart($event)">
-                              <div class="checkmark-cart">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                                  <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                                  <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                                </svg>
-                                
-                              </div>
-                            </div>
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
-       </div>
-       <div class="col-sm-4  col-md-3 my-3">
-        <a>
-          <div class="d-flex flex-column">
-            <div class="big-deal-product-data p-2">
-              <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
-              >
-                <div class="big-deal-product-big-tag">
-                  <span >Deal 50% Off</span>
-                </div>
-                <div class="products-wish" >
-                  <div class="con-like">
-                      <input class="like" type="checkbox" title="like"  (change)="toggleWishList($event)">
-                      <div class="checkmark">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
-                        </svg>
-                     
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="big-deal-product-slider">
-                <div class="swiper mySwiper big-deal-product-swiper">
-                  <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                    <swiper-container>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                    </swiper-container>
-                  </div>
-                  <div class="swiper-pagination"></div>
-                </div>
-              </div>
-              <div class="big-deal-product-detail">
-                <div class="big-deal-detail-header">
-                  <div class="big-deal-detail-data">
-                    <span>product name</span>
-                  </div>
-                  <div class="big-deal-info d-flex flex-column my-2">
-                    <span class="my-2"></span>
-                    <div class="big-deal-price d-flex align-items-center justify-content-between">
-                      <div class="big-deal-price-span">
-                          <span class="ms-2">EGP</span>
-                      <strong class="fs-4">250</strong>
-                      </div>
-                      <div class="products-wish">
-                          <div class="con-like-cart  mt-1">
-                            <input class="like-cart" type="checkbox" title="like" (change)="toggleCart($event)">
-                            <div class="checkmark-cart">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                                <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                                <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                              </svg>
-                              
-                            </div>
-                          </div>
-                        </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </a>
-     </div>
-
-     <div class="col-md-3 my-3">
-        <a>
-          <div class="d-flex flex-column">
-            <div class="big-deal-product-data p-2">
-              <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
-              >
-                <div class="big-deal-product-big-tag">
-                  <span >Deal 50% Off</span>
-                </div>
-                <div class="products-wish" >
-                  <div class="con-like">
-                      <input class="like" type="checkbox" title="like"  (change)="toggleWishList($event)">
-                      <div class="checkmark">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
-                        </svg>
-                     
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="big-deal-product-slider">
-                <div class="swiper mySwiper big-deal-product-swiper">
-                  <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                    <swiper-container>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                    </swiper-container>
-                  </div>
-                  <div class="swiper-pagination"></div>
-                </div>
-              </div>
-              <div class="big-deal-product-detail">
-                <div class="big-deal-detail-header">
-                  <div class="big-deal-detail-data">
-                    <span>product name</span>
-                  </div>
-                  <div class="big-deal-info d-flex flex-column my-2">
-                    <span class="my-2"></span>
-                    <div class="big-deal-price d-flex align-items-center justify-content-between">
-                      <div class="big-deal-price-span">
-                          <span class="ms-2">EGP</span>
-                      <strong class="fs-4">250</strong>
-                      </div>
-                      <div class="products-wish">
-                          <div class="con-like-cart  mt-1">
-                            <input class="like-cart" type="checkbox" title="like" (change)="toggleCart($event)">
-                            <div class="checkmark-cart">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                                <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                                <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                              </svg>
-                              
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-     </div>
-
-     <div class="col-md-3 my-3">
-        <a>
-          <div class="d-flex flex-column">
-            <div class="big-deal-product-data p-2">
-              <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
-              >
-                <div class="big-deal-product-big-tag">
-                  <span >Deal 50% Off</span>
-                </div>
-                <div class="products-wish" >
-                  <div class="con-like">
-                      <input class="like" type="checkbox" title="like"  (change)="toggleWishList($event)">
-                      <div class="checkmark">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                          <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
-                        </svg>
-                     
-                      </div>
-                    </div>
-                </div>
-              </div>
-              <div class="big-deal-product-slider">
-                <div class="swiper mySwiper big-deal-product-swiper">
-                  <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                    <swiper-container>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                      <swiper-slide
-                       
-                        class="swiper-slide big-deal-product-swiper-slider"
-                      >
-                        <img
-                          src="../../assets/images/bag.jpg"
-                          alt="dsfdf"
-                        />
-                      </swiper-slide>
-                    </swiper-container>
-                  </div>
-                  <div class="swiper-pagination"></div>
-                </div>
-              </div>
-              <div class="big-deal-product-detail">
-                <div class="big-deal-detail-header">
-                  <div class="big-deal-detail-data">
-                    <span>product name</span>
-                  </div>
-                  <div class="big-deal-info d-flex flex-column my-2">
-                    <span class="my-2"></span>
-                    <div class="big-deal-price d-flex align-items-center justify-content-between">
-                      <div class="big-deal-price-span">
-                          <span class="ms-2">EGP</span>
-                      <strong class="fs-4">250</strong>
-                      </div>
-                      <div class="products-wish">
-                          <div class="con-like-cart  mt-1">
-                            <input class="like-cart" type="checkbox" title="like" (change)="toggleCart($event)">
-                            <div class="checkmark-cart">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="outline" viewBox="0 0 24 24">
-                                <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" class="filled" viewBox="0 0 24 24">
-                                <path d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"></path>
-                              </svg>
-                              
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-     </div>
-
-     <!-- load more button -->
-     <div class="row text-center my-2" >
-        <a (click)="loadMore()" class="loadmore-btn">Load More <fa-icon [icon]="faChevronRight"></fa-icon> <fa-icon [icon]="faChevronRight"></fa-icon>  </a>
+        </div>
+      </a>
     </div>
-      </div>
+  </div>
+  <!-- load more button -->
+  <div class="row text-center my-2" *ngIf="thereIsNextPage">
+    <a (click)="loadMore()" class="loadmore-btn"
+      >Load More <fa-icon [icon]="faChevronRight"></fa-icon>
+      <fa-icon [icon]="faChevronRight"></fa-icon>
+    </a>
+  </div>
 </div>
-
-
-  

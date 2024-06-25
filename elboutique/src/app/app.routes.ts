@@ -94,7 +94,7 @@ export const routes: Routes = [
     component: CheckoutComponent,
   },
   {
-    path: 'category',
+    path: 'categories/:id',
     title: 'Category',
     component: CategoryComponent,
   },
