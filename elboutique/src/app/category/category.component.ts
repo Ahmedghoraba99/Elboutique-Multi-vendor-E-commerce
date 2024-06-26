@@ -141,7 +141,7 @@ export class CategoryComponent {
     this.products = data.data;
     this.productsGroup.push(this.products);
     this.navLinks = data.links;
-    if (this.id != 'all') this.title = data.data[0].category.name;
+    if (this.id != 'all') this.title = data.data[0].category.name || 'browsr';
     if (this.currentPage < data.last_page) this.thereIsNextPage = true;
   }
 
