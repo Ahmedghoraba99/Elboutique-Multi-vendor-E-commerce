@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faHeart, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductCategoryService } from '../service/product-category.service';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -17,164 +16,159 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./category.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
   faChevronRight = faChevronRight;
-  productsPerPage: number = 10;
-  products: any = [];
-  productsGroup: any[] = [];
+  productsPerPage = 10;
+  products: any[] = [];
+  productsGroup: any[][] = [];
   orderByValue = '';
   orderByPriceValue = '';
-  navLinks = [];
-  thereIsNextPage: boolean = false;
-  currentPage: number = 1;
+  navLinks: any[] = [];
+  thereIsNextPage = false;
+  currentPage = 1;
   title = '';
-  id = this.route.snapshot.paramMap.get('id');
+  id: string | null;
 
   constructor(
     private route: ActivatedRoute,
     private categoryService: ProductCategoryService,
     private toast: ToastrService
-  ) {}
+  ) {
+    this.id = this.route.snapshot.paramMap.get('id');
+  }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((queryParams) => {
-      if (queryParams) {
-        let name = queryParams.get('name');
-        let paramObject = {
-          name: name,
-        };
-        if (this.id !== 'all') {
+      const name = queryParams.get('name');
+      if (name) {
+        const paramObject = { name };
+        if (this.id != 'all') {
           this.categoryService
             .searchForProducts(paramObject)
             .subscribe((data) => {
-              this.productsGroup = [];
+              this.resetProducts();
               this.setPageParameters(data);
             });
         }
       } else {
-        if (this.id === 'all') {
-          this.categoryService.getAllProductsInAll().subscribe((data) => {
-            this.setPageParameters(data);
-          });
-          this.title = 'All Products';
-        } else if (parseInt(this.id as string)) {
-          this.categoryService
-            .productsPerCategory(parseInt(this.id as string))
-            .subscribe((data) => {
-              this.title = data.data[0].category.name;
-              this.setPageParameters(data);
-            });
-        }
+        this.handleCategoryLoading();
       }
     });
   }
 
-  loadMore() {
+  private handleCategoryLoading(): void {
     if (this.id === 'all') {
-      this.categoryService
-        .loadMoreProductsAll(this.currentPage + 1)
-        .subscribe((data) => {
-          // add products to data
-          // this.products.push(...data.data);
-          this.productsGroup.push(data.data);
-          console.log('Groups: ', this.productsGroup);
-
-          // update pagination
-          this.products.links = data.links;
-          this.currentPage++;
-          this.thereIsNextPage = this.currentPage < this.products.last_page;
-        });
+      this.categoryService.getAllProductsInAll().subscribe((data) => {
+        this.setPageParameters(data);
+        this.title = 'All Products';
+      });
     } else if (parseInt(this.id as string)) {
       this.categoryService
-        .loadMoreProductsPerCategory(
-          parseInt(this.id as string),
-          this.currentPage + 1
-        )
+        .productsPerCategory(parseInt(this.id as string))
         .subscribe((data) => {
-          // add products to data
-          this.productsGroup.push(data.data);
-          console.log('Groups: ', this.productsGroup);
-
-          // update pagination
-          this.products.links = data.links;
-          this.currentPage++;
-          this.thereIsNextPage = this.currentPage < this.products.last_page;
+          this.title = data.data[0]?.category?.name || 'Whoops!';
+          this.setPageParameters(data);
         });
-    }
-  }
-
-  toggleCart(event: any) {
-    if (event.target.checked) {
-      this.Addtocart();
     } else {
-      this.RemoveFromCart();
+      this.toast.error('Invalid category ID', 'Error');
     }
   }
 
-  toggleWishList(event: any) {
-    if (event.target.checked) {
-      this.AddtoWishlist();
+  private resetProducts(): void {
+    this.productsGroup = [];
+  }
+
+  loadMore(): void {
+    if (this.id === 'all') {
+      this.loadMoreProducts(
+        this.categoryService.loadMoreProductsAll.bind(this.categoryService)
+      );
+    } else if (parseInt(this.id as string)) {
+      this.loadMoreProducts(
+        this.categoryService.loadMoreProductsPerCategory.bind(
+          this.categoryService,
+          parseInt(this.id as string)
+        )
+      );
+    }
+  }
+
+  private loadMoreProducts(loadMoreFn: (page: number) => any): void {
+    loadMoreFn(this.currentPage + 1).subscribe((data: any) => {
+      this.productsGroup.push(data.data);
+      this.updatePagination(data);
+    });
+  }
+
+  private updatePagination(data: any): void {
+    this.products = data.data;
+    this.navLinks = data.links;
+    this.currentPage++;
+    this.thereIsNextPage = this.currentPage < data.last_page;
+  }
+
+  toggleCart(event: Event): void {
+    if ((event.target as HTMLInputElement).checked) {
+      this.addToCart();
     } else {
-      this.RemoveFromWishlist();
+      this.removeFromCart();
     }
   }
 
-  // cart
-  Addtocart() {
-    this.toast.success('Product added to cart ', 'Added ');
+  toggleWishList(event: Event): void {
+    if ((event.target as HTMLInputElement).checked) {
+      this.addToWishlist();
+    } else {
+      this.removeFromWishlist();
+    }
   }
 
-  RemoveFromCart() {
-    this.toast.error('Product Removed', 'Removed');
+  private addToCart(): void {
+    this.toast.success('Product added to cart', 'Added');
   }
 
-  // wishlist
-  AddtoWishlist() {
-    this.toast.success('Product added to WishList ', 'Added ');
+  private removeFromCart(): void {
+    this.toast.error('Product removed from cart', 'Removed');
   }
 
-  RemoveFromWishlist() {
-    this.toast.error('Product Removed', 'Removed');
+  private addToWishlist(): void {
+    this.toast.success('Product added to wishlist', 'Added');
   }
 
-  private setPageParameters(data: any) {
+  private removeFromWishlist(): void {
+    this.toast.error('Product removed from wishlist', 'Removed');
+  }
+
+  private setPageParameters(data: any): void {
     this.products = data.data;
     this.productsGroup.push(this.products);
     this.navLinks = data.links;
-    if (this.id != 'all') this.title = data.data[0].category.name || 'browsr';
-    if (this.currentPage < data.last_page) this.thereIsNextPage = true;
+    if (this.id !== 'all') {
+      this.title = data.data[0]?.category?.name || 'Whoops!';
+    }
+    this.thereIsNextPage = this.currentPage < data.last_page;
   }
 
-  orderBy(event: Event) {
-    if (event.toString() == 'recent') {
-      this.productsGroup.forEach((productsArray) => {
-        // Sort each array of products by created_at in descending order
+  orderBy(event: string): void {
+    this.productsGroup.forEach((productsArray) => {
+      if (event === 'recent') {
         productsArray.sort(
-          (a: any, b: any) =>
+          (a, b) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
-      });
-    } else if (event.toString() == 'sale') {
-      this.productsGroup.forEach((productsArray) => {
-        productsArray.sort(
-          (a: { sale: number }, b: { sale: number }) => b.sale - a.sale
-        );
-      });
-    }
+      } else if (event === 'sale') {
+        productsArray.sort((a, b) => b.sale - a.sale);
+      }
+    });
   }
 
-  orderByPrice(event: Event) {
-    if (event.toString() == 'highToLow')
-      this.productsGroup.forEach((productsArray) => {
-        productsArray.sort(
-          (a: { price: number }, b: { price: number }) => b.price - a.price
-        );
-      });
-    else
-      this.productsGroup.forEach((productsArray) => {
-        productsArray.sort(
-          (a: { price: number }, b: { price: number }) => a.price - b.price
-        );
-      });
+  orderByPrice(event: string): void {
+    this.productsGroup.forEach((productsArray) => {
+      if (event === 'highToLow') {
+        productsArray.sort((a, b) => b.price - a.price);
+      } else {
+        productsArray.sort((a, b) => a.price - b.price);
+      }
+    });
   }
 }
