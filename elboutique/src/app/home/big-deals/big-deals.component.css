@@ -57,6 +57,7 @@ a {
     text-align: center;
   }
   
+  
   .big-deal-product-wish {
     display: flex;
     align-items: center;
@@ -88,6 +89,7 @@ a {
   height: 15rem;
   object-fit: cover;
   border-radius: 1rem;
+  padding: 5px;
   }
   
   .big-deal-product-detail {
@@ -137,10 +139,11 @@ a {
     font-size: 1.2rem;
     font-weight:500;
 }
-.products-wish{
-  /* margin: 1rem; */
-  overflow: hidden;
-  display: flex;
+.products-wish {
+  /* width: 2.5rem;
+  height: 2.5rem; */
+  width: 2rem;
+  height: 2rem;
   -moz-box-align: center;
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -151,8 +154,69 @@ a {
   padding: 0.4rem 0.5rem;
 }
 
-
 /*  */
+
+.con-like {
+  color: var(--accent-color-2);
+  position: relative;
+}
+.con-like-cart{
+  color:var(--accent-color-1);
+  position: relative;
+}
+
+.con-like .like,
+.con-like-cart .like-cart {
+  position: absolute;
+  opacity: 0;
+  z-index: 20;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  top: -7px;
+  right: -9px;
+}
+
+.con-like .outline,
+.con-like .filled {
+  fill: var(--accent-color-2);
+  position: absolute;
+}
+.con-like-cart .outline,
+.con-like-cart .filled {
+  fill: var(--accent-color-1);
+  position: absolute;
+}
+
+.con-like .filled,
+.con-like-cart .filled {
+  animation: kfr-filled 0.5s;
+  display: none;
+}
+
+.con-like .poly {
+  stroke: var(--accent-color-2);
+  fill: var(--accent-color-2);
+}
+
+.con-like .like:checked ~ .checkmark .filled {
+  display: block;
+}
+
+@keyframes kfr-filled {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* tag discount */
+
 
 .big-deal-product-big-tag-deal{
   background-color: red;
@@ -190,4 +254,9 @@ a {
   border-radius: 50%;
   top: 9px;
   left: -6px;
+}
+
+
+.seemorelink{
+  margin-right: 69px;
 }
