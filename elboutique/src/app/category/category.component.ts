@@ -37,29 +37,36 @@ export class CategoryComponent {
   ) {}
 
   ngOnInit(): void {
-    if (this.route.snapshot.queryParams) {
-      if (this.id !== 'all') {
-        this.categoryService
-          .searchForProducts(this.route.snapshot.queryParams)
-          .subscribe((data) => {
+    this.route.queryParamMap.subscribe((queryParams) => {
+      if (queryParams) {
+        let name = queryParams.get('name');
+        let paramObject = {
+          name: name,
+        };
+        if (this.id !== 'all') {
+          this.categoryService
+            .searchForProducts(paramObject)
+            .subscribe((data) => {
+              this.productsGroup = [];
+              this.setPageParameters(data);
+            });
+        }
+      } else {
+        if (this.id === 'all') {
+          this.categoryService.getAllProductsInAll().subscribe((data) => {
             this.setPageParameters(data);
           });
+          this.title = 'All Products';
+        } else if (parseInt(this.id as string)) {
+          this.categoryService
+            .productsPerCategory(parseInt(this.id as string))
+            .subscribe((data) => {
+              this.title = data.data[0].category.name;
+              this.setPageParameters(data);
+            });
+        }
       }
-    } else {
-      if (this.id === 'all') {
-        this.categoryService.getAllProductsInAll().subscribe((data) => {
-          this.setPageParameters(data);
-        });
-        this.title = 'All Products';
-      } else if (parseInt(this.id as string)) {
-        this.categoryService
-          .productsPerCategory(parseInt(this.id as string))
-          .subscribe((data) => {
-            this.title = data.data[0].category.name;
-            this.setPageParameters(data);
-          });
-      }
-    }
+    });
   }
 
   loadMore() {
