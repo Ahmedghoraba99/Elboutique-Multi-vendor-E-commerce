@@ -30,6 +30,7 @@ class StoreProductRequest extends FormRequest
             'images' => "required|array",
             "category_id" => "required|string|exists:categories,id",
             "tags" => "sometimes|array",
+            "attributes" => "required|array",
             "tags.*" => "exists:tags,id",
             "images.*" => "required|image|mimes:jpeg,png,jpg|max:2048", // Added max file size validation
             "vendor_id" => "required|string|exists:vendors,id",
@@ -58,6 +59,7 @@ class StoreProductRequest extends FormRequest
             "category.required" => "Category is required",
             "category.exists" => "Category does not exist",
             "tags.*.exists" => "One or more tags do not exist",
+            "attributes.required" => "Attributes are required",
             "images.*.required" => "Image is required",
             "images.*.image" => "Image must be an image",
             "images.*.mimes" => "Image must be a jpeg, png, or jpg",
@@ -66,6 +68,4 @@ class StoreProductRequest extends FormRequest
             "vendor.exists" => "Vendor does not exist",
         ];
     }
-
-
 }

@@ -77,7 +77,21 @@ export class VendorFormComponent {
       });
     }
   }
-
+  onBlur(controler: string) {
+    const query = { [controler]: this.vendorForm.get(controler)?.value };
+    this.authService.emailAndPasswordExisting(query).subscribe(
+      () => {},
+      (err) => {
+        if (err.status == 422) {
+          this.vendorForm.get(controler)?.setErrors({ existingAccount: true });
+          this.showToastMessage(
+            'Phones and emails cannot be linked to more than one account.',
+            'Validation Error'
+          );
+        }
+      }
+    );
+  }
   onSubmit() {
     this.markFormGroupTouched(this.vendorForm);
 

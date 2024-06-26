@@ -73,6 +73,7 @@ Route::get('/customer/showWishlist/{id}', [WishlistController::class, 'showCutso
 //login logout endpoints
 Route::post('/login',  [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/registerFormValdation', [AuthController::class, 'registerFormValdation']);
 
  
 //email verification endpoints

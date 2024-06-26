@@ -39,14 +39,14 @@ class UpdateAdminRequest extends FormRequest
                   
                     'address' => 'sometimes|string|max:255|min:10',
                     'phone' => [
-                        'sometimes',
+                        'required',
                         'string',
                         'max:20',
                         'regex:/^01[012]\d{8}$/',
-                        Rule::unique('customer_phones,phoneNumper'),
-                        Rule::unique('admins','phone')->ignore($this->route('admin')),
+                        Rule::unique('customer_phones',"phoneNumper"),
+                        Rule::unique('admins','phone'),
                         Rule::unique('vendors','phone'),
-                    ], 
+                    ],
                     'image' => 'nullable|image|mimes:jpg,png|max:2048',
                 ];
            

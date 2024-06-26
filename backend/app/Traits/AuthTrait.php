@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 
 trait AuthTrait {
 
-    public function uploadImage($image='image',$request,$folder,$model=null){
+    public function uploadImage($image,$request,$folder,$model=null){
         
 
         

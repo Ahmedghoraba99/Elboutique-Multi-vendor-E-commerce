@@ -1,0 +1,303 @@
+.section-background{
+    height: 11rem;
+    background-color: aqua;
+    background: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.307), 
+      rgba(0, 0, 0, 0.307)
+    ),
+    url(../../assets/images/vendorlogo.png);    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.vendor-name img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgb(255, 255, 255);
+    border: 2px solid var(--accent-color-1);
+}
+
+.vendor-name span{
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--accent-color-2);
+    padding: 20px 0px;
+}
+.vendor-information , .vendor-container{
+    background-color: var(--accent-color-3);
+}
+.vednor-location , .vedor-email , .vendor-phone{
+    background: var(--accent-color-1);
+  padding: 10px;
+}
+.vednor-location span , .vedor-email span , .vendor-phone span {
+    color: #1a181882;
+    font-weight: 600;
+    cursor: pointer;
+}
+.vednor-location fa-icon , .vedor-email fa-icon , .vendor-phone fa-icon {
+    color: var(--accent-color-2);
+  font-size: 15px;
+  border-radius: 50%;
+}
+
+* {
+    text-transform: capitalize;
+  }
+  a {
+    text-decoration: none;
+    cursor: pointer;
+    color: #1a1818;
+  }
+  .container-fluid.big-deals {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  .big-deals-header h2 {
+    font-weight: bold;
+    margin-left: 1rem;
+  }
+  
+  .big-deals-btn a {
+    margin-right: 1rem;
+    font-weight: bold;
+    font-size: 24px;
+  }
+  
+  .big-deal-product-data {
+    background-color: var(--accent-color-1);
+    border-radius: 0.5rem;
+  }
+  
+  .big-deal-product-big-tags {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .big-deal-product-big-tag {
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    color: #ffff;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .big-deal-product-big-tag span {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-align: center;
+  }
+  
+  .big-deal-product-wish {
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    color: #ffff;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .big-deal-product-slider {
+    margin-bottom: 1rem;
+  }
+  
+  .big-deal-product-swiper {
+    width: 100%;
+  }
+  
+  .big-deal-product-swiper-slider img {
+    display: block;
+    width: 100%;
+    height: 15rem;
+    object-fit: cover;
+    padding: 5px;
+    border-radius: 1rem;
+  }
+  
+  .big-deal-product-detail {
+    line-height: 1.5;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #1a1818;
+    text-overflow: ellipsis;
+  }
+  
+  .big-deal-info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+
+  }
+  .big-deal-info span{
+    overflow: hidden;
+     white-space: nowrap;
+  }
+  
+  .big-deal-price {
+    display: flex;
+    align-items: center;
+  }
+  
+  .big-deal-price-span span {
+    margin-right: 0.5rem;
+  }
+  
+  .big-deal-price-span strong {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .big-deal-detail-data {
+    line-height: 1.5;
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: wrap;
+    color: #1a1818;
+    text-overflow: ellipsis;
+  }
+  .big-deals-header {
+    flex: 1 1 0%;
+    display: inline-flex;
+    flex-direction: row;
+    max-width: 90%;
+  }
+  .big-deals-btn a {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+  .products-wish {
+    /* width: 2.5rem;
+    height: 2.5rem; */
+    width: 2rem;
+    height: 2rem;
+    -moz-box-align: center;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    color: #ffff;
+    padding: 0.4rem 0.5rem;
+  }
+  
+  /*  */
+  
+  .con-like {
+    color: var(--accent-color-2);
+    position: relative;
+  }
+  .con-like-cart{
+    color:var(--accent-color-1);
+    position: relative;
+  }
+  
+  .con-like .like,
+  .con-like-cart .like-cart {
+    position: absolute;
+    opacity: 0;
+    z-index: 20;
+    cursor: pointer;
+    width: 2rem;
+    height: 2rem;
+    top: -7px;
+    right: -9px;
+  }
+  
+  .con-like .outline,
+  .con-like .filled {
+    fill: var(--accent-color-2);
+    position: absolute;
+  }
+  .con-like-cart .outline,
+  .con-like-cart .filled {
+    fill: var(--accent-color-1);
+    position: absolute;
+  }
+  
+  .con-like .filled,
+  .con-like-cart .filled {
+    animation: kfr-filled 0.5s;
+    display: none;
+  }
+  
+  .con-like .poly {
+    stroke: var(--accent-color-2);
+    fill: var(--accent-color-2);
+  }
+  
+  .con-like .like:checked ~ .checkmark .filled {
+    display: block;
+  }
+  
+  @keyframes kfr-filled {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+  
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+  
+  
+  .swiper-slide{
+    padding: 5px;
+  }
+  
+
+  /* tag discount */
+
+  
+.big-deal-product-big-tag-deal{
+    background-color: red;
+    text-transform: capitalize;
+    padding: 6px;
+    color: #e6e9f5;
+    font-size: 13px;
+    font-weight: 600;
+    top: 13px;
+    left: 11px;
+    transform: rotate(-45deg);
+  }
+  .big-deal-product-big-tag-deal span{
+    font-weight: 600;
+  
+  }
+  
+  .big-deal-product-big-tag-deal::after{
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-color-1);
+    border-radius: 50%;
+    top: 9px;
+    right: -6px;
+  
+  }
+  .big-deal-product-big-tag-deal::before{
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-color-1);
+    border-radius: 50%;
+    top: 9px;
+    left: -6px;
+  }
