@@ -22,6 +22,11 @@ export class DashboardComponent {
       name: 'Vendors',
     },
     {
+      path: 'categories',
+      icon: '<i class="fas fa-list"></i>',
+      name: 'Categories',
+    },
+    {
       path: 'products',
       icon: '<i class="fas fa-shopping-cart"></i>',
       name: 'Products',
