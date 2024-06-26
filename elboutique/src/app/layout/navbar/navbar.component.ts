@@ -7,7 +7,7 @@ import {
   faArrowRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -16,6 +16,24 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  selectedCategory: any = null;
+  constructor(private router: Router) {}
+
+  onCategorySelected(category: any) {
+    this.selectedCategory = category;
+  }
+  performSearch(searchTerm: string) {
+    const categoryId = this.selectedCategory ? this.selectedCategory.id : 'all';
+    this.router.navigate([`/categories/${categoryId}`], {
+      queryParams: { name: searchTerm },
+    });
+  }
+
+  handleKeyPress(event: KeyboardEvent, searchTerm: string) {
+    if (event.key === 'Enter') {
+      this.performSearch(searchTerm);
+    }
+  }
   faSearch = faSearch;
   faShoppingCart = faShoppingCart;
   faHeart = faHeart;

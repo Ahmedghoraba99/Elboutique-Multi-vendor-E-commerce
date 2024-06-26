@@ -1,26 +1,32 @@
 <div class="selectDrop position-relative">
-    <span class="text-capitalize open-select" (click)="toggleDropdown()">
-      {{ selectedItem }}
-      <fa-icon [icon]="faChevronDown" class=""></fa-icon>
-    </span>
-    <div class="select-Drop" [ngClass]="{ 'd-none': !isDropdownOpen }">
-      <div class="search-feild">
-        <input class="text-capitalize" type="text" placeholder="Search For Category.." [(ngModel)]="searchTerm" (input)="filterCategories()">
-      </div>
-      <ul class="search-result text-capitalize">
-        <ng-container *ngIf="!noCategoryFound; else noCategory">
-          <li *ngFor="let item of filteredCategories; let i = index"
-              (click)="setIsOpen(i, item.name)"
-              [ngClass]="{ 'active': selectedIndex === i }">
-                {{ item.name }}
-          </li>
-        </ng-container>
-        <ng-template #noCategory>
-          <li class="text-danger">
-            Sorry, there is no category with this name.
-          </li>
-        </ng-template>
-      </ul>
+  <span class="text-capitalize open-select" (click)="toggleDropdown()">
+    {{ selectedItem }}
+    <fa-icon [icon]="faChevronDown" class=""></fa-icon>
+  </span>
+  <div class="select-Drop" [ngClass]="{ 'd-none': !isDropdownOpen }">
+    <div class="search-feild">
+      <input
+        class="text-capitalize"
+        type="text"
+        placeholder="Search For Category.."
+        [(ngModel)]="searchTerm"
+        (input)="filterCategories()"
+        (keypress)="handleKeyPress($event)"
+      />
     </div>
+    <ul class="search-result text-capitalize">
+      <ng-container *ngIf="!noCategoryFound; else noCategory">
+        <li
+          *ngFor="let item of filteredCategories; let i = index"
+          (click)="setIsOpen(i, item.name)"
+          [ngClass]="{ active: selectedIndex === i }"
+        >
+          {{ item.name }}
+        </li>
+      </ng-container>
+      <ng-template #noCategory>
+        <li class="text-danger">Sorry, there is no category with this name.</li>
+      </ng-template>
+    </ul>
   </div>
-  
+</div>

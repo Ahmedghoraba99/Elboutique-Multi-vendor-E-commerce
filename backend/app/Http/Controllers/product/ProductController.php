@@ -226,45 +226,63 @@ class ProductController extends Controller
     //search function
     public function searchProduct(DefalutRequest $request)
     {
+        // Validate request
+        $request->validate([
+            'category_name' => 'nullable|string',
+            'category_id' => 'nullable|integer',
+            'min_price' => 'nullable|numeric',
+            'max_price' => 'nullable|numeric',
+            'name' => 'nullable|string',
+            'sort_by' => 'nullable|in:newest,highest_price,lowest_price',
+            'tags' => 'nullable|string',
+            'per_page' => 'nullable|integer|min:1',
+        ]);
+
         $query = Product::query();
 
-        //categoryname
+        // Category name
         if ($request->has('category_name')) {
             $query->whereHas('category', function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->category_name . '%');
             });
         }
 
-        //category_id
+        // Category ID
         if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        //min max price
+        // Min price
         if ($request->has('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
+
+        // Max price
         if ($request->has('max_price')) {
             $query->where('price', '<=', $request->max_price);
         }
 
-        //search
+        // Product name search
         if ($request->has('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
         }
 
-        //sorting
+        // Sorting
         if ($request->has('sort_by')) {
-            if ($request->sort_by == 'newest') {
-                $query->orderBy('created_at', 'desc');
-            } elseif ($request->sort_by == 'highest_price') {
-                $query->orderBy('price', 'desc');
-            } elseif ($request->sort_by == 'lowest_price') {
-                $query->orderBy('price', 'asc');
+            switch ($request->sort_by) {
+                case 'newest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'highest_price':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'lowest_price':
+                    $query->orderBy('price', 'asc');
+                    break;
             }
         }
 
-        //tags
+        // Tags
         if ($request->has('tags')) {
             $tags = explode(',', $request->tags);
             $query->whereHas('tags', function ($q) use ($tags) {
@@ -272,7 +290,9 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->get();
+        // Pagination
+        $perPage = $request->input('per_page', 16); // Default to 16 if per_page is not provided
+        $products = $query->with(['images', 'tags', 'category'])->paginate($perPage);
 
         return response()->json($products, 200);
     }

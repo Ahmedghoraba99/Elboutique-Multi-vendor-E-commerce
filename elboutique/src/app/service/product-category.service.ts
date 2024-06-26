@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -40,6 +40,16 @@ export class ProductCategoryService {
           console.log(res);
         })
       );
+  }
+
+  searchForProducts(queryParams: any): Observable<any> {
+    queryParams = new HttpParams({
+      fromObject: queryParams,
+    });
+    return this.httpClient.get<any>(
+      `http://localhost:8000/api/product/search`,
+      { params: queryParams }
+    );
   }
   constructor() {}
 }

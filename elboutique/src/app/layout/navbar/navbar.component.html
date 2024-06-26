@@ -11,11 +11,22 @@
       <div class="col-sm-6 my-2">
         <div class="header-search d-flex align-items-center">
           <!-- the search for category -->
-          <app-select-drop></app-select-drop>
-          <!-- search fpr product in the selected category -->
-          <div class="search">
-            <input type="text" placeholder="Search For Products..." />
-            <fa-icon [icon]="faSearch"></fa-icon>
+          <app-select-drop
+            (categorySelected)="onCategorySelected($event)"
+          ></app-select-drop>
+          <!-- search for product in the selected category -->
+          <div class="search w-100">
+            <input
+              type="text"
+              placeholder="Search For Products..."
+              #productSearch
+              (keypress)="handleKeyPress($event, productSearch.value)"
+            />
+            <fa-icon
+              [icon]="faSearch"
+              class="ms-auto"
+              (click)="performSearch(productSearch.value)"
+            ></fa-icon>
           </div>
         </div>
       </div>

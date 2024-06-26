@@ -20,9 +20,8 @@ import { FormsModule } from '@angular/forms';
 export class CategoryComponent {
   faChevronRight = faChevronRight;
   productsPerPage: number = 10;
-  products: any = []; 
+  products: any = [];
   productsGroup: any[] = [];
-
   orderByValue = '';
   orderByPriceValue = '';
   navLinks = [];
@@ -38,18 +37,28 @@ export class CategoryComponent {
   ) {}
 
   ngOnInit(): void {
-    if (this.id === 'all') {
-      this.categoryService.getAllProductsInAll().subscribe((data) => {
-        this.setPageParameters(data);
-      });
-      this.title = 'All Products';
-    } else if (parseInt(this.id as string)) {
-      this.categoryService
-        .productsPerCategory(parseInt(this.id as string))
-        .subscribe((data) => {
-          this.title = data.data[0].category.name;
+    if (this.route.snapshot.queryParams) {
+      if (this.id !== 'all') {
+        this.categoryService
+          .searchForProducts(this.route.snapshot.queryParams)
+          .subscribe((data) => {
+            this.setPageParameters(data);
+          });
+      }
+    } else {
+      if (this.id === 'all') {
+        this.categoryService.getAllProductsInAll().subscribe((data) => {
           this.setPageParameters(data);
         });
+        this.title = 'All Products';
+      } else if (parseInt(this.id as string)) {
+        this.categoryService
+          .productsPerCategory(parseInt(this.id as string))
+          .subscribe((data) => {
+            this.title = data.data[0].category.name;
+            this.setPageParameters(data);
+          });
+      }
     }
   }
 
@@ -125,6 +134,7 @@ export class CategoryComponent {
     this.products = data.data;
     this.productsGroup.push(this.products);
     this.navLinks = data.links;
+    if (this.id != 'all') this.title = data.data[0].category.name;
     if (this.currentPage < data.last_page) this.thereIsNextPage = true;
   }
 
