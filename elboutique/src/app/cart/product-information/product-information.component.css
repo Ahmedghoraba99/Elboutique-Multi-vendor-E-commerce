@@ -96,8 +96,8 @@ select option {
   top: 0px;
   right: 0px;
 }
-.vendor-email{
-  font-size: 14px;
+.vendor-profile-info p{
+  font-size: 13px;
 }
 .amount-stock-low{
  color: var(--accent-color-2);
