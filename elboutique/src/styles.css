@@ -237,9 +237,14 @@ hr {
 }
 /* end of btns */
 
-/* .modal-backdrop {
+.modal-backdrop {
   z-index: -1;
-} */
+}
 .max-width-md {
   max-width: 350px;
+}
+.user-avatar-100 {
+  width: 100px;
+  height: 100px;
+  border-radius: 1rem;
 }

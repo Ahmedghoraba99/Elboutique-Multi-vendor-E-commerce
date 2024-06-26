@@ -62,11 +62,9 @@ export class VendorsComponent {
   activateVendor(vendor: any): void {
     console.log(vendor);
 
-    this.vendorService.activateVendor(vendor.id, !vendor.active).subscribe({
-      next: () => {
+    this.vendorService.activateVendor(vendor.id).subscribe({
+      next: (response) => {
         vendor.active = !vendor.active;
-        console.log(vendor.active);
-
         Swal.fire(
           'Success!',
           `Vendor has been ${vendor.active ? 'activated' : 'deactivated'}.`,
