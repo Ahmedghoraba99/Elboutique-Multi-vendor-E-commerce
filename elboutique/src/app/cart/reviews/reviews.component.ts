@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
 import {Review} from '../../_model/reviews'
 import { ReviewService } from '../../service/review.service';
 import { ActivatedRoute } from '@angular/router';
-
+import { faStar, faStarHalfAlt, faStar as faStarEmpty } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-reviews',
@@ -35,7 +34,9 @@ export class ReviewsComponent implements OnInit{
 
 
   faStar = faStar;
-  rating = 3 ;
+  faStarHalfAlt = faStarHalfAlt;
+  faStarEmpty = faStarEmpty;
+    rating = 3 ;
 
   setRating(value:number){
     this.rating = value ;
@@ -58,6 +59,17 @@ export class ReviewsComponent implements OnInit{
   calculateAverageRating(): void {
     this.totalRating = this.reviews.reduce((sum, review) => sum + Number(review.rate), 0);
     this.averageRating = this.totalRating / this.reviews.length;
+    this.averageRating = Number(this.averageRating.toFixed(2));
 
   }
+  getStarIcon(index: number): any {
+    if (index < Math.floor(this.averageRating)) {
+      return this.faStar; 
+    } else if (index === Math.floor(this.averageRating) && this.averageRating % 1 !== 0) {
+      return this.faStarHalfAlt; 
+    } else {
+      return this.faStarEmpty; 
+    }
+  }
 }
+
