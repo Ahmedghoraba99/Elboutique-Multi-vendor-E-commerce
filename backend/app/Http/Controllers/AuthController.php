@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterFormValdationRequest;
 use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\Vendor;
@@ -42,6 +43,10 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
+    public function registerFormValdation(RegisterFormValdationRequest $request) {
+        
+    }
+
 
     private function getUserByRole($role, $email) {
         switch ($role) {
@@ -55,4 +60,5 @@ class AuthController extends Controller
                 return null;
         }
     }
+    
 }
