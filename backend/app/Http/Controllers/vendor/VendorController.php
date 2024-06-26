@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\VendorResource; 
+use App\Http\Resources\VendorResource;
 use App\Models\Vendor;
 use App\Http\Requests\StoreVendorRequest;
 use App\Http\Requests\UpdateVendorRequest;
@@ -28,7 +28,7 @@ class VendorController extends Controller
     public function store(StoreVendorRequest $request)
     {
         $validatedData = $request->validated();
-        
+
         if($request->hasfile('image')){
             $validatedData['image'] = $this->uploadImage('image',$request,"vendors");
         }
@@ -62,11 +62,11 @@ class VendorController extends Controller
         }
 
         if( $request->hasFile('national_id')){
-            
+
             $validatedData['national_id'] = $this->uploadImage('national_id',$request,"vendors/national_id",$vendor);
         }
         $vendor->update($validatedData);
-        
+
         return response()->json(['message' => 'Vendor updated successfully', 'vendor' => $vendor], 201);
 
     }
@@ -77,12 +77,12 @@ class VendorController extends Controller
     public function destroy(Vendor $vendor)
     {
 
-         
+
         if ($vendor->image) {
-            
+
             Storage::delete('public/images/vendors/'.$vendor->image);
         }
-        
+
         if ($vendor->national_id) {
             Storage::delete('public/images/vendors/national_id'.$vendor->national_id);
         }

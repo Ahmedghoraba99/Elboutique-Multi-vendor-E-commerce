@@ -250,7 +250,7 @@ class ProductController extends Controller
 
         //search
         if ($request->has('name')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%' . $request->name . '%');
         }
 
         //sorting
