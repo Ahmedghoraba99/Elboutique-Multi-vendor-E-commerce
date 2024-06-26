@@ -22,7 +22,7 @@ import { AccountComponent } from './profile/user/account/account.component';
 import { OrdersComponent as UserOrdersComponent } from './profile/user/orders/orders.component';
 import { WishListComponent as UserWishListComponent } from './profile/user/wish-list/wish-list.component';
 import { PaymentComponent } from './profile/user/payment/payment.component';
-import { ChangePasswordComponent as UserChangePasswordComponent } from './profile/user/change-password/change-password.component';
+import { ChangePasswordComponent as UserChangePasswordComponent } from './Auth/change-password/change-password.component';
 import { VendorComponent } from './profile/vendor/vendor.component';
 import { OverviewComponent as VendorOverviewComponent } from './profile/vendor/overview/overview.component';
 import { ProductsComponent as VendorProductsComponent } from './profile/vendor/products/products.component';

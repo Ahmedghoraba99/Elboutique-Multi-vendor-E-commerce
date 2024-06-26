@@ -4,7 +4,7 @@
 }
 .dark-section{
     border-radius:  1rem 0  0 1rem  ;
-    background-color: var(--accent-color-3);
+    background-color: var(--accent-color-2);
 
 }
 .light-section , .dark-section{
@@ -19,7 +19,7 @@
 .light-section::after{
     width: 16rem;
     height: 15rem;
-    background-color: var(--accent-color-3);
+    background-color: var(--accent-color-2);
 }
 .light-section::after , .dark-section::after{
     content: "";

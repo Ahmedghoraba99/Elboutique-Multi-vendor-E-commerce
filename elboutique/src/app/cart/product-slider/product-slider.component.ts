@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductDetailsService } from '../../service/product-details.service';
 import { NgFor } from '@angular/common';
 import Swiper from 'swiper';
+import { Navigation, Pagination, Thumbs } from 'swiper/modules';
 
 @Component({
   selector: 'app-product-slider',
@@ -14,11 +15,12 @@ import Swiper from 'swiper';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ProductSliderComponent implements AfterViewInit {
-  @ViewChild('swiperContainer') swiperContainer: ElementRef | undefined;
-
+  @ViewChild('mainSwiper') mainSwiperRef: ElementRef | undefined;
+  @ViewChild('thumbsSwiper') thumbsSwiperRef: ElementRef | undefined;
   productImages: any[] = [];
   id: number = 0;
-  swiper: Swiper | undefined;
+  mainSwiper: Swiper | undefined;
+  thumbsSwiper: Swiper | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,23 +36,41 @@ export class ProductSliderComponent implements AfterViewInit {
             'http://localhost:8000/storage/' + image.image
         );
         console.log(this.productImages);
-        this.initSwiper();
+        this.initSwipers();
       });
     });
   }
 
   ngAfterViewInit(): void {
-    this.initSwiper();
+    this.initSwipers();
   }
 
-  initSwiper() {
-    if (this.swiper) {
-      this.swiper.destroy(true, true);
+  initSwipers() {
+    if (this.thumbsSwiper) {
+      this.thumbsSwiper.destroy(true, true);
     }
-    this.swiper = new Swiper(this.swiperContainer?.nativeElement, {
-      spaceBetween: 20,
+    if (this.mainSwiper) {
+      this.mainSwiper.destroy(true, true);
+    }
+
+    this.thumbsSwiper = new Swiper(this.thumbsSwiperRef?.nativeElement, {
+      spaceBetween: 10,
       slidesPerView: 3,
       direction: 'vertical',
+      modules: [Navigation],
+      watchSlidesProgress: true,
+    });
+
+    this.mainSwiper = new Swiper(this.mainSwiperRef?.nativeElement, {
+      spaceBetween: 10,
+      thumbs: {
+        swiper: this.thumbsSwiper,
+      },
+      modules: [Pagination, Thumbs],
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
     });
   }
 
