@@ -33,7 +33,56 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-Route::group([], function () {
+// endpoints that use admin gaurd
+
+Route::group(['middleware' => ['auth:admin']], function () {
+    Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);
+    Route::get('/vendors/ban/{vendor}', [VendorController::class, 'banVendor']);
+    Route::get('/customers/active/{customer}', [CustomerController::class, 'activateCustomer']);
+    Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
+    });
+
+
+// endpoints that use vendor gaurd
+Route::group(['middleware' => ['auth:vendor']], function () {
+     
+    });
+
+
+// endpoints that use customer guard
+Route::group(['middleware' => ['AdminCustomerAuth']], function () {
+
+    //cart endpoint
+Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
+Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
+Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
+
+//wishlist endpoint
+Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachProductToCustomerWishlist']);
+Route::post('/customer/deleteWishlist/{id}', [WishlistController::class, 'detachProductFromCustomerWishlist']);
+Route::get('/customer/showWishlist/{id}', [WishlistController::class, 'showCutsomerWishlist']);
+     
+    });
+
+
+
+
+
+
+//email verification endpoints
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
+    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+});
+
+
+
+
+
+
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('admins', AdminController::class);
     Route::apiResource('vendors', VendorController::class);
     Route::apiResource('customers', CustomerController::class);
@@ -44,13 +93,7 @@ Route::group([], function () {
     Route::apiResource('customerphones', CustomerPhoneController::class);
 });
 
-// Product related
-Route::get('/product/featured', [ProductController::class, "getFeaturedProducts"]);
-Route::get('/product/category/{id}', [ProductController::class, "getProductsByCategory"]);
-Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
-Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
-Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
-Route::get('/product/search', [ProductController::class,"searchProduct"]);
+
 
 
 // Order related routes
@@ -60,37 +103,41 @@ Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProd
 Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
 Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
 
-//cart endpoint
-Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
-Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
-Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
 
-//wishlist endpoint
-Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachProductToCustomerWishlist']);
-Route::post('/customer/deleteWishlist/{id}', [WishlistController::class, 'detachProductFromCustomerWishlist']);
-Route::get('/customer/showWishlist/{id}', [WishlistController::class, 'showCutsomerWishlist']);
 
-//login logout endpoints
-Route::post('/login',  [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('/registerFormValdation', [AuthController::class, 'registerFormValdation']);
+
 
  
-//email verification endpoints
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
-    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-});
+
 
 //forgot-password endpoints
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
 
 
-Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);
-Route::get('/vendors/ban/{vendor}', [VendorController::class, 'banVendor']);
-Route::get('/customers/active/{customer}', [CustomerController::class, 'activateCustomer']);
-Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
 
 
+
+
+
+
+
+
+// Product related
+Route::get('/product/featured', [ProductController::class, "getFeaturedProducts"]);
+Route::get('/product/category/{id}', [ProductController::class, "getProductsByCategory"]);
+Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
+Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
+Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
+Route::get('/product/search', [ProductController::class,"searchProduct"]);
+
+
+
+
+
+
+
+//login logout endpoints
+Route::post('/login',  [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/registerFormValdation', [AuthController::class, 'registerFormValdation']);

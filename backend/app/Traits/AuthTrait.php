@@ -44,6 +44,7 @@ trait AuthTrait {
     
     private function sendSuccessResponse($message='Success',$model=null)
     {
+        
         return response()->json(['message' => "$message", 'data' => $model], 201);
     }
 
