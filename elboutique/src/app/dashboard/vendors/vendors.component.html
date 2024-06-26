@@ -1,7 +1,10 @@
+<div class="h6 text-uppercase">Vendors</div>
+<hr class="hr">
 <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
+                <th>#</th>
                 <th>Image</th>
                 <th>Name</th>
                 <th>Email</th>
@@ -10,7 +13,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let vendor of vendors">
+            @for (vendor of vendors; track $index) {
+            <tr>
+                <td>{{ $index + 1 }}</td>
                 <td><img [src]="vendor.image" alt="{{ vendor.name }}" width="50"></td>
                 <td>{{ vendor.name }}</td>
                 <td>{{ vendor.email }}</td>
@@ -35,6 +40,8 @@
                     <button (click)="deleteVendor(vendor.id)" class="btn btn-sm btn-danger">Delete</button>
                 </td>
             </tr>
+            }
+
         </tbody>
     </table>
 </div>

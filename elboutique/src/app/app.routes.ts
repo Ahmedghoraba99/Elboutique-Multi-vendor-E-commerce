@@ -28,6 +28,7 @@ import { OverviewComponent as VendorOverviewComponent } from './profile/vendor/o
 import { ProductsComponent as VendorProductsComponent } from './profile/vendor/products/products.component';
 import { AccountComponent as VendorAccountComponent } from './profile/vendor/account/account.component';
 import { ChangePasswordComponent as VendorChangePasswordComponent } from './profile/vendor/change-password/change-password.component';
+import { CategoryComponent as VendorCategoryComponent } from './dashboard/category/category.component';
 export const routes: Routes = [
   {
     path: '',
@@ -63,6 +64,11 @@ export const routes: Routes = [
         path: 'orders',
         title: 'Orders',
         component: OrdersComponent,
+      },
+      {
+        path: 'categories',
+        title: 'Categories',
+        component: VendorCategoryComponent,
       },
     ],
   },
