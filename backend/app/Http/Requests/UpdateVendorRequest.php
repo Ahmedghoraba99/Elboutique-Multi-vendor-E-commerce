@@ -48,8 +48,6 @@ class UpdateVendorRequest extends FormRequest
                         Rule::unique('vendors','phone')->ignore($this->route('vendor')),
                     ], 
                     'national_id'=>'sometimes|image|mimes:jpg,png|max:2048',
-                    'active' => 'sometimes|in:true,false',
-                    'banned' => 'sometimes|in:true,false',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
                 ];
              

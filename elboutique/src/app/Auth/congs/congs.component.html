@@ -1,26 +1,12 @@
-@if (show) {  
-<div class="congratulation-area text-center mt-5">
+@if (show) {
+<div class="congratulation-area text-center mt-5 my-5">
   <div class="container">
     <div class="congratulation-wrapper">
       <div class="congratulation-contents center-text">
         <div class="success-animation">
-          <svg
-            class="checkmark"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 52 52"
-          >
-            <circle
-              class="checkmark__circle"
-              cx="26"
-              cy="26"
-              r="25"
-              fill="none"
-            />
-            <path
-              class="checkmark__check"
-              fill="none"
-              d="M14.1 27.2l7.1 7.2 16.7-16.8"
-            />
+          <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
           </svg>
         </div>
         <h4 class="congratulation-contents-title">Congratulations!</h4>
@@ -28,7 +14,7 @@
           You have successfully activated your account. You can now use all the
           features and benefits of our website.
         </p>
-        <div class="btn-wrapper mt-4">
+        <div class="btn primary-bg-color mt-4">
           <a routerLink="/login" class="m-1 text-decoration-none">
             <button><span>Login Now</span></button>
           </a>

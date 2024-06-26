@@ -3,24 +3,14 @@ import { SideBarComponent } from '../widgets/side-bar/side-bar.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-admin-dashboard',
   standalone: true,
   imports: [SideBarComponent, RouterOutlet],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent {
-  currentUser = {
-    name: 'John Doe',
-    email: 'qfWp3@example.com',
-    image: 'https://i.pravatar.cc/300',
-  };
   navLinks = [
-    {
-      path: 'overview',
-      icon: '<i class="fas fa-home"></i>',
-      name: 'Overview',
-    },
     {
       path: 'users',
       icon: '<i class="fas fa-users"></i>',
@@ -30,6 +20,11 @@ export class DashboardComponent {
       path: 'vendors',
       icon: '<i class="fas fa-store"></i>',
       name: 'Vendors',
+    },
+    {
+      path: 'categories',
+      icon: '<i class="fas fa-list"></i>',
+      name: 'Categories',
     },
     {
       path: 'products',

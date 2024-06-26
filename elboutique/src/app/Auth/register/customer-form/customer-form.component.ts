@@ -53,6 +53,7 @@ export class CustomerFormComponent {
             '',
             [
               Validators.required,
+              Validators.minLength(4),
               Validators.pattern(/^(?=.*[A-Za-z])[A-Za-z0-9 _]+$/),
             ],
           ],
@@ -60,6 +61,7 @@ export class CustomerFormComponent {
             '',
             [
               Validators.required,
+              Validators.minLength(3),
               Validators.pattern(/^(?=.*[A-Za-z])[A-Za-z0-9 _]+$/),
             ],
           ],
@@ -67,6 +69,7 @@ export class CustomerFormComponent {
             '',
             [
               Validators.required,
+              Validators.minLength(2),
               Validators.pattern(/^(?=.*[A-Za-z])[A-Za-z0-9 _]+$/),
             ],
           ],
@@ -120,7 +123,6 @@ export class CustomerFormComponent {
       'customer created successfully we sent a verification email to you please check your inbox'
     );
     setTimeout(() => {
-
       this.router.navigateByUrl('/checkmail');
     }, 2000);
 
@@ -134,7 +136,6 @@ export class CustomerFormComponent {
     );
   }
 
- 
   createForm() {
     const formData = new FormData();
     for (const key in this.customerForm.value) {

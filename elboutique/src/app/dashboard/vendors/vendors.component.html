@@ -1,1 +1,74 @@
-<p>vendor works!</p>
+<div class="h6 text-uppercase">Vendors</div>
+<hr class="hr">
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Email</th>
+
+                <th colspan="4">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (vendor of vendors; track $index) {
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td><img [src]="vendor.image" alt="{{ vendor.name }}" width="50"></td>
+                <td>{{ vendor.name }}</td>
+                <td>{{ vendor.email }}</td>
+                <td>
+                    <button (click)="viewVendor(vendor)" class="btn btn-sm secondary-bg-color" data-toggle="modal"
+                        data-target="#vendorModal"><i class="fa-solid fa-eye"></i><span
+                            class="visually-hidden">View</span></button>
+                </td>
+                <td> @if(vendor.active=='true') {
+                    <button (click)="activateVendor(vendor)" class="btn btn-sm btn-warning">Deactivate</button>
+                    }@else {
+                    <button (click)="activateVendor(vendor)" class="btn btn-sm btn-success">Activate</button>
+                    }
+                </td>
+                <td> @if (vendor.banned == 'true') {
+                    <button (click)="banVendor(vendor)" class="btn btn-sm btn-success">Unban</button>
+                    }@else {
+                    <button (click)="banVendor(vendor)" class="btn btn-sm btn-warning">Ban</button>
+                    }
+                </td>
+                <td>
+                    <button (click)="deleteVendor(vendor.id)" class="btn btn-sm btn-danger">Delete</button>
+                </td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<!-- Vendor Details Modal -->
+<div class="modal fade show" id="vendorModal" tabindex="-1" aria-labelledby="vendorModalLabel"
+    [ngStyle]="{'display': selectedVendor ? 'block' : 'none'}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vendorModalLabel">Vendor Details</h5>
+            </div>
+            <div class="modal-body" *ngIf="selectedVendor">
+
+                <img [src]="selectedVendor.image" alt="{{ selectedVendor.name }}"
+                    class="img-fluid mb-3 user-avatar-100">
+                <p><strong>Name:</strong> {{ selectedVendor.name }}</p>
+                <p><strong>Email:</strong> {{ selectedVendor.email }}</p>
+                <p><strong>Address:</strong> {{ selectedVendor.address }}</p>
+                <p><strong>Phone:</strong> {{ selectedVendor.phone }}</p>
+                <p><strong>National ID:</strong> <a [href]="selectedVendor.national_id_url" target="_blank">View</a></p>
+                <p><strong>Active:</strong> {{ selectedVendor.active }}</p>
+                <p><strong>Banned:</strong> {{ selectedVendor.banned }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

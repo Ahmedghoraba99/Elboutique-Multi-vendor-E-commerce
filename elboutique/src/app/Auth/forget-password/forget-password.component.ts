@@ -9,6 +9,7 @@ import { AuthService } from '../../service/auth.service';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forget-password',
@@ -23,7 +24,11 @@ export class ForgotPasswordComponent {
   toastMessage = '';
   toastTitle = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -42,14 +47,27 @@ export class ForgotPasswordComponent {
   }
 
   handleSuccess(response: any) {
+    sessionStorage.setItem('needReset', 'true');
     this.showToastMessage('Password reset link sent!', 'Success');
+    setTimeout(() => {
+      this.router.navigateByUrl('/checkmail');
+    }, 2000);
+
+    this.forgotPasswordForm.reset();
   }
 
   handleError(error: any) {
-    this.showToastMessage(
-      'Failed to send password reset link. Please try again.',
-      'Error'
-    );
+    if (error.status == 404) {
+      this.showToastMessage(
+        'Failed to send password reset link. Please enter a valid email and try again.',
+        'Error'
+      );
+    } else if (error.status == 400) {
+      this.showToastMessage(
+        ' We alrady sent link to your Email Please check your inbox.',
+        'Error'
+      );
+    }
   }
 
   showToastMessage(message: string, title: string) {

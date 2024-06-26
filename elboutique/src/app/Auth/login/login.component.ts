@@ -89,9 +89,27 @@ export class LoginComponent {
     this.nextStep();
     localStorage.setItem('user_info', JSON.stringify(response));
 
-    this.showToastMessage('Welcome! Redirecting to home page...', 'Success');
+    if (response.role === 'admin') {
+      this.showToastMessage(
+        'Welcome! Redirecting to admin dashboard...',
+        'Success'
+      );
+    } else if (response.role === 'vendor') {
+      this.showToastMessage(
+        'Welcome! Redirecting to vendor dashboard...',
+        'Success'
+      );
+    } else {
+      this.showToastMessage('Welcome! Redirecting to home page...', 'Success');
+    }
+    console.log(response);
+
     setTimeout(() => {
-      this.router.navigateByUrl('/');
+      if (response.role === 'admin') {
+        this.router.navigateByUrl('/dashboard');
+      } else if (response.role === 'vendor') {
+        this.router.navigateByUrl('/v');
+      } else this.router.navigateByUrl('/');
     }, 3000);
   }
   handleError(error: any) {

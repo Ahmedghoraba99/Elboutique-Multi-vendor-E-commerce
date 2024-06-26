@@ -70,21 +70,26 @@ Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachPro
 Route::post('/customer/deleteWishlist/{id}', [WishlistController::class, 'detachProductFromCustomerWishlist']);
 Route::get('/customer/showWishlist/{id}', [WishlistController::class, 'showCutsomerWishlist']);
 
-
+//login logout endpoints
 Route::post('/login',  [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
-// Route::get('/verified-middleware-example', function () {
-//     return response()->json([
-//         'message' => 'The email account is already confirmed. Now you are able to see this message...',
-//     ]);
-// })->middleware( 'verified');
-
+ 
+//email verification endpoints
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 });
 
-
+//forgot-password endpoints
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/password/reset', [PasswordResetController::class, 'reset']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
+
+
+Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);
+Route::get('/vendors/ban/{vendor}', [VendorController::class, 'banVendor']);
+Route::get('/customers/active/{customer}', [CustomerController::class, 'activateCustomer']);
+Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
+
+

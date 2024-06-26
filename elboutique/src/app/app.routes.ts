@@ -13,7 +13,6 @@ import { UsersComponent } from './dashboard/users/users.component';
 import { VendorsComponent } from './dashboard/vendors/vendors.component';
 import { ProductsComponent } from './dashboard/products/products.component';
 import { OrdersComponent } from './dashboard/orders/orders.component';
-import { OverviewComponent } from './dashboard/overview/overview.component';
 import { CheckMailComponent } from './Auth/check-mail/check-mail.component';
 import { CongsComponent } from './Auth/congs/congs.component';
 import { checkMailGuard } from './guards/check-mail.guard';
@@ -23,12 +22,13 @@ import { AccountComponent } from './profile/user/account/account.component';
 import { OrdersComponent as UserOrdersComponent } from './profile/user/orders/orders.component';
 import { WishListComponent as UserWishListComponent } from './profile/user/wish-list/wish-list.component';
 import { PaymentComponent } from './profile/user/payment/payment.component';
-import { ChangePasswordComponent as UserChangePasswordComponent } from './profile/user/change-password/change-password.component';
+import { ChangePasswordComponent as UserChangePasswordComponent } from './Auth/change-password/change-password.component';
 import { VendorComponent } from './profile/vendor/vendor.component';
 import { OverviewComponent as VendorOverviewComponent } from './profile/vendor/overview/overview.component';
 import { ProductsComponent as VendorProductsComponent } from './profile/vendor/products/products.component';
 import { AccountComponent as VendorAccountComponent } from './profile/vendor/account/account.component';
 import { ChangePasswordComponent as VendorChangePasswordComponent } from './profile/vendor/change-password/change-password.component';
+import { CategoryComponent as VendorCategoryComponent } from './dashboard/category/category.component';
 export const routes: Routes = [
   {
     path: '',
@@ -42,13 +42,8 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'overview',
+        redirectTo: 'users',
         pathMatch: 'full',
-      },
-      {
-        path: 'overview',
-        title: 'Overview',
-        component: OverviewComponent,
       },
       {
         path: 'users',
@@ -69,6 +64,11 @@ export const routes: Routes = [
         path: 'orders',
         title: 'Orders',
         component: OrdersComponent,
+      },
+      {
+        path: 'categories',
+        title: 'Categories',
+        component: VendorCategoryComponent,
       },
     ],
   },
@@ -120,6 +120,11 @@ export const routes: Routes = [
     title: 'congs',
     component: CongsComponent,
   },
+  {
+    path: 'password/reset',
+    title: 'Change Password',
+    component: UserChangePasswordComponent,
+  },
 
   {
     path: 'u',
@@ -150,11 +155,6 @@ export const routes: Routes = [
         path: 'payment',
         title: 'Payment',
         component: PaymentComponent,
-      },
-      {
-        path: 'account/change-password',
-        title: 'Change Password',
-        component: UserChangePasswordComponent,
       },
     ],
   },

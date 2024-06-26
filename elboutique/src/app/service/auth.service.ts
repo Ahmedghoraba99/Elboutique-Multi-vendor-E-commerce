@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  private checkMailSubject: Subject<string> = new Subject();
+  private checkMailStatus!: string;
   private baseUrl = 'http://127.0.0.1:8000/api/';
   private loginUrl = `${this.baseUrl}login`;
   private storageData = localStorage.getItem('user_info');
@@ -32,8 +34,16 @@ export class AuthService {
     return this.storageData !== null ? JSON.parse(this.storageData) : null;
   }
 
+  getToken() {
+    const user = this.getStorageData();
+    return user ? user.token : null;
+  }
+
   forgotPassword(email: string) {
-    return this.http.post(`${this.baseUrl}/forgot-password`, { email });
+    return this.http.post(`${this.baseUrl}forgot-password`, { email });
+  }
+  resetPassword(data: any) {
+    return this.http.post(`${this.baseUrl}password/reset`, data);
   }
 
   register(role: string, data: any): Observable<any> {
@@ -50,5 +60,18 @@ export class AuthService {
   }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);
+  }
+  needReset() {
+    this.checkMailStatus = 'needReset';
+
+    this.checkMailSubject.next(this.checkMailStatus);
+  }
+  needActivation() {
+    this.checkMailStatus = 'needActivation';
+    this.checkMailSubject.next(this.checkMailStatus);
+  }
+
+  getCheckMailStatus(): Observable<any> {
+    return this.checkMailSubject.asObservable();
   }
 }

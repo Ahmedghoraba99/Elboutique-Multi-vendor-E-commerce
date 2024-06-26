@@ -23,6 +23,30 @@ trait AuthTrait {
         return   $imageName ;
     }
 
+    public function updateUserStatus($model=null,$attribute = 'banned'){
+
+        $newStatus = $model->$attribute === "true" ? "false" : "true";
+        $model->update([$attribute => $newStatus]);
+    
+         
+        $action = $attribute === 'banned' ? 'banned' : 'activated';
+        $message = $newStatus === "true" ? "User has been successfully $action." : "User has been successfully un$action.";
+    
+      
+        return $this->sendSuccessResponse($message, $model);
+
+        
+
+    }
+
+    
+ 
+    
+    private function sendSuccessResponse($message='Success',$model=null)
+    {
+        return response()->json(['message' => "$message", 'data' => $model], 201);
+    }
+
    
 
    

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-check-mail',
@@ -11,6 +12,7 @@ export class CheckMailComponent {
   needActivation = sessionStorage.getItem('needactivation');
   needReset = sessionStorage.getItem('needReset');
   message!: string;
+  constructor(private authService: AuthService) {}
   ngOnInit(): void {
     if (this.needActivation) {
       this.message = `You have successfully completed the registration.
@@ -22,4 +24,6 @@ export class CheckMailComponent {
       `;
     }
   }
+
+  ngOnDestroy(): void {}
 }

@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,6 +21,7 @@ import { AuthService } from '../../service/auth.service';
     VendorFormComponent,
     CommonModule,
     ReactiveFormsModule,
+    RouterLink,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
