@@ -89,5 +89,7 @@ Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name(
 
 Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);
 Route::get('/vendors/ban/{vendor}', [VendorController::class, 'banVendor']);
+Route::get('/customers/active/{customer}', [CustomerController::class, 'activateCustomer']);
+Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
 
 

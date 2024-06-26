@@ -116,6 +116,16 @@ class CustomerController extends Controller
         return response()->json(['message' => 'customer deleted successfully', 'admin' =>  $customer], 201);
 
     }
+    public function banCustomer(Customer $customer)
+    {
+        return  $this->updateUserStatus($customer,"banned");
+    
+    }
+    public function activateCustomer(Customer $customer)
+    {
+        return  $this->updateUserStatus($customer,'active');
+    
+    }
 
     public function checkForAddressesExisting(&$validatedData){
         if (isset($validatedData['addresses'])) {
