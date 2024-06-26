@@ -7,7 +7,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <!-- <th>Image</th> -->
+                <th>Image</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th colspan="2">Actions</th>
@@ -19,7 +19,8 @@
             <tr>
                 <td>{{ $index + 1 }}</td>
 
-                <!-- <td><img src="{{ category.image  }}" alt="Category Image" class="category-image"></td> -->
+                <td><img src="{{'http://localhost:8000/storage/'+ category.image  }}" width="50" height="50"
+                        alt="Category Image" class="category-image"></td>
                 <td>{{ category.name }}</td>
                 <td>{{ category.description }}</td>
                 <td>
@@ -38,13 +39,8 @@
     </table>
 
     <!-- Pagination -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            <li class="page-item" *ngFor="let link of paginationLinks">
-                <a class="page-link" href="#" (click)="loadPage(link.url)">{{ link.label }}</a>
-            </li>
-        </ul>
-    </nav>
+    <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize" (pageChange)="loadPage($event)"
+        [maxSize]="5" [rotate]="true" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination>
 
     <ng-template #editCategoryModal let-modal>
         <div class="modal-header">

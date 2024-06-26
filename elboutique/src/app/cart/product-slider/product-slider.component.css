@@ -35,6 +35,7 @@ swiper-slide img{
         background-position: center;
         background-size: contain;
         object-fit: cover;
+        padding: 5px;
     }
     swiper-slide{
         display: flex ;
@@ -52,6 +53,8 @@ swiper-slide img{
     background-repeat: no-repeat;
     border-radius: 0.6rem;
     object-fit: cover;
+    padding: 5px;
+
 }
 
 .myswiper2 swiper-slide img{

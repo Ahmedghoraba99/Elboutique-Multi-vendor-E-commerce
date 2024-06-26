@@ -66,6 +66,7 @@ header .header-search .selectDrop:after{
 
   /* header-action-icon */
   .action-icon a{
+    cursor: pointer;
     font-weight: 500;
     text-decoration: none;
     position: relative;
