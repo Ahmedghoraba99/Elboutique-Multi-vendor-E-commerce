@@ -17,7 +17,6 @@ export class FooterComponent {
   ngOnInit(): void {
     this.homeService.getAllCategories().subscribe((data) => {
       this.categories = data.data;
-      console.log(data.data);
     });
   }
 }
