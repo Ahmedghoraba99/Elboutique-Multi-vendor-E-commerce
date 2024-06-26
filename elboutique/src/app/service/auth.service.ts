@@ -34,6 +34,11 @@ export class AuthService {
     return this.storageData !== null ? JSON.parse(this.storageData) : null;
   }
 
+  getToken() {
+    const user = this.getStorageData();
+    return user ? user.token : null;
+  }
+
   forgotPassword(email: string) {
     return this.http.post(`${this.baseUrl}/forgot-password`, { email });
   }
@@ -54,15 +59,14 @@ export class AuthService {
     return this.http.post(this.customerRegisterUrl, customerData);
   }
   needReset() {
-    this.checkMailStatus='needReset'
+    this.checkMailStatus = 'needReset';
 
-    this.checkMailSubject.next( this.checkMailStatus);
-  }
-  needActivation() {
-    this.checkMailStatus='needActivation'
     this.checkMailSubject.next(this.checkMailStatus);
   }
-  
+  needActivation() {
+    this.checkMailStatus = 'needActivation';
+    this.checkMailSubject.next(this.checkMailStatus);
+  }
 
   getCheckMailStatus(): Observable<any> {
     return this.checkMailSubject.asObservable();
