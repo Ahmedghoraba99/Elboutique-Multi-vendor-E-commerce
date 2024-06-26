@@ -84,7 +84,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 //forgot-password endpoints
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
-Route::post('/password/reset', [PasswordResetController::class, 'reset']);
+Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
 
 
 Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);

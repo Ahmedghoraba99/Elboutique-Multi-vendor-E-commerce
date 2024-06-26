@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   forgotPassword(email: string) {
-    return this.http.post(`${this.baseUrl}/forgot-password`, { email });
+    return this.http.post(`${this.baseUrl}forgot-password`, { email });
   }
 
   register(role: string, data: any): Observable<any> {
