@@ -18,19 +18,20 @@
           }
         }'
     >
-      <swiper-slide *ngFor="let product of products">
+      <swiper-slide *ngFor="let product of products" class="position-relative">
+        <div
+        [ngClass]="{ 'empty-tag': !product.sale }"
+        class="big-deal-product-big-tag"
+      >
+        <span *ngIf="product.sale">{{ product.sale }}% Off</span>
+      </div>
         <a routerLink="/products/{{ product.id }}">
           <div class="d-flex flex-column">
             <div class="big-deal-product-data px-2">
               <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
+                class="big-deal-product-big-tags d-flex flex-row  align-items-end justify-content-end"
               >
-                <div
-                  [ngClass]="{ 'empty-tag': !product.sale }"
-                  class="big-deal-product-big-tag"
-                >
-                  <span *ngIf="product.sale">Deal {{ product.sale }}% Off</span>
-                </div>
+               
                 <div class="products-wish">
                   <fa-icon [icon]="faHeart"></fa-icon>
                 </div>
