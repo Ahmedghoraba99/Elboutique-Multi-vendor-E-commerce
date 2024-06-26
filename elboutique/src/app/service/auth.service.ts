@@ -42,6 +42,9 @@ export class AuthService {
   forgotPassword(email: string) {
     return this.http.post(`${this.baseUrl}forgot-password`, { email });
   }
+  resetPassword(data: any) {
+    return this.http.post(`${this.baseUrl}password/reset`, data);
+  }
 
   register(role: string, data: any): Observable<any> {
     console.log(data);

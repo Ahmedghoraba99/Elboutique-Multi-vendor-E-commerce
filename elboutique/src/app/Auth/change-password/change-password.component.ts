@@ -3,12 +3,12 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
-  ValidatorFn,
-  AbstractControl,
   ReactiveFormsModule,
-  ValidationErrors,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../service/auth.service';
+import { Router } from '@angular/router';
+import { passwordMatchValidator } from '../validators';
 
 @Component({
   selector: 'app-change-password',
@@ -19,50 +19,83 @@ import { CommonModule } from '@angular/common';
 })
 export class ChangePasswordComponent implements OnInit {
   changePasswordForm: FormGroup = new FormGroup({});
+  private token = this.getParams('token');
+  private email = this.getParams('email');
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    if (!this.token || !this.email) {
+      this.router.navigate(['/login']);
+    }
+    this.creatForm();
+  }
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
+  creatForm() {
     this.changePasswordForm = this.fb.group(
       {
-        oldPassword: ['', Validators.required],
-        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/
+            ),
+          ],
+        ],
         confirmPassword: ['', Validators.required],
       },
-      { validator: this.ConfirmValidator('newPassword', 'confirmPassword') }
+
+      {
+        validators: passwordMatchValidator,
+      }
     );
   }
 
-  ConfirmValidator(
-    controlName: string,
-    matchingControlName: string
-  ): ValidatorFn {
-    return (formGroup: AbstractControl): ValidationErrors | null => {
-      const control = formGroup.get(controlName);
-      const matchingControl = formGroup.get(matchingControlName);
-
-      if (!control || !matchingControl) {
-        return null;
-      }
-
-      if (matchingControl.errors?.['confirmValidator']) {
-        return null;
-      }
-      if (control.value !== matchingControl.value) {
-        matchingControl.setErrors({ confirmValidator: true });
-        return { confirmValidator: true };
-      } else {
-        matchingControl.setErrors(null);
-        return null;
-      }
-    };
-  }
+  ngOnInit(): void {}
 
   onSubmit() {
     if (this.changePasswordForm.valid) {
+      const dataObject = this.creatDataObject();
+      this.authService.resetPassword(dataObject).subscribe(
+        (res) => {
+          this.handleSuccess();
+        },
+        (err) => {
+          this.handleError(err);
+        }
+      );
       console.log(this.changePasswordForm.value);
     } else {
       console.log('Form is invalid');
     }
+  }
+  creatDataObject() {
+    const data = {
+      token: this.getParams('token'),
+      email: this.getParams('email'),
+      password: this.changePasswordForm.value.password,
+    };
+    return data;
+  }
+  handleSuccess() {
+    sessionStorage.removeItem('needReset');
+    alert(
+      'Your password has been changed successfully. Please login with your new password'
+    );
+
+    this.router.navigateByUrl('/login');
+  }
+  handleError(err: any) {
+    if (err.status) alert('This password reset token is invalid.');
+    setTimeout(() => {
+      this.router.navigateByUrl('/login');
+    }, 2000);
+  }
+  getParams(param: string) {
+    const searchBarParams = new URLSearchParams(window.location.search);
+    return searchBarParams.get(param);
   }
 }

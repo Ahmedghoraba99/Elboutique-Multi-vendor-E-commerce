@@ -114,6 +114,11 @@ export const routes: Routes = [
     title: 'congs',
     component: CongsComponent,
   },
+  {
+    path: 'password/reset',
+    title: 'Change Password',
+    component: UserChangePasswordComponent,
+  },
 
   {
     path: 'u',
@@ -144,11 +149,6 @@ export const routes: Routes = [
         path: 'payment',
         title: 'Payment',
         component: PaymentComponent,
-      },
-      {
-        path: 'account/change-password',
-        title: 'Change Password',
-        component: UserChangePasswordComponent,
       },
     ],
   },
