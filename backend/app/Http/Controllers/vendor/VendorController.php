@@ -93,13 +93,23 @@ class VendorController extends Controller
 
    public function activateVendor(Vendor $vendor)
 {
-    $vendor->update(['active' => "true"]) ;
-    return $this->sendSuccessResponse("  Vendor has actived successfully banned.",$vendor);
+
+    $newStatus = $vendor->active === "true" ? "false" : "true";
+
+    $vendor->update(['active' => $newStatus]);
+
+    $message = $newStatus === "true" ? "Vendor has been successfully actived." : "Vendor has been successfully unactived.";
+    
+    return $this->sendSuccessResponse($message,$vendor);
+ 
 }
    public function banVendor(Vendor $vendor)
 {
-    $vendor->update(['banned' => "true"]) ;
-    return $this->sendSuccessResponse("Vendor has been successfully banned.",$vendor);
+     
+    $newStatus = $vendor->banned === "true" ? "false" : "true";
+    $vendor->update(['banned' => $newStatus]);
+    $message = $newStatus === "true" ? "Vendor has been successfully banned." : "Vendor has been successfully unbanned.";
+    return $this->sendSuccessResponse($message,$vendor);
 }
 
 private function sendSuccessResponse($message='Success',$vendor=null)
