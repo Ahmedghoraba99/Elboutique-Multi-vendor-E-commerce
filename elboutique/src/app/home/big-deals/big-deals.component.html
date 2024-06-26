@@ -11,21 +11,17 @@
   <div class="container">
     <div class="row d-flex flex-row">
       <!-- part to be looped through -->
-      <div class="col-sm-6 col-md-3 mb-4" *ngFor="let product of products">
+      <div class="col-sm-6 col-md-3 mb-4 position-relative" *ngFor="let product of products">
+        <div class="big-deal-product-big-tag-deal position-absolute" *ngIf="product.sale">
+            <span>{{ product.sale }}% Off</span>
+        </div>
         <a routerLink="/products/{{ product.id }}">
           <div class="d-flex flex-column">
             <div class="big-deal-product-data p-4">
               <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
+                class="big-deal-product-big-tags d-flex flex-row justify-content-end align-items-end"
               >
-                <div class="big-deal-product-big-tag">
-                  <span
-                    >Deal
-                    <span *ngIf="product.sale"
-                      >{{ product.sale }}% Off</span
-                    ></span
-                  >
-                </div>
+                
                 <div class="products-wish">
                   <i
                     class="fa-regular fa-heart"
@@ -59,8 +55,8 @@
                   <div class="big-deal-info d-flex flex-column my-2">
                     <span class="my-2">{{ product.vendor.name }}</span>
                     <div class="big-deal-price d-flex align-items-center">
-                      <strong class="fs-4">{{ product.price }}</strong>
                       <span class="ms-2">EGP</span>
+                      <strong class="fs-4">{{ product.price }}</strong>
                     </div>
                   </div>
                 </div>
