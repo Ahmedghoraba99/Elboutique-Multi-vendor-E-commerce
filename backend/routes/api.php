@@ -64,6 +64,7 @@ Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrde
 Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
 Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
 Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
+Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
 
 //wishlist endpoint
 Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachProductToCustomerWishlist']);

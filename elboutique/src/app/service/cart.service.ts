@@ -21,4 +21,7 @@ export class CartService {
   deleteFromCustomerCart(body: Object): Observable<any> {
     return this.http.post(`${this.baseUrl}/deleteCart/${this.userID}`, body);
   }
+  clearCustomerCart(): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/clearCart/${this.userID}`);
+  }
 }

@@ -48,4 +48,13 @@ class CartController extends Controller
         $cartProducts = $customer->cartProducts()->with(['images','tags','vendor'])->get();
         return response()->json($cartProducts,200);
     }
+    public function clearCart($id){
+        $customer = Customer::find($id);
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        $customer->cartProducts()->detach();
+
+        return response()->json(["message" => "Cart cleared successfully"], 200);
+    }
 }

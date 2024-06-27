@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit ,Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SummaryOrderComponent } from './summary-order/summary-order.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart.service';
 import { WishlistService } from '../service/wishlist.service';
 import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 import {
   FormBuilder,
@@ -16,10 +17,16 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { OrderService } from '../service/order.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [ReactiveFormsModule, SummaryOrderComponent, FontAwesomeModule, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    SummaryOrderComponent,
+    FontAwesomeModule,
+    CommonModule,
+  ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -29,21 +36,23 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   faTrashCan = faTrashCan;
   faShoppingBasket = faShoppingBasket;
   customerCart: any = [];
+  cartPriceAndQuantity: any = [];
   addtoWishlistSub: Subscription | null = null;
   getCartSub: Subscription | null = null;
+  updateInCart: Subscription | null = null;
   removeFromCartSub: Subscription | null = null;
-
-  @Input() cartProduct: any;
-  totalPrice: number = 0;
+  addOrderSub: Subscription | null = null;
+  addProductsToOrderSub: Subscription | null = null;
+  clearCartSub: Subscription | null = null;
   paymentForm: FormGroup;
 
   constructor(
     private Toaster: ToastrService,
     private cartService: CartService,
     private wishlistService: WishlistService,
+    private orderService: OrderService,
     private fb: FormBuilder
   ) {
-
     this.paymentForm = this.fb.group({
       cardNumber: [
         '',
@@ -65,34 +74,58 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.getCartSub?.unsubscribe();
     this.addtoWishlistSub?.unsubscribe();
     this.removeFromCartSub?.unsubscribe();
+    this.updateInCart?.unsubscribe();
+    this.addOrderSub?.unsubscribe();
+    this.addProductsToOrderSub?.unsubscribe();
+    this.clearCartSub?.unsubscribe();
   }
   ngOnInit(): void {
     this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
       this.customerCart = cart;
-      
-      console.log(cart);
+      this.customerCart.forEach((product: any) => {
+        this.cartPriceAndQuantity.push({
+          [`${product.name}`]: {
+            price: product.price,
+            quantity: product.cart_table.quantity,
+          },
+        });
+      });
     });
-    const productsPrices = this.cartProduct.map(
-      (product: any) => product.price
-    );
-    const totalPrice = productsPrices.reduce(
-      (accumelator: number, current: number) => {
-        return accumelator + current;
-      },
-      0
-    );
-  
-    this.totalPrice = totalPrice;
-    
-
   }
-
-  getstock(stock : number ){
+  getOrderTotalPrice() {
+    return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
+      const key = Object.keys(product)[0];
+      return total + product[key].price * product[key].quantity;
+    }, 0);
+  }
+  getOrderTotalQuantities() {
+    return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
+      const key = Object.keys(product)[0];
+      return total + product[key].quantity;
+    }, 0);
+  }
+  getstock(stock: number) {
     return Array.from({ length: stock }, (_, i) => i + 1);
   }
-  // make the update
-  update(product:any){}
-  // 
+  update(product: any, quantity: number) {
+    const sentBody = {
+      products: {
+        [`${product.id}`]: quantity,
+      },
+    };
+    this.cartPriceAndQuantity.map((toChangeProduct: any) => {
+      const key = Object.keys(toChangeProduct)[0];
+      if (key === product.name) {
+        toChangeProduct[key].quantity = quantity;
+      }
+    });
+    this.updateInCart = this.cartService
+      .addToCustomerCart(sentBody)
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+
   addToast() {
     this.Toaster.success('Product added to Wishlist', 'Added');
   }
@@ -126,9 +159,48 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.deleteToast();
       });
   }
+  CreateOrder() {
+    const sentBody = {
+      status: 'midway',
+      total: this.getOrderTotalPrice() + this.getOrderTotalPrice() * 0.2,
+    };
 
-
-
-
-  
+    this.addOrderSub = this.orderService
+      .createOrder(sentBody)
+      .subscribe((res) => {
+        console.log(res);
+        const { id } = res.order;
+        this.successOrderCreatedAlert();
+        this.addProducts(id);
+        this.clearCart();
+        this.customerCart = [];
+      });
+  }
+  addProducts(id: number) {
+    const orderProductBody: any = {
+      products: {},
+    };
+    this.customerCart.forEach((product: any) => {
+      orderProductBody.products[`${product.id}`] = product.cart_table.quantity;
+    });
+    this.addProductsToOrderSub = this.orderService
+      .addProductToOrder(orderProductBody, id)
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+  clearCart() {
+    this.clearCartSub = this.cartService
+      .clearCustomerCart()
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+  successOrderCreatedAlert() {
+    Swal.fire({
+      title: 'Good job!',
+      text: 'Your Order is Made Successfully',
+      icon: 'success',
+    });
+  }
 }
