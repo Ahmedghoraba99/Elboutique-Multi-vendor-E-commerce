@@ -37,13 +37,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['auth:admin']], function () {
 
-    // Update users status "active banned"  endpoints  
+    // Update users status "active banned"  endpoints
     Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);
     Route::get('/vendors/ban/{vendor}', [VendorController::class, 'banVendor']);
     Route::get('/customers/active/{customer}', [CustomerController::class, 'activateCustomer']);
     Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
 
-    //Customer addresses & phones endpoints 
+    //Customer addresses & phones endpoints
     Route::apiResource('customeraddresses', CustomerAddressController::class);
     Route::apiResource('customerphones', CustomerPhoneController::class);
 
@@ -51,7 +51,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admins', AdminController::class);
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
-    
+
 
 
     Route::apiResource('tags', TagController::class);
@@ -65,7 +65,7 @@ Route::group(['middleware' => ['AdminVendorAuth']], function () {
     Route::apiResource('products', ProductController::class);
     Route::patch('vendors/{vendor}', [VendorController::class, 'update']);
     Route::delete('vendors/{vendor}', [VendorController::class, 'destroy']);
-     
+
     });
 
 
@@ -88,12 +88,12 @@ Route::group(['middleware' => ['AdminCustomerAuth']], function () {
     Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProductToOrder']);
     Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
     Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
- 
+
     Route::patch('customers/{customer}', [CustomerController::class, 'update']);
     Route::delete('customers/{customer}', [CustomerController::class, 'destroy']);
 
-   
-     
+
+
     });
 
 
@@ -124,7 +124,7 @@ Route::get('admins/{admin}', [AdminController::class, 'show']);
 Route::get('vendors/{vendor}', [VendorController::class, 'show']);
 Route::get('customers/{customer}', [CustomerController::class, 'show']);
 
- 
+
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
 
@@ -156,16 +156,6 @@ Route::post('/registerFormValdation', [AuthController::class, 'registerFormValda
 Route::post('vendors', [VendorController::class, 'store']);
 Route::post('customers', [CustomerController::class, 'store']);
 
-<<<<<<< HEAD
-
-//email verification endpoints
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
-    Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-    Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-});
-=======
->>>>>>> a070d5179317ef60e1023ddee50dd0a18c44ab7c
 
 //Forgot-password endpoints
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
