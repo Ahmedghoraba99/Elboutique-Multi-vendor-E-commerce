@@ -88,4 +88,27 @@ class CustomerPolicy
         // Example logic: user can view if they own the customer account or are an admin
         return $user->id === $customer->id || $user instanceof Admin;
     }
+    public function attachCart(  $user, Customer $customer)
+    {
+        // Example logic: user can attach if they own the customer account or are an admin
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can detach a product from a customer's wishlist.
+     */
+    public function detachCart(  $user, Customer $customer)
+    {
+        // Example logic: user can detach if they own the customer account or are an admin
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can view a customer's wishlist.
+     */
+    public function viewCart(  $user, Customer $customer)
+    {
+        // Example logic: user can view if they own the customer account or are an admin
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
 }
