@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\Admin;
+use App\Policies\AdminPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,6 +19,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        // Admin::class => AdminPolicy::class,
+
     ];
 
     /**
@@ -25,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-         
+       
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             $frontendUrl = config('app.frontend_url');

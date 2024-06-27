@@ -39,7 +39,7 @@ class UpdateVendorRequest extends FormRequest
                     
                     'address' => 'sometimes|string|max:255|min:10',
                     'phone' => [
-                        'required',
+                        'sometimes',
                         'string',
                         'max:20',
                         'regex:/^01[012]\d{8}$/',

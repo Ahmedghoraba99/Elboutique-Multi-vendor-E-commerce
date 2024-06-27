@@ -64,7 +64,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        // dd($customer);
+       
         return new CustomerResource($customer);
     }
 
@@ -74,6 +74,7 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
+        $this->authorize('update',$customer);
         DB::beginTransaction();
         try {
         $validatedData =$request->validated();
@@ -109,6 +110,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        $this->authorize('delete',$customer);
         if($customer->image){
         Storage::delete('public/images/customers/'.$customer->image);
         }

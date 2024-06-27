@@ -61,7 +61,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
 
 // Endpoints that use vendor gaurd
-Route::group(['middleware' => ['AdminVendorAuth']], function () {
+Route::group(['middleware' => ['auth:sanctum','AdminVendorAuth']], function () {
     Route::apiResource('products', ProductController::class);
     Route::patch('vendors/{vendor}', [VendorController::class, 'update']);
     Route::delete('vendors/{vendor}', [VendorController::class, 'destroy']);
@@ -70,7 +70,7 @@ Route::group(['middleware' => ['AdminVendorAuth']], function () {
 
 
 // Endpoints that use customer guard
-Route::group(['middleware' => ['AdminCustomerAuth']], function () {
+Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function () {
 
     //cart endpoint
     Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
