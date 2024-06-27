@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Models\Admin;
 use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class CustomerPolicy
@@ -11,7 +11,7 @@ class CustomerPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(Customer $customer): bool
     {
         //
     }
@@ -19,7 +19,7 @@ class CustomerPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Customer $customer): bool
+    public function view($user, Customer $customer): bool
     {
         //
     }
@@ -27,7 +27,7 @@ class CustomerPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create($user): bool
     {
         //
     }
@@ -35,23 +35,23 @@ class CustomerPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Customer $customer): bool
+    public function update( $user, Customer $customer): bool
     {
-        //
+        return  $user instanceof Admin||$user->id == $customer->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Customer $customer): bool
+    public function delete($user, Customer $customer): bool
     {
-        //
+        return  $user instanceof Admin||$user->id == $customer->id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Customer $customer): bool
+    public function restore($user, Customer $customer): bool
     {
         //
     }
@@ -59,8 +59,61 @@ class CustomerPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Customer $customer): bool
+    public function forceDelete($user, Customer $customer): bool
     {
         //
+    }
+
+
+    public function attachWishlist(  $user, Customer $customer)
+    {
+         
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can detach a product from a customer's wishlist.
+     */
+    public function detachWishlist(  $user, Customer $customer)
+    {
+        
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can view a customer's wishlist.
+     */
+    public function viewWishlist(  $user, Customer $customer)
+    {
+         
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+    public function attachCart(  $user, Customer $customer)
+    {
+         
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can detach a product from a customer's wishlist.
+     */
+    public function detachCart(  $user, Customer $customer)
+    {
+         
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can view a customer's wishlist.
+     */
+    public function viewCart(  $user, Customer $customer)
+    {
+         
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+    public function getUserOrders(  $user, Customer $customer)
+    {
+         
+        return $user->id === $customer->id || $user instanceof Admin;
     }
 }

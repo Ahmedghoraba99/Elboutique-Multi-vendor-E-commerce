@@ -8,14 +8,13 @@
                 <div class="rating-section d-flex flex-column gap-1  ">
                   <strong>{{ averageRating }} <sub>out of 5</sub></strong>
                   <div class="average-rating-stars">
-                    <fa-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index"
-                             [icon]="getStarIcon(i)">
+                    <fa-icon *ngFor="let star of [1, 2, 3, 4, 5]; let i = index" [icon]="faStar" [ngClass]="{'active-star': i < averageRating, 'inactive-star': i >= averageRating}">
                     </fa-icon>
                   </div>
 
                     <p class="">at the total rate of <span class="fw-bold">{{reviews.length}}</span> reviwe</p>
                 </div>
-                <div class="rating-review-section overflow-scroll">
+                <div class="rating-review-section ">
 
                 </div>
 
@@ -24,7 +23,7 @@
         <div class="col-md-7 my-3">
             <div class="product-review-section">
               <h1>See All The Reviews</h1>
-                <div  *ngFor="let review of reviews"  class="product-review-card mt-2 ">
+                <div  *ngFor="let review of reviews"  class="product-review-card mt-2  ">
                     <div class="reviewer-data d-flex gap-3 my-2">
                         <div class="reviewer-profile">
                             <img [src]="review.customer.image_url"  alt="">
@@ -43,7 +42,12 @@
                     <div class="rewiew-content">
                       <span class="m-0">{{ review.comment }}</span>
                     </div>
-                   
+                    <div class="d-flex align-items-center">
+                      <button class="btn" (click)="updateReview(review.id)" data-bs-toggle="modal" data-bs-target="#AddReport" >
+                        <i class="fa-solid fa-flag text-danger mt-2 p-1"></i>
+                        <span class="ms-2 text-muted">Report</span>
+                      </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,3 +71,4 @@
     </div>
 }
 
+<app-report-review [reviewId]="reviewId"></app-report-review>

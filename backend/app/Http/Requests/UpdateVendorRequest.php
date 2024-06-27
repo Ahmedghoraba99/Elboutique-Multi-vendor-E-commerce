@@ -43,10 +43,10 @@ class UpdateVendorRequest extends FormRequest
                         'string',
                         'max:20',
                         'regex:/^01[012]\d{8}$/',
-                        Rule::unique('customer_phones,phoneNumper'),
+                        Rule::unique('customer_phones',"phoneNumper"),
                         Rule::unique('admins','phone'),
-                        Rule::unique('vendors','phone')->ignore($this->route('vendor')),
-                    ], 
+                        Rule::unique('vendors','phone'),
+                    ],
                     'national_id'=>'sometimes|image|mimes:jpg,png|max:2048',
                     'image' => 'sometimes|image|mimes:jpg,png|max:2048',
                 ];

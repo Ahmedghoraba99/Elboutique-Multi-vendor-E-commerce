@@ -1,0 +1,56 @@
+
+<div
+  class="modal fade"
+  id="AddReport"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            <!-- <input type="text" [(ngModel)]="reviewId">
+            <input type="text" [(ngModel)]="customerId"> -->
+            Report Review
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="reason" class="form-label">Reason</label>
+                <textarea name="reason" id="reason" class="form-control" rows="5" formControlName="reason"></textarea>
+                <div *ngIf="reportForm.get('reason')?.invalid && (reportForm.get('reason')?.dirty || reportForm.get('reason')?.touched)">
+                  <div *ngIf="reportForm.get('reason')?.errors?.['required']" class="text-danger">Reason is required.</div>
+                  <div *ngIf="reportForm.get('reason')?.errors?.['minlength']" class="text-danger">Reason must be at least 3 characters long.</div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" [disabled]="reportForm.invalid">Submit</button>
+            </form>
+            <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+            <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+  </div>
+</div>
+
+

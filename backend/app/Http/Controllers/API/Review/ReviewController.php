@@ -35,12 +35,25 @@ class ReviewController extends Controller
         }
     }
 
+    public function getReviewsByCustomer($coustomerId){
+        $reviews=  Review::where('customer_id', $coustomerId)->get();
+        if($reviews){
+            return ReviewResource::collection($reviews);
+        }
+        else{
+            return response()->json([
+                'message' => 'No reviews found for this coustomer'
+            ], 404);
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreReviewRequest $request)
     {
+        $this->authorize('create',[Review::class, $request->product_id]  );
         $validated = $request->validated();
         $review = Review::create($validated);
         // Return custom response
@@ -74,6 +87,7 @@ class ReviewController extends Controller
     {
         try {
             $review = Review::findOrFail($id);
+            $this->authorize('update', $review);
             $validation = $request->validated();
             $review->update($validation);
             return response()->json([
@@ -101,6 +115,7 @@ class ReviewController extends Controller
     {
         try {
             $review = Review::findOrFail($id);
+            $this->authorize('delete', $review);
             $review->delete();
 
             return response()->json([

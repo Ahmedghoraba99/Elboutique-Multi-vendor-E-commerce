@@ -2,16 +2,16 @@
 
 namespace App\Policies;
 
-use App\Models\Address;
-use App\Models\User;
+use App\Models\Customer;
+use App\Models\Tag;
 use Illuminate\Auth\Access\Response;
 
-class AddressPolicy
+class TagPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(Customer $customer): bool
     {
         //
     }
@@ -19,7 +19,7 @@ class AddressPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Address $address): bool
+    public function view(Customer $customer, Tag $tag): bool
     {
         //
     }
@@ -27,7 +27,7 @@ class AddressPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(Customer $customer): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class AddressPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Address $address): bool
+    public function update(Customer $customer, Tag $tag): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class AddressPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Address $address): bool
+    public function delete(Customer $customer, Tag $tag): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class AddressPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Address $address): bool
+    public function restore(Customer $customer, Tag $tag): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class AddressPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Address $address): bool
+    public function forceDelete(Customer $customer, Tag $tag): bool
     {
         //
     }

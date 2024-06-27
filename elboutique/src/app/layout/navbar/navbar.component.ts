@@ -8,16 +8,53 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
+import { NgIf } from '@angular/common';
+import { WishlistService } from '../../service/wishlist.service';
+import { CartService } from '../../service/cart.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [FontAwesomeModule, RouterLink, SelectDropComponent],
+  imports: [FontAwesomeModule, RouterLink, SelectDropComponent, NgIf],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   selectedCategory: any = null;
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private wislistService: WishlistService,
+    private cartService: CartService
+  ) {}
+  isAuthenticated = false;
+  currentUser: any = {};
+  wishListItems = 0;
+  cartItems = 0;
+  ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+      console.log('authStatus', isAuth);
+
+      if (isAuth) {
+        this.authService.getUserDataObservable().subscribe((data) => {
+          console.log('setting user data: ', data);
+
+          this.currentUser = data.data;
+        });
+        this.wislistService.getWishlistData().subscribe((data) => {
+          // console.log('Data from wishlist: ', data);
+          this.wishListItems = data.length;
+        });
+
+        this.cartService.getCartData().subscribe((data) => {
+          console.log('Data form cart: ', data);
+
+          this.cartItems = data.length;
+        });
+      }
+    });
+  }
 
   onCategorySelected(category: any) {
     this.selectedCategory = category;
@@ -38,4 +75,14 @@ export class NavbarComponent {
   faShoppingCart = faShoppingCart;
   faHeart = faHeart;
   faArrowRightFromBracket = faArrowRightFromBracket;
+
+  user_id = localStorage.getItem('id');
+  logout(): void {
+    // handle auth
+    this.authService.logout();
+    this.cartItems = 0;
+    this.wishListItems = 0;
+    this.currentUser = {};
+    this.router.navigate(['/login']);
+  }
 }

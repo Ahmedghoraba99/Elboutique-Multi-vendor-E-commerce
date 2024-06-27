@@ -80,6 +80,7 @@
       height: 15rem;
       object-fit: cover;
       border-radius: 1rem;
+      padding: 5px;
     }
     
     .big-deal-product-detail {

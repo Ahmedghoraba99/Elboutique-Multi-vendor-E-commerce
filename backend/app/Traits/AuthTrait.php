@@ -6,7 +6,7 @@ use Illuminate\Validation\Rule;
 
 trait AuthTrait {
 
-    public function uploadImage($image='image',$request,$folder,$model=null){
+    public function uploadImage($image,$request,$folder,$model=null){
         
 
         
@@ -44,6 +44,7 @@ trait AuthTrait {
     
     private function sendSuccessResponse($message='Success',$model=null)
     {
+        
         return response()->json(['message' => "$message", 'data' => $model], 201);
     }
 

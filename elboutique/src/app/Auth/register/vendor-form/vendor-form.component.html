@@ -48,6 +48,7 @@
       <input
         type="text"
         formControlName="phone"
+        (blur)="onBlur('phone')"
         class="form-control"
         id="phone"
         placeholder="Enter phone number"
@@ -70,6 +71,7 @@
         type="email"
         formControlName="email"
         class="form-control"
+        (blur)="onBlur('email')"
         id="email"
         placeholder="Enter email"
       />

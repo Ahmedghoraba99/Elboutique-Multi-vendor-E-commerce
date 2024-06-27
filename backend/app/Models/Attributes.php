@@ -5,29 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class attributes extends Model
+class Attributes extends Model
 {
     protected $fillable = [
-        'color',
-        'weight',
-        'height',
-        'width',
-        'length',
-        'material',
-        'size',
+        'product_id', 'name', 'value'
     ];
+    public $timestamps = false; // Disable timestamps
 
-    public function products()
+
+    public function producst()
     {
-        return $this->belongsToMany(Product::class, 'product_attributes')->withPivot([
-            'color',
-            'size',
-            'weight',
-            'width',
-            'height',
-            'material'
-        ]);
+        return $this->belongsTo(Product::class);
     }
+
 
     use HasFactory;
 }

@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { CategoryService } from '../../service/admin/category.service';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModal,
+  ModalDismissReasons,
+  NgbPaginationModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
 })

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { Subject, Observable, Subscription, BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,21 +13,46 @@ export class AuthService {
   private storageData = localStorage.getItem('user_info');
   private registerUrl = `${this.baseUrl}/ `;
   private customerRegisterUrl = `${this.baseUrl}/customer/register`;
+  private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
 
   constructor(private http: HttpClient) {}
-
   login(email: string, password: string, role: string): Observable<any> {
-    return this.http.post(this.loginUrl, { email, password, role });
+    return this.http.post(this.loginUrl, { email, password, role }).pipe(
+      tap((response: any) => {
+        if (response && response.token) {
+          localStorage.setItem('user_info', JSON.stringify(response));
+          this.getCurrentUser();
+          this.updateAuthStatus(true);
+        }
+      })
+    );
   }
+  private currentUser = new BehaviorSubject<any>(null);
 
-  getCurrentUser(): Observable<any> | null {
-    const currentStoragUser = this.getStorageData();
-    if (currentStoragUser) {
-      return this.http.get(
-        `${this.baseUrl}${currentStoragUser.role}s/${currentStoragUser.id}`
-      );
+  getCurrentUser(): void {
+    const currentStorageUser = this.getStorageData();
+    if (currentStorageUser) {
+      this.http
+        .get(
+          `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
+        )
+        .subscribe((userData) => {
+          console.log('From Observable', userData);
+
+          this.currentUser.next(userData);
+        });
     }
-    return null;
+  }
+  getUserDataObservable(): Observable<any> {
+    console.log('userDataObservable');
+
+    this.getCurrentUser();
+    if (this.isAuthenticated()) {
+      console.log('Authemticated getting user');
+      this.getCurrentUser();
+      return this.currentUser.asObservable();
+    }
+    return this.currentUser.asObservable();
   }
 
   getStorageData() {
@@ -51,12 +76,18 @@ export class AuthService {
 
     return this.http.post(`${this.baseUrl}${role}`, data);
   }
+
+  emailAndPasswordExisting(query: any) {
+    return this.http.post(`${this.baseUrl}registerFormValdation`, query);
+  }
+
   verification(verificationLink: string, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(verificationLink, { headers });
   }
   logout() {
     localStorage.removeItem('user_info');
+    this.updateAuthStatus(false);
   }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);
@@ -73,5 +104,14 @@ export class AuthService {
 
   getCheckMailStatus(): Observable<any> {
     return this.checkMailSubject.asObservable();
+  }
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+  updateAuthStatus(isAuthenticated: boolean): void {
+    this.authStatus.next(isAuthenticated);
+  }
+  isAuthObservable(): Observable<boolean> {
+    return this.authStatus.asObservable();
   }
 }

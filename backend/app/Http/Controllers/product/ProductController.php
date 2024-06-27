@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Attributes;
 use App\Models\Product;
 use App\Models\product_images;
 use GuzzleHttp\Psr7\Request;
@@ -28,6 +29,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        $this->authorize('create',Product::class);
         try {
             $images = $request->images;
             // Create a new product instance and populate it with request data
@@ -64,6 +66,17 @@ class ProductController extends Controller
                 $product->tags()->attach($request->tags);
             }
 
+
+            $attributes = request()->input('attributes');
+            foreach ($attributes as $attr) {
+                $newAttr = new Attributes();
+                $newAttr->product_id = $product->id;
+                $newAttr->name = $attr['name'];
+                $newAttr->value = $attr['value'];
+                $newAttr->saveOrFail();
+            }
+
+
             return response()->json($product);
         } catch (\Throwable $th) {
             // Rollback by deleting the created product and related images if any error occurs
@@ -99,7 +112,7 @@ class ProductController extends Controller
     public function show(int $product)
     {
         // with image and vendor
-        $product = Product::with(['images', 'vendor'])->find($product);
+        $product = Product::with(['images', 'vendor', 'attributes'])->find($product);
         return response()->json($product);
     }
 
@@ -108,6 +121,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $this->authorize('update',$product);
         try {
             // Update product details
             $product->update($request->validated());
@@ -146,10 +160,11 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        
         try {
             // Find the product by ID
             $product = Product::findOrFail($id);
-
+            $this->authorize('delete', $product);
             $product->images()->delete();
 
             $product->tags()->detach();
@@ -296,4 +311,37 @@ class ProductController extends Controller
 
         return response()->json($products, 200);
     }
+
+
+    function getVendorProducts($id)
+    {
+        try {
+            $products = Product::where('vendor_id', $id)->with('images', 'vendor')->get();
+            $transFormProduct = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'description' => $product->description,
+                    'images' => $product->images->map(function ($image) {
+                        return [
+                            'image_url' => $image->image_url,
+                        ];
+                    }),
+                    'vendor'=> [
+                        'id' => $product->vendor->id,
+                        'name' => $product->vendor->name,
+                        'email' => $product->vendor->email,
+                        'phone' => $product->vendor->phone,
+                        'address' => $product->vendor->address,
+                        'image_url' => $product->vendor->image_url,
+                    ]
+                ];
+            });
+            return response()->json($transFormProduct);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
 }

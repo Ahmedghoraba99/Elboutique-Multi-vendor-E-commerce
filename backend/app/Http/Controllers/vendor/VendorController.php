@@ -57,6 +57,7 @@ class VendorController extends Controller
      */
     public function update(UpdateVendorRequest $request, Vendor $vendor)
     {
+        $this->authorize('update',$vendor);
         $validatedData = $request->validated();
         if($request->hasfile('image')){
             $validatedData['image'] = $this->uploadImage('image',$request,"vendors",$vendor);
@@ -78,7 +79,7 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-
+ $this->authorize('delete',$vendor);
 
         if ($vendor->image) {
 

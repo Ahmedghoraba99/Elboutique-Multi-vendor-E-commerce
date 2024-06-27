@@ -20,6 +20,7 @@ class OrderController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny',Order::class);
         return OrderResource::collection(Order::with('products')->get());
     }
 
@@ -29,6 +30,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+
         $order= Order::create([
             'customer_id'=>$request->customer_id,
             'status'=>$request->status,
@@ -49,6 +51,8 @@ class OrderController extends Controller
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
+        $this->authorize('view',$order);
+
         return response()->json($order,200);
     }
 
@@ -62,6 +66,7 @@ class OrderController extends Controller
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
+        $this->authorize('update',$order);
         $order->update([
             'customer_id'=>$request->customer_id,
             'status'=>$request->status,
@@ -75,15 +80,22 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-
-        $deleted = Order::destroy($id);
-        if ($deleted === 0) {
-            return response()->json(['message' => "Order Doesn't Exist"], 404);
+        $order= Order::find($id);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
         }
+        $this->authorize('delete',$order);
+        $order->delete();
+         
         return response()->json(["message"=> "Order Deleted"]);
     }
 
     public function getUserOrders($id){
+        $customer = Customer::find($id);
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        $this->authorize('getUserOrders', $customer);
         $orders = Order::where('customer_id',$id)->with(['products','products.images'])->get();
         return response()->json(["orders"=>$orders]);
     }

@@ -29,6 +29,10 @@ import { ProductsComponent as VendorProductsComponent } from './profile/vendor/p
 import { AccountComponent as VendorAccountComponent } from './profile/vendor/account/account.component';
 import { ChangePasswordComponent as VendorChangePasswordComponent } from './profile/vendor/change-password/change-password.component';
 import { CategoryComponent as VendorCategoryComponent } from './dashboard/category/category.component';
+import { UserReviewsComponent } from './profile/user/user-reviews/user-reviews.component';
+import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
+import { NotAuthComponent } from './not-auth/not-auth.component';
+import { adminGuard } from './_guards/admin.guard';
 export const routes: Routes = [
   {
     path: '',
@@ -39,6 +43,7 @@ export const routes: Routes = [
     path: 'dashboard',
     title: 'Dashboard',
     component: DashboardComponent,
+    canActivate: [adminGuard],
     children: [
       {
         path: '',
@@ -99,6 +104,11 @@ export const routes: Routes = [
     component: CategoryComponent,
   },
   {
+    path: 'vendor',
+    title: 'Vendor Profile',
+    component: VendorProfileComponent,
+  },
+  {
     path: 'login/forget-password',
     title: 'ForgetPassword',
     component: ForgotPasswordComponent,
@@ -156,6 +166,11 @@ export const routes: Routes = [
         title: 'Payment',
         component: PaymentComponent,
       },
+      {
+        path: 'reviews',
+        title: 'Reviews',
+        component: UserReviewsComponent
+      }
     ],
   },
   {
@@ -185,6 +200,11 @@ export const routes: Routes = [
         component: VendorChangePasswordComponent,
       },
     ],
+  },
+  {
+    path: 'not-authorized',
+    title: 'Not Authorized',
+    component: NotAuthComponent,
   },
   {
     path: '**',
