@@ -10,6 +10,8 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { NgIf } from '@angular/common';
+import { WishlistService } from '../../service/wishlist.service';
+import { CartService } from '../../service/cart.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -19,13 +21,38 @@ import { NgIf } from '@angular/common';
 })
 export class NavbarComponent {
   selectedCategory: any = null;
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private wislistService: WishlistService,
+    private cartService: CartService
+  ) {}
   isAuthenticated = false;
+  currentUser: any = {};
+  wishListItems = 0;
+  cartItems = 0;
   ngOnInit(): void {
     this.authService.isAuthObservable().subscribe((isAuth) => {
-      console.log(isAuth);
-
       this.isAuthenticated = isAuth;
+      console.log('authStatus', isAuth);
+
+      if (isAuth) {
+        this.authService.getUserDataObservable().subscribe((data) => {
+          console.log('setting user data: ', data);
+
+          this.currentUser = data.data;
+        });
+        this.wislistService.getWishlistData().subscribe((data) => {
+          // console.log('Data from wishlist: ', data);
+          this.wishListItems = data.length;
+        });
+
+        this.cartService.getCartData().subscribe((data) => {
+          console.log('Data form cart: ', data);
+
+          this.cartItems = data.length;
+        });
+      }
     });
   }
 
@@ -53,6 +80,9 @@ export class NavbarComponent {
   logout(): void {
     // handle auth
     this.authService.logout();
+    this.cartItems = 0;
+    this.wishListItems = 0;
+    this.currentUser = {};
     this.router.navigate(['/login']);
   }
 }

@@ -21,20 +21,38 @@ export class AuthService {
       tap((response: any) => {
         if (response && response.token) {
           localStorage.setItem('user_info', JSON.stringify(response));
+          this.getCurrentUser();
           this.updateAuthStatus(true);
         }
       })
     );
   }
+  private currentUser = new BehaviorSubject<any>(null);
 
-  getCurrentUser(): Observable<any> | null {
-    const currentStoragUser = this.getStorageData();
-    if (currentStoragUser) {
-      return this.http.get(
-        `${this.baseUrl}${currentStoragUser.role}s/${currentStoragUser.id}`
-      );
+  getCurrentUser(): void {
+    const currentStorageUser = this.getStorageData();
+    if (currentStorageUser) {
+      this.http
+        .get(
+          `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
+        )
+        .subscribe((userData) => {
+          console.log('From Observable', userData);
+
+          this.currentUser.next(userData);
+        });
     }
-    return null;
+  }
+  getUserDataObservable(): Observable<any> {
+    console.log('userDataObservable');
+
+    this.getCurrentUser();
+    if (this.isAuthenticated()) {
+      console.log('Authemticated getting user');
+      this.getCurrentUser();
+      return this.currentUser.asObservable();
+    }
+    return this.currentUser.asObservable();
   }
 
   getStorageData() {
