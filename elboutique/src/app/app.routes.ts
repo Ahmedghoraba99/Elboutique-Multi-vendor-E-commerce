@@ -30,6 +30,8 @@ import { AccountComponent as VendorAccountComponent } from './profile/vendor/acc
 import { ChangePasswordComponent as VendorChangePasswordComponent } from './profile/vendor/change-password/change-password.component';
 import { CategoryComponent as VendorCategoryComponent } from './dashboard/category/category.component';
 import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
+import { NotAuthComponent } from './not-auth/not-auth.component';
+import { adminGuard } from './_guards/admin.guard';
 export const routes: Routes = [
   {
     path: '',
@@ -40,6 +42,7 @@ export const routes: Routes = [
     path: 'dashboard',
     title: 'Dashboard',
     component: DashboardComponent,
+    canActivate: [adminGuard],
     children: [
       {
         path: '',
@@ -191,6 +194,11 @@ export const routes: Routes = [
         component: VendorChangePasswordComponent,
       },
     ],
+  },
+  {
+    path: 'not-authorized',
+    title: 'Not Authorized',
+    component: NotAuthComponent,
   },
   {
     path: '**',
