@@ -14,12 +14,17 @@ class WishlistController extends Controller
         if (!$customer) {
             return response()->json(["message"=> "Customer Doesn't exist"],404);
         }
+        $this->authorize('attachWishlist', $customer);
         $customer->wishlistProducts()->syncWithoutDetaching($request->products);
         return response()->json(["message"=>"Products Attached to wishlist"],200);
     }
 
     public function detachProductFromCustomerWishlist(Request $request,$id){
         $customer = Customer::find($id);
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        $this->authorize('detachWishlist', $customer);
         $product=Product::find($request->all()["products"]);
         $flag = false;
         foreach ($customer->wishlistProducts as $key => $wishlistProduct) {
@@ -39,6 +44,7 @@ class WishlistController extends Controller
         if (!$customer) {
             return response()->json(["message"=> "Customer Doesn't exist"],404);
         }
+        $this->authorize('viewWishlist', $customer);
         $wishlistProducts = $customer->wishlistProducts()->with(['images','tags','vendor'])->get();
         return response()->json($wishlistProducts,200);
     }

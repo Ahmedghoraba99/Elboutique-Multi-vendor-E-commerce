@@ -63,4 +63,29 @@ class CustomerPolicy
     {
         //
     }
+
+
+    public function attachWishlist(  $user, Customer $customer)
+    {
+        // Example logic: user can attach if they own the customer account or are an admin
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can detach a product from a customer's wishlist.
+     */
+    public function detachWishlist(  $user, Customer $customer)
+    {
+        // Example logic: user can detach if they own the customer account or are an admin
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can view a customer's wishlist.
+     */
+    public function viewWishlist(  $user, Customer $customer)
+    {
+        // Example logic: user can view if they own the customer account or are an admin
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
 }
