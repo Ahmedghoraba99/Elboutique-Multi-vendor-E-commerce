@@ -25,9 +25,9 @@ class StoreReportPrductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => 'required|exists:customers,id',
-            'product_id' => 'required|exists:products,id',
-            'reason' => 'required|string',
+            // 'customer_id' => 'required|exists:customers,id',
+            // 'product_id' => 'required|exists:products,id',
+            // 'reason' => 'required|string',
         ];
     }
 

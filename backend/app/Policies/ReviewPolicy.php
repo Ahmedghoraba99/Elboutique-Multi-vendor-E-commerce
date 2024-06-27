@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Models\Customer;
 use App\Models\Review;
-use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class ReviewPolicy
@@ -11,7 +11,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(Customer $customer): bool
     {
         //
     }
@@ -19,7 +19,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Review $review): bool
+    public function view(Customer $customer, Review $review): bool
     {
         //
     }
@@ -27,7 +27,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(Customer $customer): bool
     {
         //
     }
@@ -35,7 +35,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Review $review): bool
+    public function update(Customer $customer, Review $review): bool
     {
         //
     }
@@ -43,7 +43,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Review $review): bool
+    public function delete(Customer $customer, Review $review): bool
     {
         //
     }
@@ -51,7 +51,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Review $review): bool
+    public function restore(Customer $customer, Review $review): bool
     {
         //
     }
@@ -59,7 +59,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Review $review): bool
+    public function forceDelete(Customer $customer, Review $review): bool
     {
         //
     }

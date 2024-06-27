@@ -67,6 +67,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
 Route::group(['middleware' => ['auth:sanctum','AdminVendorAuth']], function () {
     Route::apiResource('products', ProductController::class);
     Route::patch('vendors/{vendor}', [VendorController::class, 'update']);
+    Route::put('vendors/{vendor}', [VendorController::class, 'update']);
     Route::delete('vendors/{vendor}', [VendorController::class, 'destroy']);
 
     });
@@ -93,6 +94,7 @@ Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function ()
     Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
 
     Route::patch('customers/{customer}', [CustomerController::class, 'update']);
+    Route::put('customers/{customer}', [CustomerController::class, 'update']);
     Route::delete('customers/{customer}', [CustomerController::class, 'destroy']);
 
 
