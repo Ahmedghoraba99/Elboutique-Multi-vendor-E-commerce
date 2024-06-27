@@ -67,7 +67,7 @@ class CustomerPolicy
 
     public function attachWishlist(  $user, Customer $customer)
     {
-        // Example logic: user can attach if they own the customer account or are an admin
+         
         return $user->id === $customer->id || $user instanceof Admin;
     }
 
@@ -76,7 +76,7 @@ class CustomerPolicy
      */
     public function detachWishlist(  $user, Customer $customer)
     {
-        // Example logic: user can detach if they own the customer account or are an admin
+        
         return $user->id === $customer->id || $user instanceof Admin;
     }
 
@@ -85,12 +85,12 @@ class CustomerPolicy
      */
     public function viewWishlist(  $user, Customer $customer)
     {
-        // Example logic: user can view if they own the customer account or are an admin
+         
         return $user->id === $customer->id || $user instanceof Admin;
     }
     public function attachCart(  $user, Customer $customer)
     {
-        // Example logic: user can attach if they own the customer account or are an admin
+         
         return $user->id === $customer->id || $user instanceof Admin;
     }
 
@@ -99,7 +99,7 @@ class CustomerPolicy
      */
     public function detachCart(  $user, Customer $customer)
     {
-        // Example logic: user can detach if they own the customer account or are an admin
+         
         return $user->id === $customer->id || $user instanceof Admin;
     }
 
@@ -108,7 +108,12 @@ class CustomerPolicy
      */
     public function viewCart(  $user, Customer $customer)
     {
-        // Example logic: user can view if they own the customer account or are an admin
+         
+        return $user->id === $customer->id || $user instanceof Admin;
+    }
+    public function getUserOrders(  $user, Customer $customer)
+    {
+         
         return $user->id === $customer->id || $user instanceof Admin;
     }
 }
