@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\Review;
 use Illuminate\Auth\Access\Response;
@@ -19,7 +20,7 @@ class ReviewPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(Customer $customer, Review $review): bool
+    public function view($user, Review $review): bool
     {
         //
     }
@@ -27,25 +28,33 @@ class ReviewPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(Customer $customer): bool
+    public function create($user,$product_id): bool
     {
-        //
+        if($user instanceof Admin){
+            return true;
+        }
+
+        $orderProduct = $user->orders()->whereHas('products', function($query) use ($product_id) {
+            $query->where('product_id', $product_id);
+        })->first();
+
+        return $orderProduct !== null;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(Customer $customer, Review $review): bool
+    public function update($user, Review $review): bool
     {
-        //
+        return $user->id === $review->customer_id|| $user  instanceof Admin;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(Customer $customer, Review $review): bool
+    public function delete($user, Review $review): bool
     {
-        //
+        return $user->id === $review->customer_id|| $user  instanceof Admin;
     }
 
     /**
