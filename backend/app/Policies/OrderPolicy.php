@@ -64,4 +64,28 @@ class OrderPolicy
     {
         //
     }
+
+    public function attachProductToOrder(  $user, Order $order)
+    {
+         
+        return $user->id === $order->customer_id|| $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can detach a product from a customer's wishlist.
+     */
+    public function detachProductToOrder(  $user, Order $order)
+    {
+         
+        return $user->id === $order->customer_id|| $user instanceof Admin;
+    }
+
+    /**
+     * Determine if the authenticated user can view a customer's wishlist.
+     */
+    public function getOrderProduct(  $user, Order $order)
+    {
+         
+        return $user->id === $order->customer_id|| $user instanceof Admin;
+    }
 }
