@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Attributes;
 use App\Models\Product;
 use App\Models\product_images;
 use GuzzleHttp\Psr7\Request;
@@ -28,6 +29,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        // dd($request);
         try {
             $images = $request->images;
             // Create a new product instance and populate it with request data
@@ -64,6 +66,17 @@ class ProductController extends Controller
                 $product->tags()->attach($request->tags);
             }
 
+
+            $attributes = request()->input('attributes');
+            foreach ($attributes as $attr) {
+                $newAttr = new Attributes();
+                $newAttr->product_id = $product->id;
+                $newAttr->name = $attr['name'];
+                $newAttr->value = $attr['value'];
+                $newAttr->saveOrFail();
+            }
+
+
             return response()->json($product);
         } catch (\Throwable $th) {
             // Rollback by deleting the created product and related images if any error occurs
@@ -99,7 +112,7 @@ class ProductController extends Controller
     public function show(int $product)
     {
         // with image and vendor
-        $product = Product::with(['images', 'vendor'])->find($product);
+        $product = Product::with(['images', 'vendor', 'attributes'])->find($product);
         return response()->json($product);
     }
 

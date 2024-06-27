@@ -21,6 +21,7 @@ export class CongsComponent implements OnInit {
         console.log(data);
       },
       (error) => {
+        sessionStorage.removeItem('needactivation');
         this.router.navigateByUrl('/');
       }
     );

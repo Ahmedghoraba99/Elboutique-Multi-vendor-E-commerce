@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
-            $table->string('color')->nullable()->default('unspecified');
-            $table->enum('weight', ['less than 500g', '500-1000g', '1000-2000g', 'more than 2000g'])->default('less than 500g');
-            $table->string('height')->nullable();
-            $table->string('width')->nullable();
-            $table->string('length')->nullable();
-            $table->string('material')->default('unspecified');
-            $table->string('size')->nullable();
+            // foreign key to product
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
+            $table->string('name');
+            $table->string('value');
         });
     }
 

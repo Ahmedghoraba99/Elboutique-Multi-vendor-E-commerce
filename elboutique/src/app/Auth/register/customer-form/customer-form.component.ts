@@ -95,7 +95,23 @@ export class CustomerFormComponent {
       }
     );
   }
-
+  onBlur(controler: string) {
+    const query = { [controler]: this.customerForm.get(controler)?.value };
+    this.authService.emailAndPasswordExisting(query).subscribe(
+      () => {},
+      (err) => {
+        if (err.status == 422) {
+          this.customerForm
+            .get(controler)
+            ?.setErrors({ existingAccount: true });
+          this.showToastMessage(
+            'Phones and emails cannot be linked to more than one account.',
+            'Validation Error'
+          );
+        }
+      }
+    );
+  }
   onSubmit() {
     this.markFormGroupTouched(this.customerForm);
 

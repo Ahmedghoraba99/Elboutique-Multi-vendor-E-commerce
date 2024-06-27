@@ -51,6 +51,11 @@ export class AuthService {
 
     return this.http.post(`${this.baseUrl}${role}`, data);
   }
+
+  emailAndPasswordExisting(query: any) {
+    return this.http.post(`${this.baseUrl}registerFormValdation`, query);
+  }
+
   verification(verificationLink: string, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(verificationLink, { headers });
@@ -73,5 +78,8 @@ export class AuthService {
 
   getCheckMailStatus(): Observable<any> {
     return this.checkMailSubject.asObservable();
+  }
+  isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 }
