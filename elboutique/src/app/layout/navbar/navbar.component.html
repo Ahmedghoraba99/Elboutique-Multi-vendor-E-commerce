@@ -39,21 +39,26 @@
               <a routerLink="/wishlist">
                 <fa-icon [icon]="faHeart"></fa-icon>
                 WishList
-                <span>3</span>
+                <span *ngIf="wishListItems">{{ wishListItems }}</span>
               </a>
             </div>
             <div class="action-icon">
               <a routerLink="/checkout">
                 <fa-icon [icon]="faShoppingCart"></fa-icon>
                 Cart
-                <span>3</span>
+                <span *ngIf="cartItems">{{ cartItems }}</span>
               </a>
             </div>
 
-            <div class="action-icon">
+            <div
+              class="action-icon"
+              *ngIf="isAuthenticated"
+              [class]="!isAuthenticated ? 'd-none' : ''"
+            >
+              " >
               <a href="#" class="user-profile">
                 <img
-                  src="../../../assets/images/men.jpg"
+                  src="{{ currentUser.image_url }}"
                   class="user-profile-img img-fluid"
                 />
               </a>
