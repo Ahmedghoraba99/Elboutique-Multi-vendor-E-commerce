@@ -38,4 +38,10 @@ export class NavbarComponent {
   faShoppingCart = faShoppingCart;
   faHeart = faHeart;
   faArrowRightFromBracket = faArrowRightFromBracket;
+
+  user_id = localStorage.getItem('id');
+  logout():void{
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
 }
