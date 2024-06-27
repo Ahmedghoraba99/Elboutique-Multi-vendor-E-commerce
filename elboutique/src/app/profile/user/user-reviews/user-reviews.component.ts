@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ReviewService } from '../../../service/review.service';
 import {AllReviews} from '../../../_model/reviews';
 import { CommonModule } from '@angular/common';
-import { UpdateReviewComponent } from './update-review/update-review.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
@@ -11,7 +10,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-user-reviews',
   standalone: true,
-  imports: [CommonModule,UpdateReviewComponent,ReactiveFormsModule,RouterLink],
+  imports: [CommonModule,ReactiveFormsModule,RouterLink],
   templateUrl: './user-reviews.component.html',
   styleUrl: './user-reviews.component.css'
 })
