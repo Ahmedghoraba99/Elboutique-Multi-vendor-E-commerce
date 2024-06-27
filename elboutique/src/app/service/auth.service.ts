@@ -79,4 +79,7 @@ export class AuthService {
   getCheckMailStatus(): Observable<any> {
     return this.checkMailSubject.asObservable();
   }
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
 }
