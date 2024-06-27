@@ -33,21 +33,21 @@ color:gold;
     font-weight: 700;
 }  */
 
-/* 
+/*
 .progress-bar.star-5 {
-    background-color: rgb(56, 174, 4); 
+    background-color: rgb(56, 174, 4);
 }
 
 .progress-bar.star-4 {
-    background-color: rgb(130, 174, 4); 
+    background-color: rgb(130, 174, 4);
 }
 
 .progress-bar.star-3 {
-    background-color: rgb(243, 172, 48); 
+    background-color: rgb(243, 172, 48);
 }
 
 .progress-bar.star-2 {
-    background-color: rgb(243, 108, 50); 
+    background-color: rgb(243, 108, 50);
 }
 
 .progress-bar.star-1 {
@@ -66,8 +66,8 @@ color:gold;
     font-size: 1.2rem;
 
 }
-.product-rating-section h1{ 
-    font-size: clamp(1.2rem, 1.04rem + 1.28vw, 1.5rem);   
+.product-rating-section h1{
+    font-size: clamp(1.2rem, 1.04rem + 1.28vw, 1.5rem);
      font-weight: 600;
 
 }
@@ -121,13 +121,13 @@ fa-icon{
 .average-rating-stars {
     display: flex;
   }
-  
+
   .active-star {
-    color: gold; 
+    color: gold;
   }
-  
+
   .inactive-star {
-    color: gray; 
+    color: gray;
   }
   average-no-rating-stars fa-icon{
     color: #404553;
@@ -137,7 +137,7 @@ fa-icon{
   }
 
   .product-review-section{
-    overflow: scroll;
+    /* overflow: scroll; */
+    overflow-y: scroll;
     height: 20rem;
   }
-  

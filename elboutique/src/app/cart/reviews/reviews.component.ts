@@ -5,11 +5,13 @@ import {Review} from '../../_model/reviews'
 import { ReviewService } from '../../service/review.service';
 import { ActivatedRoute } from '@angular/router';
 import { faStar, faStarHalfAlt, faStar as faStarEmpty } from '@fortawesome/free-solid-svg-icons';
+import { ReportReviewComponent } from '../report-review/report-review.component';
+
 
 @Component({
   selector: 'app-reviews',
   standalone: true,
-  imports: [CommonModule,FontAwesomeModule],
+  imports: [CommonModule,FontAwesomeModule,ReportReviewComponent],
   templateUrl: './reviews.component.html',
   styleUrl: './reviews.component.css'
 })
@@ -17,6 +19,7 @@ export class ReviewsComponent implements OnInit{
   reviews: Review[] = [];
   averageRating: number = 0;
   totalRating: number = 0;
+  reviewId :number = 0;
 
   constructor(
     private reviewService: ReviewService,
@@ -62,14 +65,21 @@ export class ReviewsComponent implements OnInit{
     this.averageRating = Number(this.averageRating.toFixed(2));
 
   }
+
   getStarIcon(index: number): any {
     if (index < Math.floor(this.averageRating)) {
-      return this.faStar; 
+      return this.faStar;
     } else if (index === Math.floor(this.averageRating) && this.averageRating % 1 !== 0) {
-      return this.faStarHalfAlt; 
+      return this.faStarHalfAlt;
     } else {
-      return this.faStarEmpty; 
+      return this.faStarEmpty;
     }
   }
+
+  updateReview(id:number){
+    this.reviewId = id;
+    console.log(this.reviewId);
+  }
+
 }
 
