@@ -57,6 +57,9 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('tags', TagController::class);
     Route::apiResource('categories', CategoryController::class);
 
+
+    Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
+
     });
 
 
@@ -141,7 +144,7 @@ Route::get('tags', [TagController::class, 'index'])->name('tags.index');
 // Product related
 Route::get('/product/featured', [ProductController::class, "getFeaturedProducts"]);
 Route::get('/product/category/{id}', [ProductController::class, "getProductsByCategory"]);
-Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
+
 Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
 Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
 Route::get('/product/search', [ProductController::class,"searchProduct"]);

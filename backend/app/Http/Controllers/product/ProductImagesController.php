@@ -5,6 +5,7 @@ namespace App\Http\Controllers\product;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Storeproduct_imagesRequest;
 use App\Http\Requests\Updateproduct_imagesRequest;
+use App\Models\Product;
 use App\Models\product_images;
 
 class ProductImagesController extends Controller
@@ -45,6 +46,8 @@ class ProductImagesController extends Controller
 
     public function update(Updateproduct_imagesRequest $request, product_images $product_images)
     {
+         
+        $this->authorize('update',$product_images->product());
         $product_images
             = product_images::where('product_id', $product_images)
             ->where('id', $product_images)
@@ -61,7 +64,12 @@ class ProductImagesController extends Controller
      */
     public function destroy(int $product_images, int $product_id)
     {
+        $product = Product::find($product_id);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
 
+        $this->authorize('delete', $product);
         $product_images
             = product_images::where('product_id', $product_id)
             ->where('id', $product_images)

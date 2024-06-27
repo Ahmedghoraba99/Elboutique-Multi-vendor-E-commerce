@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Auth\Access\Response;
@@ -11,7 +12,7 @@ class ProductPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(Customer $customer): bool
+    public function viewAny($user): bool
     {
         //
     }
@@ -19,7 +20,7 @@ class ProductPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(Customer $customer, Product $product): bool
+    public function view($user, Product $product): bool
     {
         //
     }
@@ -27,7 +28,7 @@ class ProductPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(Customer $customer): bool
+    public function create($user): bool
     {
         //
     }
@@ -35,23 +36,24 @@ class ProductPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(Customer $customer, Product $product): bool
+    public function update(  $user, Product $product): bool
     {
-        //
+        return $user->id === $product->vendor_id|| $user  instanceof Admin;
+
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(Customer $customer, Product $product): bool
+    public function delete($user, Product $product): bool
     {
-        //
+        return $user->id === $product->vendor_id|| $user  instanceof Admin;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(Customer $customer, Product $product): bool
+    public function restore($user, Product $product): bool
     {
         //
     }
