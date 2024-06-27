@@ -59,7 +59,20 @@
               </a>
             </div>
             <div class="action-icon">
-              <a class="mx-2 text-light logout" (click)="logout()" > Logout </a>
+              <a
+                class="mx-2 text-light logout"
+                *ngIf="!isAuthenticated"
+                (click)="logout()"
+              >
+                Login
+              </a>
+              <a
+                class="mx-2 text-light logout"
+                *ngIf="isAuthenticated"
+                (click)="logout()"
+              >
+                Logout
+              </a>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { Subject, Observable, Subscription, BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +13,18 @@ export class AuthService {
   private storageData = localStorage.getItem('user_info');
   private registerUrl = `${this.baseUrl}/ `;
   private customerRegisterUrl = `${this.baseUrl}/customer/register`;
+  private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
 
   constructor(private http: HttpClient) {}
-
   login(email: string, password: string, role: string): Observable<any> {
-    return this.http.post(this.loginUrl, { email, password, role });
+    return this.http.post(this.loginUrl, { email, password, role }).pipe(
+      tap((response: any) => {
+        if (response && response.token) {
+          localStorage.setItem('user_info', JSON.stringify(response));
+          this.updateAuthStatus(true);
+        }
+      })
+    );
   }
 
   getCurrentUser(): Observable<any> | null {
@@ -62,6 +69,7 @@ export class AuthService {
   }
   logout() {
     localStorage.removeItem('user_info');
+    this.updateAuthStatus(false);
   }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);
@@ -81,5 +89,11 @@ export class AuthService {
   }
   isAuthenticated(): boolean {
     return !!this.getToken();
+  }
+  updateAuthStatus(isAuthenticated: boolean): void {
+    this.authStatus.next(isAuthenticated);
+  }
+  isAuthObservable(): Observable<boolean> {
+    return this.authStatus.asObservable();
   }
 }

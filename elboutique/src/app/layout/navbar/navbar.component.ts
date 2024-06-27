@@ -8,16 +8,26 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
+import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [FontAwesomeModule, RouterLink, SelectDropComponent],
+  imports: [FontAwesomeModule, RouterLink, SelectDropComponent, NgIf],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
   selectedCategory: any = null;
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+  isAuthenticated = false;
+  ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      console.log(isAuth);
+
+      this.isAuthenticated = isAuth;
+    });
+  }
 
   onCategorySelected(category: any) {
     this.selectedCategory = category;
@@ -40,8 +50,9 @@ export class NavbarComponent {
   faArrowRightFromBracket = faArrowRightFromBracket;
 
   user_id = localStorage.getItem('id');
-  logout():void{
-    localStorage.clear();
+  logout(): void {
+    // handle auth
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
