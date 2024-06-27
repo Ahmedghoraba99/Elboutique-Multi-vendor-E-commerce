@@ -29,6 +29,7 @@ import { ProductsComponent as VendorProductsComponent } from './profile/vendor/p
 import { AccountComponent as VendorAccountComponent } from './profile/vendor/account/account.component';
 import { ChangePasswordComponent as VendorChangePasswordComponent } from './profile/vendor/change-password/change-password.component';
 import { CategoryComponent as VendorCategoryComponent } from './dashboard/category/category.component';
+import { UserReviewsComponent } from './profile/user/user-reviews/user-reviews.component';
 export const routes: Routes = [
   {
     path: '',
@@ -156,6 +157,11 @@ export const routes: Routes = [
         title: 'Payment',
         component: PaymentComponent,
       },
+      {
+        path: 'reviews',
+        title: 'Reviews',
+        component: UserReviewsComponent
+      }
     ],
   },
   {

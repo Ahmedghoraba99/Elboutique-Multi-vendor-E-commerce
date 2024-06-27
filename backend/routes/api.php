@@ -51,6 +51,7 @@ Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfea
 Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
 Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
 Route::get('/product/search', [ProductController::class,"searchProduct"]);
+Route::get('/product/vendor/{id}', [ProductController::class, "getVendorProducts"])->where('id', '[0-9]+');
 
 
 // Order related routes
@@ -74,7 +75,7 @@ Route::get('/customer/showWishlist/{id}', [WishlistController::class, 'showCutso
 Route::post('/login',  [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
- 
+
 //email verification endpoints
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);

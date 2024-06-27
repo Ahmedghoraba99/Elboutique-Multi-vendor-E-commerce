@@ -3,7 +3,9 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {ReviewResponse} from '../_model/reviews'
 import { catchError } from 'rxjs/operators';
-import { AddReview } from '../_model/reviews'; '../_model/reviews'
+import { AddReview } from '../_model/reviews';
+import {AllReviews} from '../_model/reviews';
+
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,22 @@ export class ReviewService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  getReviewsByCustomer(customerId: number): Observable<{data: AllReviews[]}> {
+    return this.http.get<{data: AllReviews[]}>(`${this.apiUrl}/customer/${customerId}`);
+  }
+
+  deleteReview(reviewId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${reviewId}`);
+  }
+
+  updateReview(reviewId: number, review: Partial<AllReviews>): Observable<AllReviews> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      '_method': 'PUT'
+    });
+    return this.http.post<AllReviews>(`${this.apiUrl}/${reviewId}`, {'_method':'PUT',...review});
   }
 
 

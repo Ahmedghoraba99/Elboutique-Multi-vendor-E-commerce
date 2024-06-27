@@ -35,6 +35,18 @@ class ReviewController extends Controller
         }
     }
 
+    public function getReviewsByCustomer($coustomerId){
+        $reviews=  Review::where('customer_id', $coustomerId)->get();
+        if($reviews){
+            return ReviewResource::collection($reviews);
+        }
+        else{
+            return response()->json([
+                'message' => 'No reviews found for this coustomer'
+            ], 404);
+        }
+    }
+
 
     /**
      * Store a newly created resource in storage.

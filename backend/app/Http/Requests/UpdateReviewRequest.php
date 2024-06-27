@@ -25,6 +25,7 @@ class UpdateReviewRequest extends FormRequest
     {
         return [
             'rate' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string'
         ];
     }
 

@@ -296,4 +296,37 @@ class ProductController extends Controller
 
         return response()->json($products, 200);
     }
+
+
+    function getVendorProducts($id)
+    {
+        try {
+            $products = Product::where('vendor_id', $id)->with('images', 'vendor')->get();
+            $transFormProduct = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'description' => $product->description,
+                    'images' => $product->images->map(function ($image) {
+                        return [
+                            'image_url' => $image->image_url,
+                        ];
+                    }),
+                    'vendor'=> [
+                        'id' => $product->vendor->id,
+                        'name' => $product->vendor->name,
+                        'email' => $product->vendor->email,
+                        'phone' => $product->vendor->phone,
+                        'address' => $product->vendor->address,
+                        'image_url' => $product->vendor->image_url,
+                    ]
+                ];
+            });
+            return response()->json($transFormProduct);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
 }
