@@ -37,13 +37,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['auth:admin']], function () {
 
-    // Update users status "active banned"  endpoints  
+    // Update users status "active banned"  endpoints
     Route::get('/vendors/active/{vendor}', [VendorController::class, 'activateVendor']);
     Route::get('/vendors/ban/{vendor}', [VendorController::class, 'banVendor']);
     Route::get('/customers/active/{customer}', [CustomerController::class, 'activateCustomer']);
     Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
 
-    //Customer addresses & phones endpoints 
+    //Customer addresses & phones endpoints
     Route::apiResource('customeraddresses', CustomerAddressController::class);
     Route::apiResource('customerphones', CustomerPhoneController::class);
 
@@ -51,7 +51,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::apiResource('admins', AdminController::class);
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
-    
+
 
 
     Route::apiResource('tags', TagController::class);
@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth:sanctum','AdminVendorAuth']], function () {
     Route::apiResource('products', ProductController::class);
     Route::patch('vendors/{vendor}', [VendorController::class, 'update']);
     Route::delete('vendors/{vendor}', [VendorController::class, 'destroy']);
-     
+
     });
 
 
@@ -88,12 +88,12 @@ Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function ()
     Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProductToOrder']);
     Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
     Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
- 
+
     Route::patch('customers/{customer}', [CustomerController::class, 'update']);
     Route::delete('customers/{customer}', [CustomerController::class, 'destroy']);
 
-   
-     
+
+
     });
 
 
@@ -124,7 +124,7 @@ Route::get('admins/{admin}', [AdminController::class, 'show']);
 Route::get('vendors/{vendor}', [VendorController::class, 'show']);
 Route::get('customers/{customer}', [CustomerController::class, 'show']);
 
- 
+
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
 
@@ -145,6 +145,7 @@ Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfea
 Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
 Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
 Route::get('/product/search', [ProductController::class,"searchProduct"]);
+Route::get('/product/vendor/{id}', [ProductController::class, "getVendorProducts"])->where('id', '[0-9]+');
 
 
 

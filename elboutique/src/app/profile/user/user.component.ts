@@ -32,6 +32,11 @@ export class UserComponent {
       name: 'My Wishlist',
     },
     {
+      path: 'reviews',
+      icon: '<i class="fa-solid fa-comment-dots"></i>',
+      name: 'My Reviews',
+    },
+    {
       path: 'payment',
       icon: '<i class="fa-solid fa-credit-card"></i>',
       name: 'My Payment',

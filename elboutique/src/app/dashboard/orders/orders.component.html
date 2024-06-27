@@ -1,1 +1,91 @@
-<p>orders works!</p>
+<div class="h6 text-uppercase">Orders</div>
+<hr class="hr">
+<div class="container">
+    <button class="btn primary-bg-color mb-3" (click)="open(orderForm)">Add Order</button>
+
+    <ng-template #orderForm let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{ editOrder.id ? 'Edit Order' : 'Add Order' }}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form (ngSubmit)="editOrder.id ? updateOrder() : addOrder()">
+                <div class="mb-3">
+                    <label for="customer" class="form-label">Customer</label>
+                    <select class="form-control" id="customer" [(ngModel)]="editOrder.customer_id" name="customer_id"
+                        *ngIf="editOrder.id; else newOrderInput" required>
+                        <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
+                    </select>
+                    <ng-template #newOrderInput>
+                        <select class="form-control" id="customer" [(ngModel)]="newOrder.customer_id" name="customer_id"
+                            *ngIf="!editOrder.id" required>
+                            <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}
+                            </option>
+                        </select>
+                    </ng-template>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-control" id="status" [(ngModel)]="editOrder.status" name="status"
+                        *ngIf="editOrder.id; else newOrderStatus" required>
+                        <option value="midway">Midway</option>
+                        <option value="arrived">Arrived</option>
+                    </select>
+                    <ng-template #newOrderStatus>
+                        <select class="form-control" id="status" [(ngModel)]="newOrder.status" name="status"
+                            *ngIf="!editOrder.id" required>
+                            <option value="midway">Midway</option>
+                            <option value="arrived">Arrived</option>
+                        </select>
+                    </ng-template>
+                </div>
+                <div class="mb-3">
+                    <label for="total" class="form-label">Total</label>
+                    <input type="number" class="form-control" id="total" [(ngModel)]="editOrder.total" name="total"
+                        *ngIf="editOrder.id; else newOrderTotal" required />
+                    <ng-template #newOrderTotal>
+                        <input type="number" class="form-control" id="total" [(ngModel)]="newOrder.total" name="total"
+                            *ngIf="!editOrder.id" required />
+                    </ng-template>
+                </div>
+                <button type="submit" class="btn primary-bg-color">{{ editOrder.id ? 'Update' : 'Add' }}</button>
+            </form>
+        </div>
+    </ng-template>
+
+
+
+    <!-- Orders Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Date</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let order of orders; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ getCustomerName(order.customer_id) }}</td>
+                <td>{{ order.status }}</td>
+                <td>{{ order.total }}</td>
+                <td>{{ order.created_at | date }}</td>
+                <td>
+                    <button type="button" class="btn btn-sm secondary-bg-color"
+                        (click)="editOrder = order; open(orderForm)">
+                        Edit
+                    </button>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger" (click)="deleteOrder(order.id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

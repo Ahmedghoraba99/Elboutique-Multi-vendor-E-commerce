@@ -15,7 +15,7 @@
 
                     <p class="">at the total rate of <span class="fw-bold">{{reviews.length}}</span> reviwe</p>
                 </div>
-                <div class="rating-review-section overflow-scroll">
+                <div class="rating-review-section ">
 
                 </div>
 
@@ -24,7 +24,7 @@
         <div class="col-md-7 my-3">
             <div class="product-review-section">
               <h1>See All The Reviews</h1>
-                <div  *ngFor="let review of reviews"  class="product-review-card mt-2 ">
+                <div  *ngFor="let review of reviews"  class="product-review-card mt-2  ">
                     <div class="reviewer-data d-flex gap-3 my-2">
                         <div class="reviewer-profile">
                             <img [src]="review.customer.image_url"  alt="">
@@ -43,7 +43,7 @@
                     <div class="rewiew-content">
                       <span class="m-0">{{ review.comment }}</span>
                     </div>
-                   
+
                 </div>
             </div>
         </div>
