@@ -30,7 +30,7 @@ class OrderPolicy
      */
     public function create(   $user): bool
     {
-        //
+        return  $user instanceof Admin|| $user->banned =='false';
     }
 
     /**
@@ -38,7 +38,10 @@ class OrderPolicy
      */
     public function update(   $user, Order $order): bool
     {
-        return $user->id === $order->customer_id|| $user instanceof Admin;
+        return $user instanceof Admin||
+        ( $user->id === $order->customer_id &&
+         $order->status=='midway'&&
+        $user->banned =='false');
     }
 
     /**
@@ -46,7 +49,8 @@ class OrderPolicy
      */
     public function delete( $user, Order $order): bool
     {
-        return $user->id === $order->customer_id|| $user instanceof Admin;
+        return ($user->id === $order->customer_id && $order->status=='midway')||
+         $user instanceof Admin;
     }
 
     /**

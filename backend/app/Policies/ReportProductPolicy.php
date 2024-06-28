@@ -34,7 +34,9 @@ class ReportProductPolicy
         if($user instanceof Admin){
             return true;
         }
-
+        if($user->banned =='true') {
+            return false;
+        }
         $orderProduct = $user->orders()->whereHas('products', function($query) use ($product_id) {
             $query->where('product_id', $product_id);
         })->first();
@@ -50,7 +52,13 @@ class ReportProductPolicy
      */
     public function update($user, ReportProduct $reportProduct): bool
     {
-        return $user->id === $reportProduct->customer_id|| $user  instanceof Admin;
+        if($user instanceof Admin){
+            return true;
+        }
+        if($user->banned =='true') {
+            return false;
+        }
+        return $user->id === $reportProduct->customer_id ;
     }
 
     /**
