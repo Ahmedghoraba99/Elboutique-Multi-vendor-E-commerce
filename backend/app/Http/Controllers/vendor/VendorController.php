@@ -103,8 +103,17 @@ class VendorController extends Controller
 {
     return  $this->updateUserStatus($vendor,"banned");
 
+}
+   public function getVendorReceivables(Vendor $vendor)
+{
+    return response()->json([
+        'message' => 'Vendor Receivables retrieved successfully',
+        'data' => $vendor->vendorReceivables()
+    ], 200);
+     
 
 }
+
 
 
 }

@@ -19,7 +19,13 @@ export class OrderService {
     return this.http.get(`${this.baseUrl}/users/${id}`);
   }
   createOrder(body: Object): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, body);
+    return this.http.post(`${this.baseUrl}`, {
+      customer_id: this.userID,
+      ...body,
+    });
+  }
+  addProductToOrder(body: Object, id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/addProducts/${id}`, body);
   }
   updateOrder(body: Object): Observable<any> {
     return this.http.put(`${this.baseUrl}`, body);

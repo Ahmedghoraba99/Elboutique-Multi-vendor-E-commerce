@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 class CartController extends Controller
 {
     public function attachProductToCustomerCart(Request $request,$id){
+        $customer = Customer::find($id);
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        $this->authorize('detachCart', $customer);
         
         $products=[];
         foreach ($request->products as $product_id => $quantity) {
@@ -17,15 +22,21 @@ class CartController extends Controller
             if (!$product) {
                 return response()->json(["message"=> "Product Doesn't exist"],404);
             }
+            
             $products[$product_id] = ['quantity' => $quantity];
         }
-        $customer = Customer::find($id);
+       
+
         $customer->cartProducts()->syncWithoutDetaching($products);
         return response()->json(["message"=>"Products Attached to cart"],200);
     }
 
     public function detachProductFromCustomerCart(Request $request,$id){
         $customer = Customer::find($id);
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        $this->authorize('detachCart', $customer);
         $product=Product::find($request->all()["products"]);
         $flag = false;
         foreach ($customer->cartProducts as $key => $cartProduct) {
@@ -45,7 +56,17 @@ class CartController extends Controller
         if (!$customer) {
             return response()->json(["message"=> "Customer Doesn't exist"],404);
         }
+        $this->authorize('viewCart', $customer);
         $cartProducts = $customer->cartProducts()->with(['images','tags','vendor'])->get();
         return response()->json($cartProducts,200);
+    }
+    public function clearCart($id){
+        $customer = Customer::find($id);
+        if (!$customer) {
+            return response()->json(["message"=> "Customer Doesn't exist"],404);
+        }
+        $customer->cartProducts()->detach();
+
+        return response()->json(["message" => "Cart cleared successfully"], 200);
     }
 }

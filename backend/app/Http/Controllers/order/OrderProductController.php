@@ -16,6 +16,7 @@ class OrderProductController extends Controller
         if (!$order) {
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
+        $this->authorize('attachProductToOrder',   $order);
         $products=[];
         foreach($request->products as $product_id => $quantity){
             $product=Product::find($product_id);
@@ -32,6 +33,7 @@ class OrderProductController extends Controller
         if (!$order) {
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
+        $this->authorize('detachProductFromOrder',   $order);
         $product=Product::find($request->all()['product']);
         $flag = false;
         foreach ($order->products as $key => $orderProduct) {
@@ -50,6 +52,7 @@ class OrderProductController extends Controller
         if (!$order) {
             return response()->json(["message"=> "Order Doesn't exist"],404);
         }
+        $this->authorize('view', $order);
         $orderProducts = $order->products()->with(['images','tags','vendor'])->get();
         return response()->json(['order_product'=>$orderProducts],200);
     }

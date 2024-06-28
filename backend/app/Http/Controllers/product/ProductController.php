@@ -29,7 +29,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // dd($request);
+        $this->authorize('create',Product::class);
         try {
             $images = $request->images;
             // Create a new product instance and populate it with request data
@@ -121,6 +121,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $this->authorize('update',$product);
         try {
             // Update product details
             $product->update($request->validated());
@@ -159,10 +160,11 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
+        
         try {
             // Find the product by ID
             $product = Product::findOrFail($id);
-
+            $this->authorize('delete', $product);
             $product->images()->delete();
 
             $product->tags()->detach();

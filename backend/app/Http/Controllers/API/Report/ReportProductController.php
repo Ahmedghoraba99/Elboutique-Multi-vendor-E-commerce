@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Report;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+ 
 use App\Http\Resources\ReportProductResource;
 use App\Models\ReportProduct;
 use App\Http\Requests\StoreReportPrductRequest;
@@ -22,6 +22,7 @@ class ReportProductController extends Controller
 
     public function store(StoreReportPrductRequest $request)
     {
+        $this->authorize('create',[ReportProduct::class, $request->product_id]  );
         $validated = $request->validated();
         $review = ReportProduct::create($validated);
         // Return custom response
@@ -52,6 +53,7 @@ class ReportProductController extends Controller
         try {
             // Find the review by ID
             $review = ReportProduct::findOrFail($id);
+            $this->authorize('update', $review);
             $review->update($request->validated());
             return response()->json([
                 'message' => 'Report Product updated successfully',
@@ -74,6 +76,7 @@ class ReportProductController extends Controller
     {
         try {
             $review = ReportProduct::findOrFail($id);
+            $this->authorize('delete', $review);
             $review->delete();
 
             return response()->json([

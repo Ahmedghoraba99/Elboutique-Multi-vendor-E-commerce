@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOrderRequest extends FormRequest
+class StoreVendorReceivablesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "customer_id"=>["required","exists:customers,id"],
-            "total" => ["required", "numeric"],
+            "vendor_id" => "required|integer|exists:vendors,id|",
+            "amount" => "required|numeric|min:0.01",      
         ];
     }
 }
