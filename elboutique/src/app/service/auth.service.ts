@@ -38,7 +38,6 @@ export class AuthService {
         )
         .subscribe((userData) => {
           console.log('From Observable', userData);
-
           this.currentUser.next(userData);
         });
     }

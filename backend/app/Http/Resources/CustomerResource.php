@@ -21,7 +21,7 @@ class CustomerResource extends JsonResource
             'phone' => $this->phone,
             'addresses' => $this->addresses,
             'phones'=>$this->phones,
-             
+            'image'=>$this->image_url
         ];
     }
 }

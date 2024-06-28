@@ -1,114 +1,85 @@
 <div class="h6 text-uppercase">Personal Information</div>
 <hr class="hr">
 <div class="row">
-    <div class="d-flex justify-content-between">
-        <div class="profile-img-container">
-            <img [src]="profileImage" alt="profile image">
-            @if (isEditable) {
-            <button type="button" class="icon" (click)="openImageInput()"><i class="fa-solid fa-camera"></i><span
-                    class="visually-hidden">image</span></button>}
-        </div>
-        <button type="button" class="btn btn-link primary-color text-decoration-none" (click)="toggleEdit()">
-            <i class="fa-solid fa-pen-to-square"></i> Change Profile Information
-        </button>
-    </div>
 
-    <form [formGroup]="profileForm" class="form row my-3">
+  <form [formGroup]="profileForm" class="form row my-3">
+      <div class="d-flex justify-content-between mb-3">
+          <div class="profile-img-container">
+              <img [src]="profileImage" alt="profile image">
+              <button *ngIf="isEditable" type="button" class="icon" (click)="openImageInput()">
+                  <i class="fa-solid fa-camera"></i>
+                  <span class="visually-hidden">image</span>
+              </button>
+          </div>
+          <button type="button" class="btn btn-link primary-color text-decoration-none" (click)="toggleEdit()">
+              <i class="fa-solid fa-pen-to-square"></i> Change Profile Information
+          </button>
+      </div>
+
         <input type="file" name="image" id="image" hidden #imageInput (change)="onImageChange($event)">
         <div class="d-flex gap-3">
+            <!-- first name -->
             <div class="col form-group">
-                <label for="fname">First Name</label>
-                <input type="text" class="form-control" id="fname" formControlName="fname"
-                    placeholder="Enter your first name" aria-label="First Name">
-                <div *ngIf="profileForm.get('fname')?.invalid && profileForm.get('fname')?.touched" class="text-danger">
+                <label for="name">First Name</label>
+                <input type="text" class="form-control" id="name" formControlName="name"
+                    placeholder="Enter your first name" aria-label="First Name" [(ngModel)]="user.data.name">
+                <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="text-danger">
                     First name is required and must be at least 2 characters.
                 </div>
             </div>
-            <div class="col form-group">
-                <label for="midname">Middle Name</label>
-                <input type="text" class="form-control" id="midname" formControlName="midname"
-                    placeholder="Enter your middle name" aria-label="Middle Name">
-            </div>
-            <div class="col form-group">
-                <label for="lname">Last Name</label>
-                <input type="text" class="form-control" id="lname" formControlName="lname"
-                    placeholder="Enter your last name" aria-label="Last Name">
-                <div *ngIf="profileForm.get('lname')?.invalid && profileForm.get('lname')?.touched" class="text-danger">
-                    Last name is required and must be at least 2 characters.
-                </div>
-            </div>
-        </div>
-        <div class="d-flex gap-3">
-            <div class="form-group">
-                <label for="dob">Date of Birth</label>
-                <input type="date" class="form-control" id="dob" formControlName="dob"
-                    placeholder="Enter your date of birth" aria-label="Date of Birth">
-                <div *ngIf="profileForm.get('dob')?.invalid && profileForm.get('dob')?.touched" class="text-danger">
-                    Date of Birth is required.
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <div class="d-flex">
-                    <div class="form-check">
-                        <input type="radio" id="male" class="form-check-input" formControlName="gender" value="Male">
-                        <label for="male" class="form-check-label">Male</label>
-                    </div>
-                    <div class="form-check mx-3">
-                        <input type="radio" id="female" class="form-check-input" formControlName="gender"
-                            value="Female">
-                        <label for="female" class="form-check-label">Female</label>
-                    </div>
-                    <div *ngIf="profileForm.get('gender')?.invalid && profileForm.get('gender')?.touched"
-                        class="text-danger">
-                        Gender is required.
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex gap-3">
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" class="form-control" id="phone" formControlName="phone"
-                    placeholder="Enter your phone number" aria-label="Phone">
-                <div *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-danger">
-                    Phone is required and must be a valid 10-digit number.
-                </div>
-            </div>
+
+            <!-- email -->
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="text" class="form-control" id="email" formControlName="email"
-                    placeholder="Enter your email" aria-label="Email">
+                    placeholder="Enter your email" aria-label="Email" [(ngModel)]="user.data.email">
                 <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger">
                     Email is required and must be a valid email address.
                 </div>
             </div>
         </div>
-        <div class="d-flex gap-3">
-            <div class="form-group">
-                <label for="governorate">Governorate</label>
-                <input type="text" class="form-control" id="governorate" formControlName="governorate"
-                    placeholder="Enter your governorate" aria-label="Governorate">
+
+        <div *ngFor="let phone of user.data.phones; let i = index" class="d-flex gap-3">
+          <div class="form-group">
+            <label for="phone{{i}}">Phone {{i + 1}}</label>
+            <input type="text" class="form-control" id="phone{{i}}" formControlName="phone{{i}}"
+                placeholder="Enter your phone number" aria-label="Phone" [(ngModel)]="phone.phoneNumper">
+            <div *ngIf="profileForm.get('phone' + i)?.invalid && profileForm.get('phone' + i)?.touched" class="text-danger">
+              Phone is required and must be a valid 10-digit number.
             </div>
-            <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" class="form-control" id="city" formControlName="city" placeholder="Enter your city"
-                    aria-label="City">
-            </div>
+          </div>
         </div>
-        <div class="d-flex gap-3">
-            <div class="form-group">
-                <label for="street">Street</label>
-                <input type="text" class="form-control" id="street" formControlName="street"
-                    placeholder="Enter your street" aria-label="Street">
+
+        <div *ngFor="let address of user.data.addresses; let i = index" class="address-section">
+            <div class="d-flex gap-3">
+                <div class="form-group">
+                    <label for="governorate{{i}}">Governorate</label>
+                    <input type="text" class="form-control" id="governorate{{i}}" formControlName="governorate{{i}}"
+                        placeholder="Enter your governorate" aria-label="Governorate" [(ngModel)]="address.governorate">
+                </div>
+                <div class="form-group">
+                    <label for="city{{i}}">City</label>
+                    <input type="text" class="form-control" id="city{{i}}" formControlName="city{{i}}"
+                        placeholder="Enter your city" aria-label="City" [(ngModel)]="address.city">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="houseNumber">House Number</label>
-                <input type="text" class="form-control" id="houseNumber" formControlName="houseNumber"
-                    placeholder="Enter your house number" aria-label="House Number">
+
+            <div class="d-flex gap-3">
+                <div class="form-group">
+                    <label for="street{{i}}">Street</label>
+                    <input type="text" class="form-control" id="street{{i}}" formControlName="street{{i}}"
+                        placeholder="Enter your street" aria-label="Street" [(ngModel)]="address.street">
+                </div>
+                <div class="form-group">
+                    <label for="houseNumber{{i}}">House Number</label>
+                    <input type="text" class="form-control" id="houseNumber{{i}}" formControlName="houseNumber{{i}}"
+                        placeholder="Enter your house number" aria-label="House Number" [(ngModel)]="address.house_number">
+                </div>
             </div>
+
+            <hr *ngIf="user.data.addresses.length > 1" class="w-50">
         </div>
-        <button *ngIf="isEditable" type="button" class="btn primary-bg-color w-auto ms-auto"
-            (click)="saveProfile()">Save</button>
+
+        <button *ngIf="isEditable" type="button" class="btn primary-bg-color w-auto ms-auto" (click)="saveProfile()">Save</button>
     </form>
 </div>
