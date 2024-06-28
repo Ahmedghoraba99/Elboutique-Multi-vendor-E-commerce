@@ -15,6 +15,7 @@ use App\Http\Controllers\product\ProductController;
 use App\Http\Controllers\product\ProductImagesController;
 use App\Http\Controllers\order\OrderProductController;
 use App\Http\Controllers\vendor\VendorController;
+use App\Http\Controllers\VendorReceivablesController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
@@ -165,3 +166,5 @@ Route::post('customers', [CustomerController::class, 'store']);
 //Forgot-password endpoints
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
+Route::apiResource('vendor-eceivables', VendorReceivablesController::class);
+Route::get('vendors/vendoreceivables/{vendor}', [VendorController::class, 'getVendorReceivables']);
