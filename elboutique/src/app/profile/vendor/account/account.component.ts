@@ -1,12 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { VendorService } from '../../../service/vendor/vendor.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vendor-account',
@@ -15,32 +12,67 @@ import {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
   @ViewChild('imageInput') imageInput!: ElementRef;
+
+  sub: Subscription | null = null;
+  userInfo: string | null = localStorage.getItem('user_info');
+  user_id: number = 0;
 
   profileForm: FormGroup = new FormGroup({});
   isEditable = false;
-  profileImage = 'https://i.pravatar.cc/300';
+  profileImage = 'https://i.pravatar.cc/300'; 
   idImageFront: string | ArrayBuffer | null = null;
   idImageBack: string | ArrayBuffer | null = null;
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private vendorService: VendorService) {
+    if (this.userInfo) {
+      try {
+        const parsedUserInfo = JSON.parse(this.userInfo);
+        this.user_id = parsedUserInfo.id;
+      } catch (error) {
+        console.error('Error parsing user info from local storage', error);
+      }
+    }
+  }
 
   ngOnInit() {
+    this.initializeForm();
+    if (this.user_id !== 0) {
+      this.sub = this.vendorService.getVendorById(this.user_id).subscribe({
+        next: (response) => {
+          console.log('API Response:', response);
+          this.patchFormData(response.data);
+        },
+        error: (error) => {
+          console.error('Error fetching vendor data:', error);
+        }
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
+
+  initializeForm() {
     this.profileForm = this.fb.group({
-      name: [
-        { value: 'John Doe', disabled: true },
-        [Validators.required, Validators.minLength(2)],
-      ],
-      phone: [
-        { value: '1234567890', disabled: true },
-        [Validators.required, Validators.pattern('^[0-9]{10}$')],
-      ],
-      email: [
-        { value: 'john.doe@example.com', disabled: true },
-        [Validators.required, Validators.email],
-      ],
+      name: [{ value: '', disabled: true }, [Validators.required, Validators.minLength(2)]],
+      phone: [{ value: '', disabled: true }, [Validators.required, Validators.pattern('^[0-9]{10,11}$')]],
+      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
     });
+  }
+
+  patchFormData(data: any) {
+    this.profileForm.patchValue({
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+    });
+    this.profileImage = data.image_url || this.profileImage;
+    console.log('Form patched with data:', this.profileForm.value);
   }
 
   toggleEdit() {
@@ -91,23 +123,29 @@ export class AccountComponent implements OnInit {
 
   saveProfile() {
     if (this.profileForm.valid) {
-      const formData = {
-        ...this.profileForm.value,
-        profileImage: this.profileImage,
-        idImageFront: this.idImageFront,
-        idImageBack: this.idImageBack,
-      };
+      const formData = new FormData();
+      formData.append('name', this.profileForm.get('name')?.value);
+      formData.append('phone', this.profileForm.get('phone')?.value);
+      formData.append('email', this.profileForm.get('email')?.value);
+      formData.append('profileImage', this.profileImage);
+      if (this.idImageFront) {
+        formData.append('idImageFront', this.idImageFront as string);
+      }
+      if (this.idImageBack) {
+        formData.append('idImageBack', this.idImageBack as string);
+      }
+
+      console.log("formdata");
       console.log(formData);
 
-      // Uncomment and modify the URL to save the profile data to the server
-      // this.http.post('http://127.0.0.1:8000/id', formData).subscribe({
-      //   next: (data) => {
-      //     console.log('Profile saved successfully', data);
-      //   },
-      //   error: (error) => {
-      //     console.error('Error saving profile:', error);
-      //   },
-      // });
+      this.vendorService.updateVendor(this.user_id, formData).subscribe({
+        next: (data) => {
+          console.log('Profile saved successfully', data);
+        },
+        error: (error) => {
+          console.error('Error saving profile:', error);
+        },
+      });
     } else {
       console.log('Form is invalid');
     }
