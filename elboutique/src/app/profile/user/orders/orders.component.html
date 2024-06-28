@@ -49,7 +49,7 @@
           <p>{{ product.price }} EGP</p>
           <p class="ms-3 fw-bold">x <span>1</span></p>
           @if (order.status === "arrived") {
-            <i class="ms-3 fa-regular fa-flag fs-5 report-flag " data-bs-toggle="modal" data-bs-target="#reportProduct" (click)="updateProduct(product.id)"><span class="fw-bold">report</span></i>
+            <i class="ms-3 fa-regular fa-flag fs-5 report-flag " data-bs-toggle="modal" data-bs-target="#reportProduct" (click)="updateProduct(product.id)"><span class="report-text">report</span></i>
           }
         </div>
         <p class="text-muted m-0">
