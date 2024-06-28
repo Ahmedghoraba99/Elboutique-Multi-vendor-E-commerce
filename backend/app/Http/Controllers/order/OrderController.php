@@ -14,6 +14,7 @@ use App\Models\Product;
 use App\Models\VendorReceivables;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -104,7 +105,8 @@ class OrderController extends Controller
 
     public function changeStatus(ChangeStatusOrderRequest $request, Order $order) 
 {
-     
+    DB::beginTransaction();
+    try {
     $order->update(['status' => $request->status]);
 
     
@@ -124,7 +126,12 @@ class OrderController extends Controller
             }
         }
     }
-
+    DB::commit();
     return response()->json(['message' => 'Order status updated successfully'], 200);
+}
+catch (Exception $e) {
+    DB::rollBack();
+    return response()->json(['message' => 'Failed to update order status.'], 500);
+}
 }
 }
