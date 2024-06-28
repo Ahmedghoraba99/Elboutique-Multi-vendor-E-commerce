@@ -33,7 +33,7 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-
+        $this->authorize('create',Order::class);
         $order= Order::create([
             'customer_id'=>$request->customer_id,
             "total" => $request->total
