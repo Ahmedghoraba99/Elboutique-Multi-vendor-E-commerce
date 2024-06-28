@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vendor_receivables', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vendor_id') ->nullable()->constrained()->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 10, 2)->default(0);
            
             
             $table->timestamps();

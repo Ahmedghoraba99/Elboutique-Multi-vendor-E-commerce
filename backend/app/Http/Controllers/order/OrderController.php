@@ -5,11 +5,13 @@ namespace App\Http\Controllers\order;
 use App\Http\Requests\StoreOrderProductRequest;
 use App\Models\Order;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeStatusOrderRequest;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\VendorReceivables;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -33,7 +35,6 @@ class OrderController extends Controller
 
         $order= Order::create([
             'customer_id'=>$request->customer_id,
-            'status'=>$request->status,
             "total" => $request->total
         ]);
         return response()->json([
@@ -69,7 +70,6 @@ class OrderController extends Controller
         $this->authorize('update',$order);
         $order->update([
             'customer_id'=>$request->customer_id,
-            'status'=>$request->status,
             "total" => $request->total
         ]);
         return response()->json(['message' => 'Order updated successfully'], 200);
@@ -99,4 +99,32 @@ class OrderController extends Controller
         $orders = Order::where('customer_id',$id)->with(['products','products.images'])->get();
         return response()->json(["orders"=>$orders]);
     }
+
+
+
+    public function changeStatus(ChangeStatusOrderRequest $request, Order $order) 
+{
+     
+    $order->update(['status' => $request->status]);
+
+    
+    if ($request->status === 'arrived') {
+         
+        $order->load('products.vendor.vendorReceivables');
+
+        foreach ($order->products as $product) {
+            $vendor = $product->vendor;
+            if ($vendor) {
+                $vendorReceivables = $vendor->vendorReceivables()->firstOrNew([
+                    'vendor_id' => $vendor->id
+                ]);
+
+                $vendorReceivables->amount += $product->price;
+                $vendorReceivables->save();
+            }
+        }
+    }
+
+    return response()->json(['message' => 'Order status updated successfully'], 200);
+}
 }
