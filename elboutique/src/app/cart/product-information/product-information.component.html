@@ -4,9 +4,10 @@
       <app-product-slider></app-product-slider>
     </div>
     <div class="col-md-5">
-
-      <div class="product-description-section position-relative " >
-        <sup class="disount-sup position-absolute" *ngIf="product.sale">{{ product.sale }}% OFF</sup>
+      <div class="product-description-section position-relative">
+        <sup class="disount-sup position-absolute" *ngIf="product.sale"
+          >{{ product.sale }}% OFF</sup
+        >
 
         <div
           class="prodcut-description-data d-flex flex-column justify-content-evenly"
@@ -19,61 +20,66 @@
           </div>
           <div class="product-description-pricing d-flex align-items-center">
             <div *ngIf="product.sale">
-              <span class="text-capitalize" >price Before : </span>
+              <span class="text-capitalize">price Before : </span>
               <strong class="mx-2 text-decoration-line-through"
                 >{{ product.price }}
               </strong>
-             <div class="new-price mt-3 position-relative">
-              <span class="text-capitalize">price now : </span>
-              <strong class="mx-2 text-danger fw-bold">{{
-                product.price - (product.price * product.sale) / 100
-              }}</strong>
-              <sub class="ms-1">inclusive of VAT</sub>
-
-             </div>
+              <div class="new-price mt-3 position-relative">
+                <span class="text-capitalize">price now : </span>
+                <strong class="mx-2 text-danger fw-bold">{{
+                  product.price - (product.price * product.sale) / 100
+                }}</strong>
+                <sub class="ms-1">inclusive of VAT</sub>
+              </div>
             </div>
             <div *ngIf="!product.sale">
               <span>price : </span>
-              <strong class="mx-2">{{ product.price }}
-              </strong>
+              <strong class="mx-2">{{ product.price }} </strong>
               <sub class="ms-1">inclusive of VAT</sub>
-
             </div>
           </div>
           <div class="product-description-amount">
-           
             <span>Amount</span>
             <select class="m-3" name="" id="" #select>
-             @for(item of getStock(product.stock) ; track $index ){
-              <option  value="{{item}}">{{item}}</option>
-             }
+              @for(item of getStock(product.stock) ; track $index ){
+              <option value="{{ item }}">{{ item }}</option>
+              }
             </select>
             <span
-            [ngClass]="{
-              'amount-stock-low': product.stock < 10, 'amount-stock-available': product.stock >= 10}"
-          >
-            {{ product.stock < 10? "Only " + product.stock + " Available !": "Available  " + product.stock}}
+              [ngClass]="{
+                'amount-stock-low': product.stock < 10,
+                'amount-stock-available': product.stock >= 10
+              }"
+            >
+              {{
+                product.stock < 10
+                  ? "Only " + product.stock + " Available !"
+                  : "Available  " + product.stock
+              }}
             </span>
           </div>
           <div class="product-description-vendor my-2">
             <div class="vendor-data d-flex align-items-center p-3">
               <div class="vendor-profile position-relative">
                 <img src="../../../assets/images/defaultAvatar.webp" alt="" />
-                <fa-icon [icon] ="faCircleCheck"  *ngIf="product.vendor.national_id"></fa-icon>
-
+                <fa-icon
+                  [icon]="faCircleCheck"
+                  *ngIf="product.vendor.national_id"
+                ></fa-icon>
               </div>
               <div class="vendor-profile-info ms-3">
                 <h5>
-                  <a class="" href="">{{ product.vendor.name }}</a>
+                  <a class="" routerLink="/vendor/{{ product.vendor.id }}">{{
+                    product.vendor.name
+                  }}</a>
                 </h5>
-                <p class="vendor-email m-0 p-0">{{product.vendor.email}}</p>
-      
+                <p class="vendor-email m-0 p-0">{{ product.vendor.email }}</p>
               </div>
             </div>
           </div>
           <div class="product-adding d-flex flex-row gap-5 my-4">
             <div
-            #element
+              #element
               class="product-wish d-flex justify-content-center align-items-center px-4 text-light"
               (click)="addToWishlist(element)"
             >
