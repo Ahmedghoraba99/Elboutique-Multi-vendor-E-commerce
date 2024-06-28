@@ -53,6 +53,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
 
+//cart endpoint
+Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
+Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
+Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
+Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
 
 
     Route::apiResource('tags', TagController::class);
