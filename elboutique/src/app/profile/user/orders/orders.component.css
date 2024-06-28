@@ -98,11 +98,14 @@
   background-color: var(--accent-color-2);
 }
 
-
+.report-flag{
+  cursor: pointer;
+  color: red;
+}
 
 .Btn i {
   font-size: 17px;
-  right: 8px;
+  right: 9px;
   position: relative;
   color:white;
 
