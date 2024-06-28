@@ -44,6 +44,7 @@ class ReportReviewController extends Controller
         try {
             // Find the review by ID
             $review = ReportReview::findOrFail($id);
+            $this->authorize('update', $review);
             $review->update($request->validated());
             return response()->json([
                 'message' => 'Report Review updated successfully',
@@ -65,6 +66,7 @@ class ReportReviewController extends Controller
     public function destroy($id){
         try {
             $review = ReportReview::findOrFail($id);
+            $this->authorize('delete', $review);
             $review->delete();
 
             return response()->json([

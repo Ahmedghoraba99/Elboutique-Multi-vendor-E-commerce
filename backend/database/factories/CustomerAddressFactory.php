@@ -20,7 +20,7 @@ class CustomerAddressFactory extends Factory
             // $customerIds = Customer::pluck('id')->toArray();
 
             return [
-                'Governate' => $this->faker->state,
+                'governorate' => $this->faker->state,
                 'city' => $this->faker->city,
                 'street' => $this->faker->streetName,
                 'house_number' => $this->faker->randomNumber(3),

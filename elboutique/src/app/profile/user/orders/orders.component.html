@@ -48,26 +48,21 @@
         <div class="d-flex">
           <p>{{ product.price }} EGP</p>
           <p class="ms-3 fw-bold">x <span>1</span></p>
+          @if (order.status === "arrived") {
+            <i class="ms-3 fa-regular fa-flag fs-5 report-flag " data-bs-toggle="modal" data-bs-target="#reportProduct" (click)="updateProduct(product.id)"><span class="report-text">report</span></i>
+          }
         </div>
         <p class="text-muted m-0">
           {{ product.description }}
         </p>
+
         @if (order.status === "arrived") {
-        <button
-          class="Btn header"
-          data-bs-toggle="modal"
-          data-bs-target="#modalId"
-        >
-          <i class="fa-solid fa-comment-dots"></i>
-          <div class="text">Review</div>
-        </button>
-        <app-add-review
-          [product_id]="product.id"
-          [customer_id]="getUser()"
-        ></app-add-review>
-        <!-- <div class="d-flex">
-          </div> -->
+          <button class="Btn header me-2" data-bs-toggle="modal" data-bs-target="#modalId" (click)="updateProduct(product.id)">
+              <i class="fa-solid fa-comment-dots"></i>
+              <div class="text">Review</div>
+          </button>
         }
+
       </div>
     </div>
   </div>
@@ -88,3 +83,7 @@
   </div>
 </div>
 }
+
+
+<app-add-review [product_id]="productId" [customer_id]="getUser()"></app-add-review>
+<app-add-report-product [productId]="productId"></app-add-report-product>

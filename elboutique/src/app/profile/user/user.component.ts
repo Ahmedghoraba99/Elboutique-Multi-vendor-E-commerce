@@ -41,10 +41,5 @@ export class UserComponent {
       icon: '<i class="fa-solid fa-credit-card"></i>',
       name: 'My Payment',
     },
-    {
-      path: 'account/change-password',
-      icon: '<i class="fa-solid fa-lock"></i>',
-      name: 'Change Password',
-    },
   ];
 }

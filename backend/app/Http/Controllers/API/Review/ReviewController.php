@@ -53,6 +53,7 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
+        $this->authorize('create',[Review::class, $request->product_id]  );
         $validated = $request->validated();
         $review = Review::create($validated);
         // Return custom response
@@ -86,6 +87,7 @@ class ReviewController extends Controller
     {
         try {
             $review = Review::findOrFail($id);
+            $this->authorize('update', $review);
             $validation = $request->validated();
             $review->update($validation);
             return response()->json([
@@ -113,6 +115,7 @@ class ReviewController extends Controller
     {
         try {
             $review = Review::findOrFail($id);
+            $this->authorize('delete', $review);
             $review->delete();
 
             return response()->json([

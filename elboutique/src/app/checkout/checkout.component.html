@@ -65,19 +65,21 @@
                             >
                               <span class="me-2">Quantity:</span>
                               <select
+                                #select
                                 class="form-select w-25"
-                                (change)="update(product)"
+                                (change)="update(product, +select.value)"
                               >
-                                @for(item of getstock(product.stock) ; track  $index){
-                              @if(item == product.cart_table.quantity){
-                                <option selected value="{{ item }}">{{ item }}</option>
+                                @for(item of getstock(product.stock) ; track
+                                $index){ @if(item ==
+                                product.cart_table.quantity){
+                                <option selected value="{{ item }}">
+                                  {{ item }}
+                                </option>
 
                                 }@else {
-                                  <option  value="{{ item }}">{{ item }}</option>
+                                <option value="{{ item }}">{{ item }}</option>
 
-                                }
-
-                                }
+                                } }
                               </select>
                             </div>
                           </div>
@@ -113,8 +115,7 @@
                 </div>
               </div>
             </div>
-          }
-
+            }
           </div>
           <div class="col-lg-4 col-md-6 summary">
             <!-- <app-summary-order [cartProduct]="customerCart"></app-summary-order> -->
@@ -124,12 +125,18 @@
                   <h1>order summery</h1>
                 </div>
                 <div class="total-details d-flex justify-content-between my-3">
-                  <span>Subtotal ( {{ cartProduct.length }} items )</span>
-                  <span class="price">{{ totalPrice }} <sub>EGP</sub></span>
+                  <span
+                    >Subtotal ( {{ getOrderTotalQuantities() }} items )</span
+                  >
+                  <span class="price"
+                    >{{ getOrderTotalPrice() }} <sub>EGP</sub></span
+                  >
                 </div>
                 <div class="totalshiping d-flex justify-content-between my-3">
                   <span>Shipping Fee</span>
-                  <span class="price">{{ totalPrice * 0.4 }} <sub>EGP</sub></span>
+                  <span class="price"
+                    >{{ getOrderTotalPrice() * 0.2 }} <sub>EGP</sub></span
+                  >
                 </div>
                 <div class="tatla-price d-flex justify-content-between my-3">
                   <div class="total-price-info my-3">
@@ -138,20 +145,19 @@
                   </div>
                   <div class="total-price-order my-3">
                     <span class="price"
-                      >{{ totalPrice + totalPrice * 0.4 }} <sub>EGP</sub></span
+                      >{{ getOrderTotalPrice() + getOrderTotalPrice() * 0.2 }} <sub>EGP</sub></span
                     >
                   </div>
                 </div>
-               
+
                 <div class="checkout-btn text-center my-4">
-                  <button class="btn" type="submit">ckeckout</button>
+                  <button class="btn" type="submit" (click)="CreateOrder()">ckeckout</button>
                 </div>
               </div>
             </div>
-            
           </div>
         </div>
-       
+
         } @else {
 
         <div class="col-lg-12 col-md-12 w-100">

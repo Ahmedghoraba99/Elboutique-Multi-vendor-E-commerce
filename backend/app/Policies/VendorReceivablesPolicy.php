@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Admin;
 use App\Models\Customer;
-use App\Models\ReportReview;
+use App\Models\VendorReceivables;
 use Illuminate\Auth\Access\Response;
 
-class ReportReviewPolicy
+class VendorReceivablesPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +19,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(Customer $customer, ReportReview $reportReview): bool
+    public function view(Customer $customer, VendorReceivables $vendorReceivables): bool
     {
         //
     }
@@ -28,7 +27,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(  $user): bool
+    public function create(Customer $customer): bool
     {
         //
     }
@@ -36,23 +35,23 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update($user, ReportReview $reportReview): bool
+    public function update(Customer $customer, VendorReceivables $vendorReceivables): bool
     {
-        return $user->id === $reportReview->customer_id|| $user  instanceof Admin;
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete($user, ReportReview $reportReview): bool
+    public function delete(Customer $customer, VendorReceivables $vendorReceivables): bool
     {
-        return $user->id === $reportReview->customer_id|| $user  instanceof Admin;
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(Customer $customer, ReportReview $reportReview): bool
+    public function restore(Customer $customer, VendorReceivables $vendorReceivables): bool
     {
         //
     }
@@ -60,7 +59,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(Customer $customer, ReportReview $reportReview): bool
+    public function forceDelete(Customer $customer, VendorReceivables $vendorReceivables): bool
     {
         //
     }

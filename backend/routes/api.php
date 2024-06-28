@@ -12,11 +12,13 @@ use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\category\CategoryController;
 use App\Http\Controllers\tag\TagController;
 use App\Http\Controllers\product\ProductController;
-use App\Http\Controllers\product\ProductImagesController;
+ 
 use App\Http\Controllers\order\OrderProductController;
 use App\Http\Controllers\vendor\VendorController;
+use App\Http\Controllers\VendorReceivablesController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\wishlist\WishlistController;
+ 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +54,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
 
+//cart endpoint
+Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
+Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
+Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
+Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
 
 
     Route::apiResource('tags', TagController::class);
@@ -59,6 +66,8 @@ Route::group(['middleware' => ['auth:admin']], function () {
 
 
     Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
+    Route::apiResource('vendor-eceivables', VendorReceivablesController::class);
+    Route::post('/changeorderstatus/{order}', [OrderController::class, "changeStatus"]);
 
     });
 
@@ -67,7 +76,10 @@ Route::group(['middleware' => ['auth:admin']], function () {
 Route::group(['middleware' => ['auth:sanctum','AdminVendorAuth']], function () {
     Route::apiResource('products', ProductController::class);
     Route::patch('vendors/{vendor}', [VendorController::class, 'update']);
+    Route::put('vendors/{vendor}', [VendorController::class, 'update']);
     Route::delete('vendors/{vendor}', [VendorController::class, 'destroy']);
+
+    Route::get('vendors/vendoreceivables/{vendor}', [VendorController::class, 'getVendorReceivables']);
 
     });
 
@@ -93,6 +105,7 @@ Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function ()
     Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
 
     Route::patch('customers/{customer}', [CustomerController::class, 'update']);
+    Route::put('customers/{customer}', [CustomerController::class, 'update']);
     Route::delete('customers/{customer}', [CustomerController::class, 'destroy']);
 
 
@@ -163,3 +176,7 @@ Route::post('customers', [CustomerController::class, 'store']);
 //Forgot-password endpoints
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
+
+
+
+

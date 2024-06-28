@@ -7,6 +7,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { AuthService } from '../../../service/auth.service';
+import {ProfileUser} from '../../../_model/customer'
+import { UserProfileService } from '../../../service/user-profile.service';
+
 
 @Component({
   selector: 'app-account',
@@ -15,41 +19,64 @@ import {
   templateUrl: './account.component.html',
   styleUrl: './account.component.css',
 })
+
 export class AccountComponent implements OnInit {
   @ViewChild('imageInput') imageInput!: ElementRef;
 
+  user!:ProfileUser;
   profileForm: FormGroup = new FormGroup({});
   isEditable = false;
-  profileImage = 'https://i.pravatar.cc/300';
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  profileImage: string | ArrayBuffer | null = 'https://i.pravatar.cc/300';
+  imageFile: File | null = null;
+
+
+  constructor(private fb: FormBuilder, private http: HttpClient,private authService:AuthService ,private profileService: UserProfileService) {
+  }
 
   ngOnInit() {
-    this.profileForm = this.fb.group({
-      fname: [
-        { value: 'John', disabled: true },
-        [Validators.required, Validators.minLength(2)],
-      ],
-      midname: [{ value: 'A.', disabled: true }],
-      lname: [
-        { value: 'Doe', disabled: true },
-        [Validators.required, Validators.minLength(2)],
-      ],
-      dob: [{ value: '1990-01-01', disabled: true }, [Validators.required]],
-      gender: [{ value: 'Male', disabled: true }, [Validators.required]],
-      phone: [
-        { value: '1234567890', disabled: true },
-        [Validators.required, Validators.pattern('^[0-9]{10}$')],
-      ],
-      email: [
-        { value: 'john.doe@example.com', disabled: true },
-        [Validators.required, Validators.email],
-      ],
-      governorate: [{ value: 'Governorate', disabled: true }],
-      city: [{ value: 'City', disabled: true }],
-      street: [{ value: '123 Street', disabled: true }],
-      houseNumber: [{ value: '456', disabled: true }],
+
+    this.authService.getUserDataObservable().subscribe(
+      (data) => {
+        this.user = data;
+        this.profileImage = this.user.data.image;
+        this.initForm();
+        // console.log(this.user.data);
     });
   }
+
+
+  initForm() {
+    this.profileForm = this.fb.group({
+      name: [
+        { value: this.user.data.name, disabled: true },
+        [Validators.required, Validators.minLength(2)],
+      ],
+      email: [
+        { value: this.user.data.email, disabled: true },
+        [Validators.required, Validators.email],
+      ],
+      ...this.user.data.phones.reduce((acc: any, phone, index) => {
+        acc[`phone${index}`] = [
+          { value: phone.phoneNumper, disabled: true },
+          [Validators.required, Validators.pattern('^[0-9]{11}$')],
+        ];
+        return acc;
+      }, {}),
+      ...this.user.data.addresses.reduce((acc: any, address, index) => {
+        acc[`governorate${index}`] = [
+          { value: address.governorate, disabled: true },
+        ];
+        acc[`city${index}`] = [{ value: address.city, disabled: true }];
+        acc[`street${index}`] = [{ value: address.street, disabled: true }];
+        acc[`houseNumber${index}`] = [
+          { value: address.house_number, disabled: true },
+        ];
+        return acc;
+      }, {}),
+    });
+  }
+
+
   toggleEdit() {
     this.isEditable = !this.isEditable;
     if (this.isEditable) {
@@ -65,31 +92,34 @@ export class AccountComponent implements OnInit {
   onImageChange(event: Event) {
     const file = (event.target as HTMLInputElement).files![0];
     if (file) {
+      this.imageFile = file;
       const reader = new FileReader();
       reader.onload = () => {
-        this.profileImage = reader.result as string;
+        this.profileImage = reader.result;
       };
       reader.readAsDataURL(file);
     }
   }
+
   saveProfile() {
     if (this.profileForm.valid) {
-      const formData = this.profileForm.value;
-      formData.profileImage = this.profileImage;
-      console.log(formData);
+      const formData = { ...this.profileForm.value, image: this.imageFile };
+      console.log(this.profileImage);
 
-      // this.http.post('http://127.0.0.1:8000/id', formData).subscribe({
-      //   next: (data) => {
-      //     console.log(data);
-
-      //     console.log('Profile saved successfully');
-      //   },
-      //   error: (error) => {
-      //     console.error('Error saving profile:', error);
-      //   },
-      // });
+      this.profileService.updateProfile(formData,this.user.data.id).subscribe({
+        next: (data) => {
+          console.log(data);
+          alert('Profile saved successfully');
+        },
+        error: (error) => {
+          console.error('Error saving profile:', error);
+          alert('Error saving profile: ' + error);
+        },
+      });
     } else {
       console.log('Form is invalid');
     }
+
   }
+
 }

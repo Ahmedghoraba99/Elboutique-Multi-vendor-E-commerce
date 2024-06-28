@@ -32,8 +32,8 @@ export class ReportReviewComponent {
   onSubmit() {
     if (this.reportForm.valid) {
       const review:AddReport = this.reportForm.value;
-      review.review_id = this.reviewId;
       review.customer_id = this.customerId;
+      review.review_id = this.reviewId;
       // Call the service to add the report
       this.addReportService.submitReport(review)
         .subscribe(

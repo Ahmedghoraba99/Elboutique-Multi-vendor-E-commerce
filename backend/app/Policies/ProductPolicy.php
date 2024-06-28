@@ -30,7 +30,9 @@ class ProductPolicy
      */
     public function create($user): bool
     {
-        //
+        
+      return $user  instanceof Admin|| ($user->active=='true' && $user->banned=="false") ;
+        
     }
 
     /**

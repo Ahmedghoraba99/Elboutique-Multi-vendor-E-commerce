@@ -29,7 +29,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        
+        $this->authorize('create', Product::class);
         try {
             $images = $request->images;
             // Create a new product instance and populate it with request data
@@ -121,7 +121,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        $this->authorize('update',$product);
+        $this->authorize('update', $product);
         try {
             // Update product details
             $product->update($request->validated());
@@ -160,7 +160,7 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        
+
         try {
             // Find the product by ID
             $product = Product::findOrFail($id);
@@ -316,32 +316,34 @@ class ProductController extends Controller
     function getVendorProducts($id)
     {
         try {
-            $products = Product::where('vendor_id', $id)->with('images', 'vendor')->get();
-            $transFormProduct = $products->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'description' => $product->description,
-                    'images' => $product->images->map(function ($image) {
-                        return [
-                            'image_url' => $image->image_url,
-                        ];
-                    }),
-                    'vendor'=> [
-                        'id' => $product->vendor->id,
-                        'name' => $product->vendor->name,
-                        'email' => $product->vendor->email,
-                        'phone' => $product->vendor->phone,
-                        'address' => $product->vendor->address,
-                        'image_url' => $product->vendor->image_url,
-                    ]
-                ];
-            });
-            return response()->json($transFormProduct);
+            // paginate products 
+
+            $products = Product::where('vendor_id', $id)->with('images', 'vendor')->paginate(10);
+            // $products = Product::where('vendor_id', $id)->with('images', 'vendor')->get();
+            // $transFormProduct = $products->map(function ($product) {
+            //     return [
+            //         'id' => $product->id,
+            //         'name' => $product->name,
+            //         'price' => $product->price,
+            //         'description' => $product->description,
+            //         'images' => $product->images->map(function ($image) {
+            //             return [
+            //                 'image_url' => $image->image_url,
+            //             ];
+            //         }),
+            //         'vendor'=> [
+            //             'id' => $product->vendor->id,
+            //             'name' => $product->vendor->name,
+            //             'email' => $product->vendor->email,
+            //             'phone' => $product->vendor->phone,
+            //             'address' => $product->vendor->address,
+            //             'image_url' => $product->vendor->image_url,
+            //         ]
+            //     ];
+            // });
+            return response()->json($products);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
-
 }

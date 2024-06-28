@@ -12,10 +12,24 @@ export interface Customer {
   email: string;
   phone: string | null;
   addresses: Address[];
-  phones: any[];
+  phones: Phone[];
+  role: string
 }
 export interface Phone {
   id: number;
   customer_id: number;
   phoneNumper: string;
+}
+
+interface Data{
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  addresses: Address[];
+  phones: Phone[];
+  image:string
+}
+export interface ProfileUser{
+  data: Data;
 }

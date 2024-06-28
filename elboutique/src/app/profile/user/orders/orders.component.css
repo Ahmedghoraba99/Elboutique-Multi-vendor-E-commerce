@@ -98,11 +98,14 @@
   background-color: var(--accent-color-2);
 }
 
-
+.report-flag{
+  cursor: pointer;
+  color: red;
+}
 
 .Btn i {
   font-size: 17px;
-  right: 8px;
+  right: 9px;
   position: relative;
   color:white;
 
@@ -134,3 +137,15 @@
 .Btn:active {
   transform: translate(2px, 2px);
 }
+
+.report-text{
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  text-decoration: underline;
+  display: none;
+}
+
+.report-flag:hover .report-text{
+  display: inline;
+}
+

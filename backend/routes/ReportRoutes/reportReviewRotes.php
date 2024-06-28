@@ -9,7 +9,7 @@ Route::group(['prefix' => 'report-reviews'], function () {
     Route::get('/{id}', [ReportReviewController::class, 'show']);
 });
 
-Route::group(['prefix' => 'report-reviews','middleware' => ['auth:sanctum']], function () {
+Route::group(['prefix' => 'report-reviews','middleware' => ['auth:sanctum','AdminCustomerAuth']], function () {
     Route::post('/', [ReportReviewController::class, 'store']);
     Route::put('/{id}', [ReportReviewController::class, 'update']);
     Route::delete('/{id}', [ReportReviewController::class, 'destroy']);
