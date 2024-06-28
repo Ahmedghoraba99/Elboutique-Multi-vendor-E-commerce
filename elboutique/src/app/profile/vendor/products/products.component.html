@@ -9,9 +9,9 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
+                <th scope="col">Discribtion</th>
                 <th scope="col">Price</th>
                 <th scope="col">Category</th>
-                <th scope="col">Quantity</th>
                 <th scope="col">Stock</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -20,9 +20,9 @@
             <tr *ngFor="let product of products; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
                 <td>{{ product.name }}</td>
+                <td>{{ product.discribtion }}</td>
                 <td>{{ product.price | currency }}</td>
                 <td>{{ product.category }}</td>
-                <td>{{ product.quantity }}</td>
                 <td>{{ product.stock }}</td>
                 <td>
                     <button type="button" class="btn btn-warning btn-sm me-2" (click)="editProduct(i)"><i
@@ -61,7 +61,7 @@
                             <label for="category" class="form-label">Category</label>
                             <select id="category" class="form-control" formControlName="category">
                                 <option value="" disabled selected>Select Category</option>
-                                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
                             </select>
                             <div
                                 *ngIf="productForm.get('category')?.invalid && (productForm.get('category')?.dirty || productForm.get('category')?.touched)">
