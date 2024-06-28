@@ -33,6 +33,9 @@ class ReviewPolicy
         if($user instanceof Admin){
             return true;
         }
+        if($user->banned =='true') {
+            return false;
+        }
 
         $orderProduct = $user->orders()->whereHas('products', function($query) use ($product_id) {
             $query->where('product_id', $product_id);
@@ -46,7 +49,13 @@ class ReviewPolicy
      */
     public function update($user, Review $review): bool
     {
-        return $user->id === $review->customer_id|| $user  instanceof Admin;
+        if($user instanceof Admin){
+            return true;
+        }
+        if($user->banned =='true') {
+            return false;
+        }
+        return $user->id === $review->customer_id;
     }
 
     /**
