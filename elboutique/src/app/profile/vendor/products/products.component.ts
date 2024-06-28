@@ -83,11 +83,15 @@ export class ProductsComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.push(sub);
   }
+  getCategoryName(categoryId: number): string {
+    const category = this.categories.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Unknown';
+  }
 
   loadProducts() {
     const sub = this.VendorProdcutService.getVendorProducts(this.user_id).subscribe(
-      data => {
-        this.products = data;
+      response => {
+        this.products = response.data;
         console.log(`the respnse:`);
         console.log(this.products);
       },
@@ -112,17 +116,20 @@ export class ProductsComponent implements OnInit, OnDestroy {
   
       const images = this.productForm.get('images')?.value;
       for (let i = 0; i < images.length; i++) {
+        console.log(images[i]);
         formData.append(`images[${i}]`, images[i]);
       }
+
   
+      console.log(images);
+
       if (this.isEditing && this.editingIndex !== null) {
-        // Update product logic
         console.log('Edited Product Data:', formData);
-        // Assume updateProductVendor is the method to call for editing products
+    
         this.VendorAddProductService.updateProductVendor(this.products[this.editingIndex].id, formData).subscribe(
           response => {
             console.log('Product updated successfully:', response);
-            this.products[this.editingIndex!] = response; // The non-null assertion operator '!' ensures that TypeScript treats this.editingIndex as non-null
+            this.products[this.editingIndex!] = response; 
             this.productForm.reset();
           },
           error => {
@@ -181,6 +188,12 @@ export class ProductsComponent implements OnInit, OnDestroy {
     });
   }
   deleteProduct(index: number) {
-    this.products.splice(index, 1);
+   this.VendorAddProductService.deleteProdcutVendor(index).subscribe(
+      data=>{
+        console.log(data);
+      }
+    )
   }
+
+
 }

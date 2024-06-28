@@ -26,4 +26,7 @@ export class VendorAddProductService {
 
     return this.http.put(`${this.apiUrl}/${id}`, product, { headers });
   }
+  deleteProdcutVendor(id:number):Observable<any>{
+   return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
