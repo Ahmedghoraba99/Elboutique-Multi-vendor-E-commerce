@@ -15,12 +15,11 @@ declare const bootstrap: any;
   styleUrls: ['./products.component.css'],
   imports: [CommonModule, ReactiveFormsModule],
 })
-export class ProductsComponent implements OnInit, OnDestroy {
+export class ProductsComponent implements OnInit  {
   products: any[] = [];
   categories: any[] = [];
   editingIndex: number | null = null;
   isEditing: boolean = false;
-  subscriptions: Subscription[] = [];
   userInfo: string | null = localStorage.getItem('user_info');
   user_id: number = 0;
   productForm: FormGroup;
@@ -58,9 +57,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.loadProducts();
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
 
   onFileChange(event: any) {
     if (event.target.files.length > 0) {
@@ -72,7 +68,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   loadCategories() {
-    const sub = this.vendorCatgoriesService.getCategories().subscribe(
+    this.vendorCatgoriesService.getCategories().subscribe(
       response => {
         this.categories = response.data;
         console.log(this.categories);
@@ -81,7 +77,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
         console.error('Error loading categories:', error);
       }
     );
-    this.subscriptions.push(sub);
   }
   getCategoryName(categoryId: number): string {
     const category = this.categories.find(cat => cat.id === categoryId);
@@ -89,7 +84,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   loadProducts() {
-    const sub = this.VendorProdcutService.getVendorProducts(this.user_id).subscribe(
+  this.VendorProdcutService.getVendorProducts(this.user_id).subscribe(
       response => {
         this.products = response.data;
         console.log(`the respnse:`);
@@ -99,7 +94,6 @@ export class ProductsComponent implements OnInit, OnDestroy {
         console.error('Error loading products:', error);
       }
     );
-    this.subscriptions.push(sub);
   }
 
   onSubmit() {
@@ -116,7 +110,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   
       const images = this.productForm.get('images')?.value;
       for (let i = 0; i < images.length; i++) {
-        console.log(images[i]);
+        console.log(images[i])
         formData.append(`images[${i}]`, images[i]);
       }
 
@@ -126,7 +120,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       if (this.isEditing && this.editingIndex !== null) {
         console.log('Edited Product Data:', formData);
     
-        this.VendorAddProductService.updateProductVendor(this.products[this.editingIndex].id, formData).subscribe(
+        this.VendorAddProductService.updateProductVendor(this.editingIndex, formData).subscribe(
           response => {
             console.log('Product updated successfully:', response);
             this.products[this.editingIndex!] = response; 
@@ -150,14 +144,20 @@ export class ProductsComponent implements OnInit, OnDestroy {
         );
       }
   
+      this.productForm.reset();
       this.isEditing = false;
       this.editingIndex = null;
     }
   }
-  
   editProduct(index: number) {
     this.editingIndex = index;
-    const product = this.products[index];
+    const product = this.products.find(product => product.id === index);
+
+    if (!product) {
+      console.error('Product not found with id:', index);
+      return;
+    }
+
     this.productForm.patchValue(product);
     this.isEditing = true;
     const modalElement = document.getElementById('addProductModal');
