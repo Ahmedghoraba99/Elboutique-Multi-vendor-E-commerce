@@ -104,7 +104,7 @@ export const routes: Routes = [
     component: CategoryComponent,
   },
   {
-    path: 'vendor',
+    path: 'vendor/:id',
     title: 'Vendor Profile',
     component: VendorProfileComponent,
   },
@@ -169,8 +169,8 @@ export const routes: Routes = [
       {
         path: 'reviews',
         title: 'Reviews',
-        component: UserReviewsComponent
-      }
+        component: UserReviewsComponent,
+      },
     ],
   },
   {
