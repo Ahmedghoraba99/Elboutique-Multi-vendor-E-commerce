@@ -190,6 +190,11 @@ swiper-container {
 .empty-cart span{
   color:#8d9db3;
 }
+.empty-cart p{
+  font-weight: 600;
+  color: #1a1818;
+}
+
 
 /*  */
 

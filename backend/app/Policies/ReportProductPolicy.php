@@ -30,7 +30,7 @@ class ReportProductPolicy
      */
     public function create($user,$product_id ): bool
     {
-           
+
         if($user instanceof Admin){
             return true;
         }
@@ -42,7 +42,7 @@ class ReportProductPolicy
         })->first();
 
         return $orderProduct !== null;
-         
+
 
 
     }

@@ -27,9 +27,9 @@ export class UserComponent {
       name: 'My Orders',
     },
     {
-      path: 'wishlist',
-      icon: '<i class="fa-solid fa-heart"></i>',
-      name: 'My Wishlist',
+      path: 'report-products',
+      icon: '<i class="fa-solid fa-flag"></i>',
+      name: 'Report Product',
     },
     {
       path: 'reviews',
