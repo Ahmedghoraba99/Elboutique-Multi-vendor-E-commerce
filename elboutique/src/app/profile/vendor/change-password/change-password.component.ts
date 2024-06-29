@@ -9,7 +9,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { VendorChangePassword } from '../../../service/vendor/changePassword.service';
 @Component({
   selector: 'app-vendor-change-password',
   standalone: true,
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 export class ChangePasswordComponent implements OnInit {
   changePasswordForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder , private  VendorChangePassword :VendorChangePassword) {}
 
   ngOnInit(): void {
     this.changePasswordForm = this.fb.group(
@@ -60,7 +60,14 @@ export class ChangePasswordComponent implements OnInit {
 
   onSubmit() {
     if (this.changePasswordForm.valid) {
-      console.log(this.changePasswordForm.value);
+      // console.log(this.changePasswordForm.value);
+      const newPassword = this.changePasswordForm.value.newPassword;
+      this.VendorChangePassword.changePassword(newPassword).subscribe(
+        response=>{
+          console.log(response);
+          this.changePasswordForm.reset();
+        }
+      )
     } else {
       console.log('Form is invalid');
     }

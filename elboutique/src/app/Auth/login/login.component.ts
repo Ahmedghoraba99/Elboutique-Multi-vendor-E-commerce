@@ -88,7 +88,7 @@ export class LoginComponent {
   handleSuccess(response: any) {
     this.nextStep();
     localStorage.setItem('user_info', JSON.stringify(response));
-
+    console.log(response);
     if (response.role === 'admin') {
       this.showToastMessage(
         'Welcome! Redirecting to admin dashboard...',
@@ -113,6 +113,7 @@ export class LoginComponent {
     }, 3000);
   }
   handleError(error: any) {
+    console.log(error)
     this.showToastMessage('Login failed. Please try again.', 'Error');
   }
 
