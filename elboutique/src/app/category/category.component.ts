@@ -76,6 +76,7 @@ export class CategoryComponent implements OnInit {
 
   private resetProducts(): void {
     this.productsGroup = [];
+    this.products = [];
   }
 
   loadMore(): void {
@@ -101,7 +102,7 @@ export class CategoryComponent implements OnInit {
   }
 
   private updatePagination(data: any): void {
-    this.products = data.data;
+    this.products.push(...data.data);
     this.navLinks = data.links;
     this.currentPage++;
     this.thereIsNextPage = this.currentPage < data.last_page;
@@ -150,16 +151,15 @@ export class CategoryComponent implements OnInit {
   }
 
   orderBy(event: string): void {
-    this.productsGroup.forEach((productsArray) => {
-      if (event === 'recent') {
-        productsArray.sort(
-          (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-      } else if (event === 'sale') {
-        productsArray.sort((a, b) => b.sale - a.sale);
-      }
-    });
+    if (event === 'recent') {
+      this.products.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    } else if (event === 'sale') {
+      this.products.sort((a, b) => b.sale - a.sale);
+    }
+    // this.orderByValue = 'recent';
   }
 
   orderByPrice(event: string): void {
