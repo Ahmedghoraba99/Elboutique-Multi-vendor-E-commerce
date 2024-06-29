@@ -10,7 +10,7 @@ import { CartService } from '../service/cart.service';
 import { WishlistService } from '../service/wishlist.service';
 import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-
+import { RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -19,7 +19,6 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
 import { AuthService } from '../service/auth.service';
-import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-checkout',
   standalone: true,

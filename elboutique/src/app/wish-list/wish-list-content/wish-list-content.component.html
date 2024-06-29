@@ -17,6 +17,9 @@
                 <div class="big-deal-product-slider">
                   <div class="swiper mySwiper big-deal-product-swiper">
                     <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                      <!-- <a routerLink="/products/{{ product.id }}"> -->
+                      <a href="/products/{{ product.id }}">
+     
                       <swiper-container pagination="true">
                         @for(image of product.images ;track $index){
                         <swiper-slide
@@ -32,6 +35,8 @@
 
                         }
                       </swiper-container>
+                    </a>
+
                     </div>
                   </div>
                 </div>
@@ -52,26 +57,33 @@
 
                 <!-- wihslist action -->
                 <div
-                  class="wishlist-actions d-flex flex-row justify-content-evenly text-capitalize"
+                  class="wishlist-actions d-flex flex-row justify-content-between text-capitalize"
                 >
+              
+                <button
+                #myButton
+                class="btn btn-wishlist"
+                (click)="addToCartToggler(myButton, product.id)"
+              >
+  
+                {{
+                  userCartId.includes(product.id)
+                    ? "Remove from cart"
+                    : "Add to cart"
+                }}
+              </button>
+              
+
                   <button
-                    #myButton
-                    class="btn btn-primary"
-                    (click)="addToCartToggler(myButton, product.id)"
-                    (disabled)="userCartId.includes(product.id)"
-                  >
-                    {{
-                      userCartId.includes(product.id)
-                        ? "Remove from cart"
-                        : "Add to cart"
-                    }}
-                  </button>
-                  <button
-                    class="btn btn-primary"
-                    (click)="removeProductFromWishlist(product.id)"
-                  >
-                    Remove
-                  </button>
+                  class="btn btn-wishlist-delete"
+                  (click)="removeProductFromWishlist(product.id)"
+                >
+                  <fa-icon
+                    class="animated-heart"
+                    [icon]="faTrashCan"
+                  ></fa-icon
+                  >Remove
+                </button>
                 </div>
               </div>
             </div>

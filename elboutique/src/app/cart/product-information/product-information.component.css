@@ -5,7 +5,7 @@
 }
 .product-description-section {
   background-color: var(--accent-color-3);
-  padding: 2rem 3rem;
+  padding: 0rem 3rem;
   border-radius: 0.5rem;
 }
 
@@ -114,7 +114,7 @@ select option {
   /* border-radius: 5px; */
   background-color: red;
   padding: 13px;
-  color: #e6e9f5;
+  color: var(--accent-color-3);
   font-size: 19px;
   font-weight: 600;
   top: 19px;

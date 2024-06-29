@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-3 col-md-3 my-3" *ngFor="let product of products">
+    <div class="col-sm-6 col-md-3 my-3" *ngFor="let product of products">
         <div class="d-flex flex-column">
           <div class="products-data p-4">
             <div class="products-tags d-flex flex-row justify-content-between align-items-center my-1">
@@ -62,7 +62,7 @@
                   <span class="my-2">{{ product.vendor.name }}</span>
                   <div  class="big-deal-price d-flex align-items-center justify-content-between">
                     <div class="big-deal-price-span">
-                      <span class="ms-2">EGP</span>
+                      <span class="mx-2">EGP</span>
                       <strong class="fs-4">250</strong>
                     </div>
                     <div class="products-wish">
@@ -110,6 +110,9 @@
         </div>
     </div>
   </div>
+
+</div>
+<div class="container-fluid">
   <div class="row">
     <div class="d-flex flex-row align-items-center justify-content-end my-4">
       <div class="big-deals-btn">

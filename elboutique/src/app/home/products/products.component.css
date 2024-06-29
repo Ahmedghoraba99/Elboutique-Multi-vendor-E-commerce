@@ -127,3 +127,12 @@
 }
 
 
+.seemorelink{
+  margin-right: 1.4rem;
+}
+@media only screen and (max-width: 450) {
+ 
+  .seemorelink{
+    margin-right: none;
+  }
+}
