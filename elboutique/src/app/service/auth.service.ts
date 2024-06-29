@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, Observable, Subscription, BehaviorSubject, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class AuthService {
   private customerRegisterUrl = `${this.baseUrl}/customer/register`;
   private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
   login(email: string, password: string, role: string): Observable<any> {
     return this.http.post(this.loginUrl, { email, password, role }).pipe(
       tap((response: any) => {
@@ -37,17 +38,17 @@ export class AuthService {
           `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
         )
         .subscribe((userData) => {
-          console.log('From Observable', userData);
+          // console.log('From Observable', userData);
           this.currentUser.next(userData);
         });
     }
   }
   getUserDataObservable(): Observable<any> {
-    console.log('userDataObservable');
+    // console.log('userDataObservable');
 
     this.getCurrentUser();
     if (this.isAuthenticated()) {
-      console.log('Authemticated getting user');
+      // console.log('Authemticated getting user');
       this.getCurrentUser();
       return this.currentUser.asObservable();
     }
@@ -71,7 +72,7 @@ export class AuthService {
   }
 
   register(role: string, data: any): Observable<any> {
-    console.log(data);
+    // console.log(data);
 
     return this.http.post(`${this.baseUrl}${role}`, data);
   }
@@ -84,9 +85,10 @@ export class AuthService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(verificationLink, { headers });
   }
-  logout() {
+  logout(): void {
     localStorage.removeItem('user_info');
     this.updateAuthStatus(false);
+    this.router.navigate(['/login']);
   }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);

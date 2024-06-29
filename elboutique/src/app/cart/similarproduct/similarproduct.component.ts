@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-similarproduct',
   standalone: true,
-  imports: [FontAwesomeModule, NgFor, NgIf, RouterLink ,CommonModule],
+  imports: [FontAwesomeModule, NgFor, NgIf, RouterLink, CommonModule],
   templateUrl: './similarproduct.component.html',
   styleUrl: './similarproduct.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -36,7 +36,7 @@ export class SimilarproductComponent {
         })
       )
       .subscribe((product) => {
-        console.log('The product from subscription', product.data);
+        // console.log('The product from subscription', product.data);
         this.products = product.data;
         this;
       });

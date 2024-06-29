@@ -55,4 +55,12 @@ export class CartService {
       )
       .subscribe();
   }
+  clearCart(): void {
+    this.clearCustomerCart()
+      .pipe(
+        switchMap(() => this.getCustomerCart()),
+        tap((cartData) => this.cart.next(cartData))
+      )
+      .subscribe();
+  }
 }

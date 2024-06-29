@@ -13,5 +13,7 @@
     color: #ffff;
     font-weight: 600;
     font-size: 3rem;
+    width: 100%;
+    overflow: hidden;
 
 }

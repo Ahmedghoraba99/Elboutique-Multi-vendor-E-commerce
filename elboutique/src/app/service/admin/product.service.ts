@@ -32,4 +32,9 @@ export class ProductService {
   deleteProduct(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  deleteProducts(ids: number[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/products/delete-multiple`, {
+      ids,
+    });
+  }
 }

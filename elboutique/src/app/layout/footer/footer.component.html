@@ -8,7 +8,7 @@
         <h5 class="text-uppercase text-footer">Categories</h5>
 
         <ul class="footer-categories m-0 p-0">
-          @for(item of categories ; track item.id){
+          @for(item of categories.slice(0 , 4) ; track item.id){
           <li>
             <a routerLink="/categories/{{ item.id }}">{{ item.name }}</a>
           </li>
@@ -16,6 +16,8 @@
           <li>No categories</li>
           }
         </ul>
+        <!-- another shity one  -->
+        <a  routerLink="categories/all" class="text-capitalize allcategories "> all Categories</a>
       </div>
 
       <div class="col-lg-4 col-md-12 mb-4 mb-md-0">

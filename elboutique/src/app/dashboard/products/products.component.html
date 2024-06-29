@@ -1,118 +1,125 @@
-<div class="h6 text-uppercase">Products</div>
-<hr class="hr">
-<div class="container">
-    <button class="btn btn-primary mb-3" (click)="open(productForm)">Add Product</button>
+<p-toast></p-toast>
 
-    <ng-template #productForm let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">
-                {{ selectedProduct.id ? 'Edit Product' : 'Add Product' }}
-            </h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+<div class="card">
+
+    <p-table #dt class="p-datatable" [value]="products" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['name', 'categoryName', 'vendorName']" [tableStyle]="{'min-width': '75rem'}"
+        [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="my-2">Manage Products</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onFilter($event)" placeholder="Search..." />
+                </span>
+                <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                    (click)="openNew()"><span class="visually-hidden">btn</span></button>
+                <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
+                    (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"><span
+                        class="visually-hidden">btn</span></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 2rem" scope="col">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th pSortableColumn="name" style="min-width:15rem" scope="col">Name <p-sortIcon
+                        field="name"></p-sortIcon></th>
+                <th pSortableColumn="image" scope="col">Image</th>
+                <th pSortableColumn="price" style="min-width:7rem" id="price">Price <p-sortIcon
+                        field="price"></p-sortIcon></th>
+                <th pSortableColumn="categoryName" scope="col" style="min-width:10rem">Category <p-sortIcon
+                        field="categoryName"></p-sortIcon></th>
+                <th pSortableColumn="vendorName" scope="col" style="min-width:10rem">Vendor <p-sortIcon
+                        field="vendorName"></p-sortIcon></th>
+                <th pSortableColumn="stock" scope="col" style="min-width:7rem">Stock <p-sortIcon
+                        field="stock"></p-sortIcon></th>
+                <th scope="col" style="min-width:10rem">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                </td>
+                <td>{{product.name}}</td>
+                <td><img [src]="'http://localhost:8000/storage/' + product.images[0]?.image" [alt]="product.name"
+                        title="image" width="50" height="50"></td>
+                <td>{{product.price | currency:'USD'}}</td>
+                <td>{{product.categoryName}}</td>
+                <td>{{product.vendorName}}</td>
+                <td>{{product.stock}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                        (click)="editProduct(product)"><span class="visually-hidden">btn</span></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                        (click)="deleteProduct(product.id)"><span class="visually-hidden">btn</span></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{products ? products.length : 0 }} products.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true"
+    styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <img [src]="'http://localhost:8000/storage/' + product.image" [alt]="product.image" class="product-image"
+            *ngIf="product.image" title="image">
+        <div class="field">
+            <label for="name">Name</label>
+            <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
+            <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small>
         </div>
-        <div class="modal-body">
-            <form (ngSubmit)="saveProduct()">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" [(ngModel)]="selectedProduct.name" name="name"
-                        required />
-                </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea class="form-control" id="description" [(ngModel)]="selectedProduct.description"
-                        name="description" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="number" class="form-control" id="price" [(ngModel)]="selectedProduct.price"
-                        name="price" required />
-                </div>
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select class="form-control" id="category" [(ngModel)]="selectedProduct.category_id"
-                        name="category_id" required>
-                        <option *ngFor="let category of categories" [value]="category.id">
-                            {{ category.name }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="vendor" class="form-label">Vendor</label>
-                    <select class="form-control" id="vendor" [(ngModel)]="selectedProduct.vendor_id" name="vendor_id"
-                        required>
-                        <option *ngFor="let vendor of vendors" [value]="vendor.id">
-                            {{ vendor.name }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="stock" class="form-label">Stock</label>
-                    <input type="number" class="form-control" id="stock" [(ngModel)]="selectedProduct.stock"
-                        name="stock" required />
-                </div>
-                <div class="mb-3">
-                    <label for="images" class="form-label">Images</label>
-                    <input type="file" class="form-control" id="images" (change)="onImageChange($event)" multiple />
-                </div>
-                <div class="form-group">
-                    <label for="sale">Sale (%)</label>
-                    <input type="number" class="form-control" id="sale" name="sale" [(ngModel)]="selectedProduct.sale">
-                </div>
-                <div class="form-group">
-                    <label for="is_featured">Featured</label>
-                    <input type="checkbox" class="form-control" id="is_featured" name="is_featured"
-                        [(ngModel)]="selectedProduct.is_featured">
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    {{ selectedProduct.id ? 'Update' : 'Add' }}
-                </button>
-            </form>
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" pInputTextarea class="form-control" [(ngModel)]="product.description" required
+                rows="3" cols="20"></textarea>
+        </div>
+        <div class="field">
+            <label for="category">Category</label>
+            <p-dropdown [(ngModel)]="product.category_id" [options]="categories" optionLabel="name"
+                placeholder="Select a Category"></p-dropdown>
+        </div>
+        <div class="field">
+            <label for="vendor">Vendor</label>
+            <p-dropdown [(ngModel)]="product.vendor_id" [options]="vendors" optionLabel="name"
+                placeholder="Select a Vendor"></p-dropdown>
+        </div>
+        <div class="field">
+            <label for="price">Price</label>
+            <input type="number" pInputText id="price" [(ngModel)]="product.price" required />
+        </div>
+        <div class="field">
+            <label for="stock">Stock</label>
+            <input type="number" pInputText id="stock" [(ngModel)]="product.stock" required />
+        </div>
+        <div class="field">
+            <label for="sale">Sale (%)</label>
+            <input type="number" pInputText id="sale" [(ngModel)]="product.sale">
+        </div>
+        <div class="field">
+            <label for="is_featured">Featured</label>
+            <input type="checkbox" pInputText id="is_featured" [(ngModel)]="product.is_featured">
+        </div>
+        <div class="field">
+            <label for="images">Images</label>
+            <p-fileUpload name="demo[]" url="./upload" (onUpload)="onImageChange($event)" [multiple]="true"
+                accept="image/*"></p-fileUpload>
         </div>
     </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"><span
+                class="visually-hidden">btn</span></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"><span
+                class="visually-hidden">btn</span></button>
+    </ng-template>
+</p-dialog>
 
-    <!-- Products Table -->
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Vendor</th>
-                <th>Stock</th>
-                <th colspan="2">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>
-                    <img src="http://localhost:8000/storage/{{ product.images[0]?.image }}" alt="{{ product.name }}"
-                        width="50" height="50">
-                </td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ product.categoryName }}</td>
-                <td>{{ product.vendorName }}</td>
-                <td>{{ product.stock }}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-warning" (click)="open(productForm, product)">
-                        Edit
-                    </button>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize" (pageChange)="loadPage($event)">
-    </ngb-pagination>
-</div>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

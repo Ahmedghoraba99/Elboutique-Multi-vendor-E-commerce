@@ -3,14 +3,14 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SummaryOrderComponent } from './summary-order/summary-order.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart.service';
 import { WishlistService } from '../service/wishlist.service';
 import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-
+import { RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -18,6 +18,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
+import { AuthService } from '../service/auth.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -26,6 +27,8 @@ import { OrderService } from '../service/order.service';
     SummaryOrderComponent,
     FontAwesomeModule,
     CommonModule,
+    NgIf,
+    RouterLink,
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
@@ -35,7 +38,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   faHeart = faHeart;
   faTrashCan = faTrashCan;
   faShoppingBasket = faShoppingBasket;
-  customerCart: any = [];
+  customerCart: any[] = [];
   cartPriceAndQuantity: any = [];
   addtoWishlistSub: Subscription | null = null;
   getCartSub: Subscription | null = null;
@@ -45,9 +48,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addProductsToOrderSub: Subscription | null = null;
   clearCartSub: Subscription | null = null;
   paymentForm: FormGroup;
+  isAuthenticated: boolean = false;
 
   constructor(
     private Toaster: ToastrService,
+    private authService: AuthService,
     private cartService: CartService,
     private wishlistService: WishlistService,
     private orderService: OrderService,
@@ -80,7 +85,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.clearCartSub?.unsubscribe();
   }
   ngOnInit(): void {
-    this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
+    this.getCartSub = this.cartService.getCartData().subscribe((cart) => {
       this.customerCart = cart;
       this.customerCart.forEach((product: any) => {
         this.cartPriceAndQuantity.push({
@@ -98,6 +106,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return total + product[key].price * product[key].quantity;
     }, 0);
   }
+  getDiscountedAmount() {
+    let afterDiscount = 0;
+    this.customerCart.forEach((cartItem: any) => {
+      if (cartItem.sale) {
+        let dicPercent = (100 - cartItem.sale) / 100;
+        afterDiscount +=
+          cartItem.price * dicPercent * cartItem.cart_table.quantity;
+      }
+    });
+    return afterDiscount;
+  }
+
   getOrderTotalQuantities() {
     return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
       const key = Object.keys(product)[0];
@@ -122,7 +142,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.updateInCart = this.cartService
       .addToCustomerCart(sentBody)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
 
@@ -134,41 +154,28 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   // for services
-  AddToWishlist(id: number) {
+  addToWishlist(id: number) {
     const sentBody: Object = {
       products: [id],
     };
-    this.addtoWishlistSub = this.wishlistService
-      .addToUserWishlist(sentBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.addToast();
-      });
+    this.wishlistService.addItemToWishlist(sentBody);
   }
   DeleteFromCart(id: number) {
     const sentBody = {
       products: id,
     };
-    this.removeFromCartSub = this.cartService
-      .deleteFromCustomerCart(sentBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.customerCart = this.customerCart.filter(
-          (product: any) => product.id != id
-        );
-        this.deleteToast();
-      });
+    this.cartService.deleteItemFromCart(sentBody);
   }
   CreateOrder() {
     const sentBody = {
       status: 'midway',
-      total: this.getOrderTotalPrice() + this.getOrderTotalPrice() * 0.2,
+      total: this.getOrderTotalPrice() - this.getDiscountedAmount() + 50,
     };
 
     this.addOrderSub = this.orderService
       .createOrder(sentBody)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
         const { id } = res.order;
         this.successOrderCreatedAlert();
         this.addProducts(id);
@@ -186,15 +193,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
   clearCart() {
-    this.clearCartSub = this.cartService
-      .clearCustomerCart()
-      .subscribe((res) => {
-        console.log(res);
-      });
+    // this.clearCartSub = this.cartService
+    //   .clearCustomerCart()
+    //   .subscribe((res) => {
+    //     // console.log(res);
+    //   });
+    this.cartService.clearCart();
   }
   successOrderCreatedAlert() {
     Swal.fire({

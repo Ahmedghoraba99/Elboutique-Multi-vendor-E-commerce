@@ -79,10 +79,10 @@ export class NavbarComponent {
   user_id = localStorage.getItem('id');
   logout(): void {
     // handle auth
-    this.authService.logout();
     this.cartItems = 0;
     this.wishListItems = 0;
     this.currentUser = {};
-    this.router.navigate(['/login']);
+    this.authService.logout();
+    // this.router.navigate(['/login']);
   }
 }
