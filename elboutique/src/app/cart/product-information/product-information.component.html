@@ -61,7 +61,7 @@
           <div class="product-description-vendor my-2">
             <div class="vendor-data d-flex align-items-center p-3">
               <div class="vendor-profile position-relative">
-                <img src="../../../assets/images/defaultAvatar.webp" alt="" />
+                <img src="{{ product.vendor.image_url }}" alt="" />
                 <fa-icon
                   [icon]="faCircleCheck"
                   *ngIf="product.vendor.national_id"
