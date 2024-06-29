@@ -44,6 +44,8 @@ export class CategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((queryParams) => {
+      // console.log('*****************');
+
       const name = queryParams.get('name');
       if (name) {
         const paramObject = { name };
@@ -60,16 +62,16 @@ export class CategoryComponent implements OnInit {
       }
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      console.log('Data from wishlist: ', data);
+      // console.log('Data from wishlist: ', data);
       data.forEach((item: { id: any }) => {
         this.userWishlist.push(item.id);
       });
     });
     this.cartService.getCartData().subscribe((data) => {
-      console.log('Data from cart: ', data);
+      // console.log('Data from cart: ', data);
       data.forEach((item: { id: any }) => {
         this.userCart.push(item.id);
-        console.log(this.userCart);
+        // console.log(this.userCart);
       });
     });
   }
@@ -78,6 +80,7 @@ export class CategoryComponent implements OnInit {
     if (this.id === 'all') {
       this.categoryService.getAllProductsInAll().subscribe((data) => {
         this.setPageParameters(data);
+
         this.title = 'All Products';
       });
     } else if (parseInt(this.id as string)) {
@@ -143,7 +146,7 @@ export class CategoryComponent implements OnInit {
   }
 
   isInWishlist(id: number): boolean {
-    // console.log(this.userWishlist, id);
+    // console.log("**************");
     // console.log(this.userWishlist.includes(id));
 
     return this.userWishlist.includes(id);
