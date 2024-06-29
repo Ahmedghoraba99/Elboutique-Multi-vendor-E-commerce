@@ -199,7 +199,7 @@
         No products found
         <i class="fa-solid fa-ghost mx-2"></i>
       </div>
-      <div class="row" *ngFor="let products of productsGroup">
+      <div class="row">
         <div class="col-sm-4 col-md-3 my-3" *ngFor="let product of products">
           <div class="d-flex flex-column">
             <div class="big-deal-product-data p-3">
@@ -220,8 +220,9 @@
                     <input
                       class="like"
                       type="checkbox"
+                      [checked]="isInWishlist(product.id)"
                       title="Wishlist"
-                      (change)="toggleWishList($event)"
+                      (change)="toggleWishList($event, product.id)"
                     />
                     <div class="checkmark">
                       <svg
@@ -288,7 +289,8 @@
                             class="like-cart"
                             type="checkbox"
                             title="Cart"
-                            (change)="toggleCart($event)"
+                            [checked]="isInCart(product.id)"
+                            (change)="toggleCart($event, product.id)"
                           />
                           <div class="checkmark-cart">
                             <svg
