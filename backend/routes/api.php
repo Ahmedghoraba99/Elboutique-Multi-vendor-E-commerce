@@ -18,7 +18,7 @@ use App\Http\Controllers\vendor\VendorController;
 use App\Http\Controllers\VendorReceivablesController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\wishlist\WishlistController;
- 
+use App\Http\Controllers\PayPalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -178,5 +178,7 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkE
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
 
 
-
+Route::get('payment', [PayPalController::class, 'createPayment'])->name('payment');
+Route::get('payment/success', [PayPalController::class, 'success'])->name('payment.success');
+Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment.cancel');
 
