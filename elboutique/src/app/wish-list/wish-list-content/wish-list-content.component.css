@@ -91,10 +91,10 @@
   
   .big-deal-price strong {
     font-size: 1.5rem;
+    font-weight: 600;
   }
   .big-deal-detail-data {
     line-height: 1.5;
-    max-height: 2.6em;
     font-size: 1rem;
     font-weight: 500;
     white-space: wrap;
@@ -143,4 +143,60 @@
 }
 .empty-wish span{
   color: #8d9db3;
+}
+
+.btn-wishlist {
+  border: 1px solid #caced1;
+  color: var(--primary-color);
+  padding: 8px;
+}
+.btn-wishlist fa-icon {
+  color: red;
+}
+
+.btn-wishlist-delete {
+  border: 1px solid #caced1;
+  color: var(--accent-color-3);
+  padding: 8px;
+  background-color: var(--accent-color-2);
+}
+.btn-wishlist-delete fa-icon {
+  margin: 0 0.2rem;
+}
+
+.custom-swal-container {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.custom-swal-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.custom-swal-text {
+  font-size: 16px;
+}
+
+.custom-swal-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.custom-swal-confirm-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.custom-swal-cancel-btn {
+  background-color: #ccc;
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
 }

@@ -7,7 +7,7 @@
     font-size: 14px;
     font-weight: 400;
 }
-.footer-categories a {
+.footer-categories a  , .allcategories{
     color: var(--primary-color);
     text-decoration: none;
     transition: ease-in-out 0.3s ;
@@ -15,7 +15,7 @@
     display: block;
     text-transform: capitalize;
 }
-.footer-categories a:hover{
+.footer-categories a:hover  , .allcategories:hover{
     color: var(--accent-color-2);
     transform: translateX(20px);
     font-weight: 600;
@@ -23,4 +23,9 @@
 .text-footer{
     color: var(--accent-color-2);
     font-weight: 600;
+}
+.allcategories{
+    font-weight: 700;
+    color: var(--accent-color-2) !important;
+
 }

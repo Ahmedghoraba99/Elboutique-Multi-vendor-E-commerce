@@ -10,7 +10,7 @@ import { CartService } from '../service/cart.service';
 import { WishlistService } from '../service/wishlist.service';
 import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-
+import { RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -26,6 +26,7 @@ import { OrderService } from '../service/order.service';
     SummaryOrderComponent,
     FontAwesomeModule,
     CommonModule,
+    RouterLink
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',

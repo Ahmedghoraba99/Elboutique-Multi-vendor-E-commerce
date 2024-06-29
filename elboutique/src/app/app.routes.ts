@@ -33,11 +33,27 @@ import { VendorProfileComponent } from './vendor-profile/vendor-profile.componen
 import { NotAuthComponent } from './not-auth/not-auth.component';
 import { adminGuard } from './_guards/admin.guard';
 import { ReportListComponent } from './profile/user/report-list/report-list.component';
+import { LayoutComponent } from './layout/layout.component';
 export const routes: Routes = [
   {
     path: '',
-    title: 'Elboutique',
-    component: HomeComponent,
+    component: LayoutComponent,
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'home' },
+      { path: 'home', component: HomeComponent, data: { title: 'Home' } },
+      { path: 'login', component: LoginComponent, data: { title: 'Login' } },
+      { path: 'wishlist', component: WishListComponent, data: { title: 'WishList' } },
+      { path: 'products/:id', component: CartComponent, data: { title: 'Details' } },
+      { path: 'checkout', component: CheckoutComponent, data: { title: 'Checkout' } },
+      // { path: 'categories', component: CategoryComponent, data: { title: 'Category' } },
+      { path: 'categories/:id', component: CategoryComponent, data: { title: 'Category' } },
+      { path: 'vendor/:id', component: VendorProfileComponent, data: { title: 'Vendor Profile' } },
+      { path: 'login/forget-password', component: ForgotPasswordComponent, data: { title: 'Forget Password' } },
+      { path: 'register', component: RegisterComponent, canActivate: [authGuard], data: { title: 'Register' } },
+      { path: 'checkmail', component: CheckMailComponent, canActivate: [checkMailGuard], data: { title: 'Check Mail' } },
+      { path: 'congs', component: CongsComponent, data: { title: 'Congs' } },
+      { path: 'password/reset', component: UserChangePasswordComponent, data: { title: 'Change Password' } },
+    ]
   },
   {
     path: 'dashboard',
@@ -82,32 +98,34 @@ export const routes: Routes = [
     title: 'Login',
     component: LoginComponent,
     canActivate: [authGuard],
-  },
-  {
-    path: 'wishlist',
-    title: 'WishList',
-    component: WishListComponent,
-  },
-  {
-    path: 'products/:id',
-    title: 'Details',
-    component: CartComponent,
-  },
-  {
-    path: 'checkout',
-    title: 'Checkout',
-    component: CheckoutComponent,
-  },
-  {
-    path: 'categories/:id',
-    title: 'Category',
-    component: CategoryComponent,
-  },
-  {
-    path: 'vendor/:id',
-    title: 'Vendor Profile',
-    component: VendorProfileComponent,
-  },
+  }
+  // ,
+  // {
+  //   path: 'wishlist',
+  //   title: 'WishList',
+  //   component: WishListComponent,
+  // },
+  // {
+  //   path: 'products/:id',
+  //   title: 'Details',
+  //   component: CartComponent,
+  // },
+  // {
+  //   path: 'checkout',
+  //   title: 'Checkout',
+  //   component: CheckoutComponent,
+  // },
+  // {
+  //   path: 'categories/:id',
+  //   title: 'Category',
+  //   component: CategoryComponent,
+  // },
+  // {
+  //   path: 'vendor/:id',
+  //   title: 'Vendor Profile',
+  //   component: VendorProfileComponent,
+  // },
+  ,
   {
     path: 'login/forget-password',
     title: 'ForgetPassword',
@@ -212,3 +230,5 @@ export const routes: Routes = [
     component: PageNotFoundComponent,
   },
 ];
+
+
