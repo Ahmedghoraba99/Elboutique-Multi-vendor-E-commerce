@@ -20,7 +20,6 @@ import { authGuard } from './guards/auth.guard';
 import { UserComponent } from './profile/user/user.component';
 import { AccountComponent } from './profile/user/account/account.component';
 import { OrdersComponent as UserOrdersComponent } from './profile/user/orders/orders.component';
-import { WishListComponent as UserWishListComponent } from './profile/user/wish-list/wish-list.component';
 import { PaymentComponent } from './profile/user/payment/payment.component';
 import { ChangePasswordComponent as UserChangePasswordComponent } from './Auth/change-password/change-password.component';
 import { VendorComponent } from './profile/vendor/vendor.component';
@@ -33,6 +32,7 @@ import { UserReviewsComponent } from './profile/user/user-reviews/user-reviews.c
 import { VendorProfileComponent } from './vendor-profile/vendor-profile.component';
 import { NotAuthComponent } from './not-auth/not-auth.component';
 import { adminGuard } from './_guards/admin.guard';
+import { ReportListComponent } from './profile/user/report-list/report-list.component';
 export const routes: Routes = [
   {
     path: '',
@@ -157,9 +157,9 @@ export const routes: Routes = [
         component: UserOrdersComponent,
       },
       {
-        path: 'wishlist',
+        path: 'report-products',
         title: 'WishList',
-        component: UserWishListComponent,
+        component: ReportListComponent,
       },
       {
         path: 'payment',

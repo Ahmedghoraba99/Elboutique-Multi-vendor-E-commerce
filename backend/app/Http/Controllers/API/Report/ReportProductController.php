@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Report;
 
 use App\Http\Controllers\Controller;
- 
+
 use App\Http\Resources\ReportProductResource;
 use App\Models\ReportProduct;
 use App\Http\Requests\StoreReportPrductRequest;
@@ -30,6 +30,18 @@ class ReportProductController extends Controller
             'message' => 'Report About Product created successfully',
             'Report' => new ReportProductResource($review)
         ], 201);
+    }
+
+    public function getReportByCustomer($coustomerId){
+        $report=  ReportProduct::where('customer_id', $coustomerId)->get();
+        if($report){
+            return ReportProductResource::collection($report);
+        }
+        else{
+            return response()->json([
+                'message' => 'No report found for this coustomer'
+            ], 404);
+        }
     }
 
     public function show($id)

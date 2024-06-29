@@ -40,3 +40,11 @@ export interface AllReviews{
   created_at: string,
   updated_at: string
 }
+export interface AllReport{
+  id:number,
+  reason: string;
+  customer:Customer,
+  product: Product,
+  created_at: string,
+  updated_at: string
+}

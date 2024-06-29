@@ -1,0 +1,102 @@
+
+@if (reports.length > 0){
+  <div class="h6 text-uppercase">My Reviews</div>
+  <hr class="hr">
+  <div *ngFor="let report of reports" class="card">
+      <div class="ms-auto small">
+          added in <span>{{ report.created_at | date }}</span>
+      </div>
+      <div class="d-flex gap-3 my-2">
+          <div class="img-container">
+              <img [src]="report.product.image_url " alt="product image">
+          </div>
+          <div>
+              <div class="d-flex justify-content-between">
+                  <h6 class="m-0">{{ report.product.name }}</h6>
+                  <button type="button" class="view-product btn btn-link p-0 border-0" [routerLink]="['/products', report.product.id]">
+                      <i class="fa-solid fa-eye primary-color"></i> View Product
+                  </button>
+              </div>
+              <div class="desc">
+                  <p class=" m-0">{{ report.reason }}</p>
+              </div>
+              <p class="fw-semibold">EGP {{ report.product.price }}</p>
+              <div class="d-flex justify-content-evenly">
+                <div class="custom-btn-1" data-bs-toggle="modal" data-bs-target="#updateReviewModal" (click)="setReviewForUpdate(report)">Update Report</div>
+
+                  <div class="custom-btn-2 me-2" data-bs-toggle="modal" data-bs-target="#deleteReview" (click)="deleteReview(report.id)">Remove Report</div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+
+  <div
+    class="modal fade"
+    id="deleteReview"
+    tabindex="-1"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    role="dialog"
+    aria-labelledby="modalTitleId"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitleId">
+            Confirm Delete
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">Are You Sure To Delete ?</div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-danger" (click)="comnfirmDeleteReview()" data-bs-dismiss="modal">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="updateReviewModal" tabindex="-1" aria-labelledby="updateReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateReviewModalLabel">Update Report</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="reviewForm">
+
+            <div class="form-group">
+              <label for="reason">Reason</label>
+              <textarea  id="reason" formControlName="reason" class="form-control" [(ngModel)]="reason">
+              </textarea>
+            </div>
+            <button type="button" (click)="onSubmit()" class="btn btn-primary mt-2">Submit</button>
+          </form>
+          <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+}@else {
+  <div class="h6 text-uppercase text-center">{{errorMessage}}</div>
+}
