@@ -161,10 +161,24 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.wishlistService.addItemToWishlist(sentBody);
   }
   DeleteFromCart(id: number) {
-    const sentBody = {
-      products: id,
-    };
-    this.cartService.deleteItemFromCart(sentBody);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this product from your wishlist !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#270949',
+      cancelButtonColor: '#f95b3d',
+      confirmButtonText: 'Yes, Delete it!'
+    }).then((result) => {
+      if (result.isConfirmed){
+        const sentBody = {
+          products: id,
+        };
+        this.cartService.deleteItemFromCart(sentBody);
+      }
+    }
+  )
+  
   }
   CreateOrder() {
     const sentBody = {
