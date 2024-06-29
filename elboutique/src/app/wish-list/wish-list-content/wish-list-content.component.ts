@@ -10,6 +10,7 @@ import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../service/auth.service';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { CartService } from '../../service/cart.service';
 
 @Component({
   selector: 'app-wish-list-content',
@@ -25,10 +26,16 @@ export class WishListContentComponent implements OnInit, OnDestroy {
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
+  userCartId: any[] = [];
+  // userCart: any = [];
+
+  userCart: any = [];
+
   isAuthenticated = false;
 
   constructor(
     private wishlistService: WishlistService,
+    private cartService: CartService,
     private toaster: ToastrService,
     private authService: AuthService
   ) {}
@@ -46,19 +53,53 @@ export class WishListContentComponent implements OnInit, OnDestroy {
         this.userWishlist = wishlist;
         console.log(this.userWishlist);
       });
+
+    this.cartService.getCartData().subscribe((cart) => {
+      cart.forEach((element: { id: any }) => {
+        this.userCartId.push(element.id);
+      });
+    });
   }
   removeProductFromWishlist(id: number) {
     const sentbody: Object = {
       products: id,
     };
-    this.deleteFromWishlistSub = this.wishlistService
-      .deleteFromUserWishlist(sentbody)
-      .subscribe((res) => {
-        console.log(res);
-        this.userWishlist = this.userWishlist.filter(
-          (product: any) => product.id != id
-        );
-        this.toaster.error('Product Removed From Wishlist', 'Remove');
-      });
+
+    this.wishlistService.deleteItemFromWishlist(sentbody);
+    this.toaster.error('Product Removed From Wishlist', 'Remove');
+    this.userWishlist = this.userWishlist.filter(
+      (product: any) => product.id != id
+    );
+  }
+
+  addProductToCart(e: HTMLButtonElement, id: number) {
+    const sentbody: Object = {
+      products: {
+        [id.toString()]: 1,
+      },
+    };
+
+    this.cartService.addItemToCart(sentbody);
+    this.toaster.success('Product Added To Cart', 'Add');
+    // Change button text
+    e.textContent = 'Remove from cart';
+  }
+
+  removeProductFromCart(e: HTMLButtonElement, id: number) {
+    const sentbody: Object = {
+      products: id,
+    };
+    this.cartService.deleteItemFromCart(sentbody);
+    this.toaster.error('Product Removed From Cart', 'Remove');
+    // Change button text
+    e.textContent = 'Add to cart';
+  }
+
+  addToCartToggler(e: HTMLButtonElement, id: number) {
+    if (e.textContent === 'Add to cart') {
+      this.addProductToCart(e, id);
+    } else {
+      this.removeProductFromCart(e, id);
+    }
   }
 }

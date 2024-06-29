@@ -54,7 +54,18 @@
                 <div
                   class="wishlist-actions d-flex flex-row justify-content-evenly text-capitalize"
                 >
-                  <button class="btn btn-primary">Add to cart</button>
+                  <button
+                    #myButton
+                    class="btn btn-primary"
+                    (click)="addToCartToggler(myButton, product.id)"
+                    (disabled)="userCartId.includes(product.id)"
+                  >
+                    {{
+                      userCartId.includes(product.id)
+                        ? "Remove from cart"
+                        : "Add to cart"
+                    }}
+                  </button>
                   <button
                     class="btn btn-primary"
                     (click)="removeProductFromWishlist(product.id)"
