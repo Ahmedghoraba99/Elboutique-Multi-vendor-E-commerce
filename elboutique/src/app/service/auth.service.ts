@@ -37,17 +37,17 @@ export class AuthService {
           `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
         )
         .subscribe((userData) => {
-          console.log('From Observable', userData);
+          // console.log('From Observable', userData);
           this.currentUser.next(userData);
         });
     }
   }
   getUserDataObservable(): Observable<any> {
-    console.log('userDataObservable');
+    // console.log('userDataObservable');
 
     this.getCurrentUser();
     if (this.isAuthenticated()) {
-      console.log('Authemticated getting user');
+      // console.log('Authemticated getting user');
       this.getCurrentUser();
       return this.currentUser.asObservable();
     }
@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   register(role: string, data: any): Observable<any> {
-    console.log(data);
+    // console.log(data);
 
     return this.http.post(`${this.baseUrl}${role}`, data);
   }
