@@ -3,13 +3,14 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AddReport} from '../_model/add-report';
+import { AllReport } from '../_model/reviews';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddReportService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/report-reviews';
+  private apiUrl = 'http://127.0.0.1:8000/api/report-products';
   constructor(private http: HttpClient) { }
 
 
@@ -27,6 +28,19 @@ export class AddReportService {
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+
+  getReviewsByCustomer(customerId: number): Observable<{data: AllReport[]}> {
+    return this.http.get<{data: AllReport[]}>(`${this.apiUrl}/customer/${customerId}`);
+  }
+
+  deleteReview(reportId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${reportId}`);
+  }
+
+  updateReview(reportId: number, report: Partial<AllReport>): Observable<AllReport> {
+    return this.http.post<AllReport>(`${this.apiUrl}/${reportId}`, {'_method':'PUT',...report});
   }
 
 
