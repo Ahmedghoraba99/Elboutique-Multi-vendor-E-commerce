@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ProductService } from '../../service/admin/product.service';
 import { VendorService } from '../../service/admin/vendor.service';
@@ -10,30 +10,61 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { Table, TableModule } from 'primeng/table';
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbPaginationModule,
+    FileUploadModule,
+    TableModule,
+    ToastModule,
+    ToolbarModule,
+    DialogModule,
+    DropdownModule,
+    ConfirmDialogModule,
+    InputTextModule,
+  ],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
 export class ProductsComponent {
+  @ViewChild('dt') dt: Table | undefined;
+
   products: any[] = [];
   categories: any[] = [];
   vendors: any[] = [];
+  productDialog: boolean = false;
+  selectedProducts: any[] = [];
+  product: any = {};
+  submitted: boolean = false;
   page = 1;
   pageSize = 10;
   totalItems = 0;
-  paginationLinks: any[] = [];
-
-  selectedProduct: any = {};
   images: File[] = [];
+  statuses: any[] = [
+    { label: 'INSTOCK', value: 'instock' },
+    { label: 'LOWSTOCK', value: 'lowstock' },
+    { label: 'OUTOFSTOCK', value: 'outofstock' },
+  ];
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private vendorService: VendorService,
-    private modalService: NgbModal
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +72,6 @@ export class ProductsComponent {
       this.getProducts();
     });
   }
-
   getCategoriesAndVendors(callback: () => void): void {
     let categoriesLoaded = false;
     let vendorsLoaded = false;
@@ -83,8 +113,9 @@ export class ProductsComponent {
           categoryName: this.getCategoryName(product.category_id),
           vendorName: this.getVendorName(product.vendor_id),
         }));
+        console.log(this.products);
+
         this.totalItems = response.total;
-        this.paginationLinks = response.links;
       },
       error: (error) => {
         console.error('Error fetching products:', error);
@@ -92,131 +123,100 @@ export class ProductsComponent {
     });
   }
 
-  deleteProduct(id: number): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productService.deleteProduct(id).subscribe({
-          next: () => {
+  openNew() {
+    this.product = {};
+    this.submitted = false;
+    this.productDialog = true;
+  }
+
+  hideDialog() {
+    this.productDialog = false;
+    this.submitted = false;
+  }
+
+  saveProduct() {
+    this.submitted = true;
+
+    if (this.product.name.trim()) {
+      if (this.product.id) {
+        this.productService
+          .updateProduct(this.product.id, this.product)
+          .subscribe(() => {
             this.getProducts();
-            Swal.fire('Deleted!', 'Product has been deleted.', 'success');
-          },
-          error: () => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the product.',
-              'error'
-            );
-          },
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Product Updated',
+              life: 3000,
+            });
+          });
+      } else {
+        this.productService.addProduct(this.product).subscribe(() => {
+          this.getProducts();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Product Created',
+            life: 3000,
+          });
         });
       }
+
+      this.products = [...this.products];
+      this.productDialog = false;
+      this.product = {};
+    }
+  }
+
+  editProduct(product: any) {
+    this.product = { ...product };
+    this.productDialog = true;
+  }
+
+  deleteProduct(id: number) {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this product?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.productService.deleteProduct(id).subscribe(() => {
+          this.getProducts();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Product Deleted',
+            life: 3000,
+          });
+        });
+      },
     });
   }
 
-  open(content: any, product: any = null): void {
-    if (product) {
-      this.selectedProduct = { ...product };
-    } else {
-      this.selectedProduct = {};
-    }
-
-    this.modalService
-      .open(content, { ariaLabelledBy: 'modal-basic-title' })
-      .result.then(
-        (result) => {
-          console.log(`Closed with: ${result}`);
-        },
-        (reason) => {
-          console.log(`Dismissed ${this.getDismissReason(reason)}`);
-        }
-      );
-  }
-
-  saveProduct(): void {
-    const formData = new FormData();
-    formData.append('name', this.selectedProduct.name);
-    formData.append('description', this.selectedProduct.description);
-    formData.append('price', this.selectedProduct.price);
-    formData.append('stock', this.selectedProduct.stock);
-    formData.append('category_id', this.selectedProduct.category_id);
-    formData.append('vendor_id', this.selectedProduct.vendor_id);
-    formData.append('is_featured', this.selectedProduct.is_featured);
-    formData.append('sale', this.selectedProduct.sale);
-    formData.append('deleted_at', this.selectedProduct.deleted_at);
-    formData.append('created_at', this.selectedProduct.created_at);
-    formData.append('updated_at', this.selectedProduct.updated_at);
-
-    for (const image of this.images) {
-      formData.append('images[]', image);
-    }
-
-    if (this.selectedProduct.id) {
-      this.productService
-        .updateProduct(this.selectedProduct.id, formData)
-        .subscribe({
-          next: () => {
-            this.getProducts();
-            this.modalService.dismissAll();
-            Swal.fire('Updated!', 'Product has been updated.', 'success');
-          },
-          error: (error) => {
-            console.error('Error updating product:', error);
-            Swal.fire(
-              'Error!',
-              'There was an error updating the product.',
-              'error'
-            );
-          },
-        });
-    } else {
-      this.productService.addProduct(formData).subscribe({
-        next: () => {
+  deleteSelectedProducts() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete the selected products?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        let ids = this.selectedProducts.map((product) => product.id);
+        this.productService.deleteProducts(ids).subscribe(() => {
           this.getProducts();
-          this.modalService.dismissAll();
-          Swal.fire('Added!', 'Product has been added.', 'success');
-        },
-        error: (error) => {
-          console.error('Error adding product:', error);
-          Swal.fire(
-            'Error!',
-            'There was an error adding the product.',
-            'error'
-          );
-        },
-      });
-    }
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Products Deleted',
+            life: 3000,
+          });
+        });
+        this.selectedProducts = [];
+      },
+    });
   }
 
-  onImageChange(event: any): void {
-    const files = event.target.files;
-    this.images = [];
-    for (const file of files) {
-      this.images.push(file);
-    }
+  onFilter(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.dt?.filterGlobal(inputElement.value, 'contains');
   }
-
-  loadPage(page: number): void {
-    this.page = page;
-    this.getProducts();
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
-
   private getCategoryName(categoryId: number): string {
     const category = this.categories.find((cat) => cat.id === categoryId);
     return category ? category.name : '-';
@@ -225,5 +225,11 @@ export class ProductsComponent {
   private getVendorName(vendorId: number): string {
     const vendor = this.vendors.find((ven) => ven.id === vendorId);
     return vendor ? vendor.name : '-';
+  }
+
+  onImageChange(event: any) {
+    for (let file of event.files) {
+      this.images.push(file);
+    }
   }
 }
