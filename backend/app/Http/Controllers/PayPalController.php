@@ -18,7 +18,7 @@ class PayPalController extends Controller
     public function createPayment(Request $request)
     {
         $invoiceId = 1;
-        $data = $this->getPaymentData($invoiceId);
+        $data = $this->getPaymentData($request);
 
         $response = $this->payPalService->createPayment($data);
 
@@ -46,15 +46,15 @@ class PayPalController extends Controller
         return redirect($frontEndUrl . '?success=false');
     }
 
-    private function getPaymentData($invoiceId)
+    private function getPaymentData($request)
     {
         return [
             'items' => [],
-            'invoice_id' => $invoiceId,
-            'invoice_description' => "Order #$invoiceId Invoice",
+            'invoice_id' => $request->order_id,
+            'invoice_description' => "Order #$request->order_id Invoice",
             'return_url' => route('payment.success'),
             'cancel_url' => route('payment.cancel'),
-            'total' => 50000
+            'total' => $request->total
         ];
     }
 
