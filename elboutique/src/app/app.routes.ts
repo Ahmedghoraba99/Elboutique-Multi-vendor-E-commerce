@@ -35,6 +35,9 @@ import { adminGuard } from './_guards/admin.guard';
 import { ReportListComponent } from './profile/user/report-list/report-list.component';
 import { LayoutComponent } from './layout/layout.component';
 import { authGuardGuard } from './_guards/auth.guard';
+import { AddProductComponent } from './profile/vendor/products/add-product/add-product.component';
+import { UpdateProductComponent } from './profile/vendor/products/update-product/update-product.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -246,6 +249,16 @@ export const routes: Routes = [
         path: 'products',
         title: 'Products',
         component: VendorProductsComponent,
+      },
+      {
+        path: 'products/add',
+        title: 'Add Product',
+        component: AddProductComponent
+      },
+      {
+        path: 'products/edit/:id',
+        title: 'Edit Product',
+        component: UpdateProductComponent
       },
       {
         path: 'account',
