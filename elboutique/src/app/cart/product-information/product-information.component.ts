@@ -39,12 +39,21 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
   product: any = {};
   addToWishlistSub: Subscription | null = null;
   addToCartSub: Subscription | null = null;
+  currentWishlist: number[] = [];
+
   id: number = 0;
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.id = +params['id'];
       this.productService.getProduct(this.id).subscribe((product) => {
         this.product = product;
+      });
+    });
+
+    this.wishlistService.getWishlistData().subscribe((res: any) => {
+      console.log('this is wishlist data :', res);
+      res.forEach((element: any) => {
+        this.currentWishlist.push(element.id);
       });
     });
   }
@@ -55,33 +64,43 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
 
   addToCart(select: HTMLSelectElement) {
     const selectedValue = String(select.value);
-    console.log(typeof selectedValue);
+    // console.log(typeof selectedValue);
     const sentBody = {
       products: {
         [`${this.product.id}`]: selectedValue,
       },
     };
-    console.log('this is sentbody :');
-    console.log(sentBody);
+    // console.log('this is sentbody :');
+    // console.log(sentBody);
 
-    this.addToCartSub = this.cartService
-      .addToCustomerCart(sentBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.toaster.success('Product Added To Cart', 'success');
-      });
+    // this.addToCartSub = this.cartService
+    //   .addToCustomerCart(sentBody)
+    //   .subscribe((res) => {
+    //     console.log(res);
+    //     this.toaster.success('Product Added To Cart', 'success');
+    //   });
+    this.cartService.addItemToCart(sentBody);
+    this.toaster.success('Product Added To Cart', 'success');
   }
 
   addToWishlist(div: HTMLDivElement) {
     const sentBody: Object = {
       products: [this.product.id],
     };
-    this.addToWishlistSub = this.wishlistService
-      .addToUserWishlist(sentBody)
-      .subscribe((res) => {
-        console.log(res);
-        div.innerHTML = `<i class="fa-solid fa-heart fs-6 text-danger"></i>`;
-        this.toaster.success('Product added to Wishlist', 'Added');
+    if (this.currentWishlist.includes(this.product.id)) {
+      this.wishlistService.deleteItemFromWishlist({
+        products: this.product.id,
       });
+      this.toaster.error('Product removed from Wishlist', 'Error');
+      div.innerHTML = `<i class="fa-regular fa-heart fs-6 text-danger"></i>`;
+      this.currentWishlist = this.currentWishlist.filter(
+        (item) => item !== this.product.id
+      );
+    } else {
+      this.wishlistService.addItemToWishlist(sentBody);
+      this.toaster.success('Product added to Wishlist', 'Added');
+      this.currentWishlist.push(this.product.id);
+      div.innerHTML = `<i class="fa-solid fa-heart fs-6 "></i>`;
+    }
   }
 }

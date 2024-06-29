@@ -13,7 +13,7 @@ export class ProductDetailsService {
   getProduct(id: number): Observable<any> {
     return this.httpClient
       .get<any>(`${this.baseUrl}/products/${id}`)
-      .pipe(tap((data) => console.log(data)));
+      .pipe(tap((data) => {}));
   }
   constructor() {}
 }

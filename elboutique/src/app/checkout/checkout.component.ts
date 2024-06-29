@@ -3,7 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SummaryOrderComponent } from './summary-order/summary-order.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { CartService } from '../service/cart.service';
@@ -18,6 +18,8 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
+import { AuthService } from '../service/auth.service';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -26,7 +28,12 @@ import { OrderService } from '../service/order.service';
     SummaryOrderComponent,
     FontAwesomeModule,
     CommonModule,
+<<<<<<< HEAD
     RouterLink
+=======
+    NgIf,
+    RouterLink,
+>>>>>>> 37270dbd237569b1de94be4d18b8adf3e105efd5
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
@@ -46,9 +53,11 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addProductsToOrderSub: Subscription | null = null;
   clearCartSub: Subscription | null = null;
   paymentForm: FormGroup;
+  isAuthenticated: boolean = false;
 
   constructor(
     private Toaster: ToastrService,
+    private authService: AuthService,
     private cartService: CartService,
     private wishlistService: WishlistService,
     private orderService: OrderService,
@@ -81,6 +90,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.clearCartSub?.unsubscribe();
   }
   ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
     this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
       this.customerCart = cart;
       this.customerCart.forEach((product: any) => {

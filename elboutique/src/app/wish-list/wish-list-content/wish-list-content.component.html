@@ -1,6 +1,6 @@
 <div class="container text-capitalize">
   <div class="row">
-    <div class="wishList-section px-2 my-5">
+    <div class="wishList-section px-2 my-5" *ngIf="isAuthenticated">
       <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
         <h1>Total Items</h1>
         <span>( {{ userWishlist.length }} Items)</span>
@@ -34,6 +34,22 @@
                          </swiper-container>
                       </a>
                     
+                      <swiper-container pagination="true">
+                        @for(image of product.images ;track $index){
+                        <swiper-slide
+                          class="swiper-slide big-deal-product-swiper-slider"
+                        >
+                          <img
+                            [src]="
+                              'http://localhost:8000/storage/' + image.image
+                            "
+                            alt="{{ product.name }}"
+                          />
+                        </swiper-slide>
+
+                        }
+                      </swiper-container>
+
                     </div>
                   </div>
                 </div>
@@ -51,21 +67,30 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- wihslist action -->
                 <div
                   class="wishlist-actions d-flex flex-row justify-content-between text-capitalize"
                 >
-                <button
-                class="btn btn-wishlist"
-                (click)="AddToCart(product.id)"
-              >
-                <fa-icon
-                  class="animated-heart"
-                  [icon]="faHeart"
-                ></fa-icon>
-                Add to WishList
-              </button>
+              
+                  <button
+                    #myButton
+                    class="btn btn-wishlist"
+                    (click)="addToCartToggler(myButton, product.id)"
+                    (disabled)="userCartId.includes(product.id)"
+                  >
+                    {{
+                      userCartId.includes(product.id)
+                        ? "Remove from cart"
+                        : "Add to cart"
+                    }}
+                     <fa-icon
+                     class="animated-heart"
+                     [icon]="faHeart"
+                   ></fa-icon>
+                   Add to WishList
+                  </button>
+
                   <button
                   class="btn btn-wishlist-delete"
                   (click)="removeProductFromWishlist(product.id)"
@@ -77,30 +102,34 @@
                   >Remove
                 </button>
                 </div>
-
               </div>
             </div>
           </div>
           }@empty {
-           <div class="container">
+          <div class="container">
             <div class="row">
               <div class="col-md-12">
                 <div class="empty-wish my-2 text-center">
                   <fa-icon [icon]="faHeartBroken"></fa-icon>
                   <p>Your Wihslist is Empty!</p>
-                  <span class="my-3 text-capitalize ">
-                    Looks like you haven't added anything to
-                    your wishlist yet
-                   
+                  <span class="my-3 text-capitalize">
+                    Looks like you haven't added anything to your wishlist yet
                   </span>
-                 </div>
+                </div>
               </div>
             </div>
-           </div>
+          </div>
           }
-        
         </div>
       </div>
+    </div>
+    <div class="wishList-section px-2 py-4 my-5" *ngIf="!isAuthenticated">
+      <h3 class="text-center text-capitalize my-3">
+        Please login first to use this feature
+      </h3>
+      <button class="btn btn-primary p3 mx-auto d-block">
+        <a routerLink="/login" class="text-light fw-medium">Login</a>
+      </button>
     </div>
   </div>
 </div>

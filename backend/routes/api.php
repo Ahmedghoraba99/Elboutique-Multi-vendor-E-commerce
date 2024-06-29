@@ -178,7 +178,7 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkE
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.reset');
 
 
-Route::get('payment', [PayPalController::class, 'createPayment'])->name('payment');
+Route::post('payment', [PayPalController::class, 'createPayment'])->name('payment');
 Route::get('payment/success', [PayPalController::class, 'success'])->name('payment.success');
 Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment.cancel');
 
