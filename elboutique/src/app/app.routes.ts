@@ -33,6 +33,7 @@ import { VendorProfileComponent } from './vendor-profile/vendor-profile.componen
 import { NotAuthComponent } from './not-auth/not-auth.component';
 import { adminGuard } from './_guards/admin.guard';
 import { ReportListComponent } from './profile/user/report-list/report-list.component';
+import { authGuardGuard } from './_guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
@@ -140,6 +141,8 @@ export const routes: Routes = [
     path: 'u',
     title: 'Users',
     component: UserComponent,
+    canActivate: [authGuardGuard],
+
     children: [
       {
         path: '',
