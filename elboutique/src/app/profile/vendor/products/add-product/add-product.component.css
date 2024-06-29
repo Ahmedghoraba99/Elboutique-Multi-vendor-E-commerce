@@ -1,0 +1,7 @@
+.icon-plus{
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 16px;
+  text-transform: lowercase;
+  word-spacing: 2px;
+}

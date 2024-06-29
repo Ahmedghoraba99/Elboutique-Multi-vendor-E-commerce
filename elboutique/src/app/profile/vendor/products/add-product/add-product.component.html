@@ -1,0 +1,90 @@
+<div class="container ">
+  @if(errorMessage.length > 0){
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <!-- name -->
+    <div class="form-group mb-3">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" formControlName="name" placeholder="Enter product name">
+      <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="text-danger">
+        Name is required.
+      </div>
+    </div>
+
+    <!-- desc -->
+    <div class="form-group mb-3">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" formControlName="description" rows="3" placeholder="Enter product description"></textarea>
+      <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="text-danger">
+        Description is required.
+      </div>
+    </div>
+
+    <!-- price -->
+    <div class="form-group mb-3">
+      <label for="price">Price</label>
+      <input type="number" class="form-control" id="price" formControlName="price" placeholder="Enter product price">
+      <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="text-danger">
+        Price is required.
+      </div>
+    </div>
+
+    <!-- category -->
+    <div class="form-group mb-3">
+      <label for="category">Category</label>
+      <select class="form-control" id="category" formControlName="category">
+        <option value="">Select category</option>
+        @for (category of categories; track $index) {
+          <option [value]="category.id">{{category.name}}</option>
+        }
+      </select>
+      <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="text-danger">
+        Category is required.
+      </div>
+    </div>
+
+    <!-- stock -->
+    <div class="form-group mb-3">
+      <label for="stock">Stock</label>
+      <input type="number" class="form-control" id="stock" formControlName="stock" value="0" >
+    </div>
+
+    <!-- image -->
+    <div class="form-group mb-3">
+      <label for="formFileMultiple" class="form-label">Multiple files input</label>
+      <input class="form-control" type="file"  (change)="onFileChange($event)" multiple>
+
+    </div>
+
+    <!-- attributes -->
+    <h3 class="mb-2">Attributes</h3>
+    <hr class="w-50">
+    <i class="fa-solid fa-plus" (click)="addAttribute()"><span class="icon-plus">Add Attributes</span></i>
+
+    <!-- div repeated -->
+    <div formArrayName="attributes">
+      <div *ngFor="let attribute of attributes.controls; let i=index" [formGroupName]="i" class="d-flex justify-content-lg-around align-items-center">
+        <div class="form-group mb-3">
+          <label [for]="'attribute-name-' + i">Attribute Name</label>
+          <input type="text" class="form-control" [id]="'attribute-name-' + i" formControlName="name" placeholder="Enter attribute name">
+          <div *ngIf="attribute.get('name')?.invalid && attribute.get('name')?.touched" class="text-danger">
+            Attribute name is required.
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label [for]="'attribute-value-' + i">Attribute Value</label>
+          <input type="text" class="form-control" [id]="'attribute-value-' + i" formControlName="value" placeholder="Enter attribute value">
+          <div *ngIf="attribute.get('value')?.invalid && attribute.get('value')?.touched" class="text-danger">
+            Attribute value is required.
+          </div>
+        </div>
+        <button class="btn btn-danger" (click)="removeAttribute(i)">Remove</button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid || selectedFiles.length == 0">Add Product</button>
+  </form>
+</div>
