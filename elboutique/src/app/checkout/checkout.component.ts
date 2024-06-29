@@ -39,7 +39,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   faHeart = faHeart;
   faTrashCan = faTrashCan;
   faShoppingBasket = faShoppingBasket;
-  customerCart: any = [];
+  customerCart: any[] = [];
   cartPriceAndQuantity: any = [];
   addtoWishlistSub: Subscription | null = null;
   getCartSub: Subscription | null = null;
@@ -89,7 +89,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.authService.isAuthObservable().subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
     });
-    this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
+    this.getCartSub = this.cartService.getCartData().subscribe((cart) => {
       this.customerCart = cart;
       this.customerCart.forEach((product: any) => {
         this.cartPriceAndQuantity.push({
@@ -107,6 +107,18 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return total + product[key].price * product[key].quantity;
     }, 0);
   }
+  getDiscountedAmount() {
+    let afterDiscount = 0;
+    this.customerCart.forEach((cartItem: any) => {
+      if (cartItem.sale) {
+        let dicPercent = (100 - cartItem.sale) / 100;
+        afterDiscount +=
+          cartItem.price * dicPercent * cartItem.cart_table.quantity;
+      }
+    });
+    return afterDiscount;
+  }
+
   getOrderTotalQuantities() {
     return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
       const key = Object.keys(product)[0];
@@ -131,7 +143,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.updateInCart = this.cartService
       .addToCustomerCart(sentBody)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
 
@@ -143,30 +155,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   // for services
-  AddToWishlist(id: number) {
+  addToWishlist(id: number) {
     const sentBody: Object = {
       products: [id],
     };
-    this.addtoWishlistSub = this.wishlistService
-      .addToUserWishlist(sentBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.addToast();
-      });
+    this.wishlistService.addItemToWishlist(sentBody);
   }
   DeleteFromCart(id: number) {
     const sentBody = {
       products: id,
     };
-    this.removeFromCartSub = this.cartService
-      .deleteFromCustomerCart(sentBody)
-      .subscribe((res) => {
-        console.log(res);
-        this.customerCart = this.customerCart.filter(
-          (product: any) => product.id != id
-        );
-        this.deleteToast();
-      });
+    this.cartService.deleteItemFromCart(sentBody);
   }
   CreateOrder() {
     const sentBody = {
@@ -177,7 +176,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.addOrderSub = this.orderService
       .createOrder(sentBody)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
         const { id } = res.order;
         this.successOrderCreatedAlert();
         this.addProducts(id);
@@ -195,14 +194,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
   clearCart() {
     this.clearCartSub = this.cartService
       .clearCustomerCart()
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
       });
   }
   successOrderCreatedAlert() {
