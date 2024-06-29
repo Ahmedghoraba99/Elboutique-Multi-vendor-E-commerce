@@ -19,20 +19,23 @@
                   <div class="big-deal-product-slider">
                     <div class="swiper mySwiper big-deal-product-swiper">
                       <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                        <swiper-container pagination="true">
-                          @for (image of product.images; track $index) {
-                          <swiper-slide
-                            class="swiper-slide big-deal-product-swiper-slider"
-                          >
-                            <img
-                              src="http://127.0.0.1:8000/storage/{{
-                                image.image
-                              }}"
-                              alt="product-Name"
-                            />
-                          </swiper-slide>
-                          }
-                        </swiper-container>
+                        <a routerLink="/products/{{ product.id }}">
+                          <swiper-container pagination="true">
+                            @for (image of product.images; track $index) {
+                            <swiper-slide
+                              class="swiper-slide big-deal-product-swiper-slider"
+                            >
+                              <img
+                                src="http://127.0.0.1:8000/storage/{{
+                                  image.image
+                                }}"
+                                alt="product-Name"
+                              />
+                            </swiper-slide>
+                            }
+                          </swiper-container>
+                        </a>
+                     
                       </div>
                     </div>
                   </div>

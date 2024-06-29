@@ -130,19 +130,7 @@
       font-size: 1.2rem;
       font-weight:500;
   }
-  .products-wish{
-    margin: 1rem;
-    overflow: hidden;
-    display: flex;
-    -moz-box-align: center;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    color: #ffff;
-    padding: 0.4rem 0.5rem;
-  }
+  
 
   /* empty tag */
   .empty-tag{
@@ -183,3 +171,84 @@
       right: -6px;
 
     }
+
+
+
+
+    /* wishlist button */
+    
+.products-wish {
+  /* width: 2.5rem;
+  height: 2.5rem; */
+  width: 2rem;
+  height: 2rem;
+  -moz-box-align: center;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  color: #ffff;
+  padding: 0.4rem 0.5rem;
+}
+
+/*  */
+
+.con-like {
+  color: var(--accent-color-2);
+  position: relative;
+}
+.con-like-cart{
+  color:var(--accent-color-1);
+  position: relative;
+}
+
+.con-like .like,
+.con-like-cart .like-cart {
+  position: absolute;
+  opacity: 0;
+  z-index: 20;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  top: -7px;
+  right: -9px;
+}
+
+.con-like .outline,
+.con-like .filled {
+  fill: var(--accent-color-2);
+  position: absolute;
+}
+.con-like-cart .outline,
+.con-like-cart .filled {
+  fill: var(--accent-color-1);
+  position: absolute;
+}
+
+.con-like .filled,
+.con-like-cart .filled {
+  animation: kfr-filled 0.5s;
+  display: none;
+}
+
+.con-like .poly {
+  stroke: var(--accent-color-2);
+  fill: var(--accent-color-2);
+}
+
+.con-like .like:checked ~ .checkmark .filled {
+  display: block;
+}
+
+@keyframes kfr-filled {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}

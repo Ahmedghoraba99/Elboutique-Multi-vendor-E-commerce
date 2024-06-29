@@ -15,7 +15,7 @@ a {
   
   .big-deals-header h2 {
     font-weight: bold;
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
   }
   
   .big-deals-btn a {
@@ -257,6 +257,6 @@ a {
 }
 
 
-.seemorelink{
-  margin-right: 69px;
-}
+/* .seemorelink{
+  margin-right: 7rem !important;
+} */

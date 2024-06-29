@@ -11,7 +11,9 @@ import { AuthService } from '../../service/auth.service';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../service/cart.service';
-
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-wish-list-content',
   standalone: true,
@@ -23,11 +25,15 @@ import { CartService } from '../../service/cart.service';
 export class WishListContentComponent implements OnInit, OnDestroy {
   faHeartBroken = faHeartBroken;
   faShoppingBasket = faShoppingBasket;
+
+  faHeart=faHeart;
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
   userCartId: any[] = [];
   // userCart: any = [];
+
+  faTrashCan=faTrashCan;
 
   userCart: any = [];
 
@@ -60,18 +66,29 @@ export class WishListContentComponent implements OnInit, OnDestroy {
       });
     });
   }
+  // with the sweetalert 
   removeProductFromWishlist(id: number) {
-    const sentbody: Object = {
-      products: id,
-    };
-
-    this.wishlistService.deleteItemFromWishlist(sentbody);
-    this.toaster.error('Product Removed From Wishlist', 'Remove');
-    this.userWishlist = this.userWishlist.filter(
-      (product: any) => product.id != id
-    );
+    Swal.fire({
+      title:'Are you sure ?',
+      text:'Do you really want to delete this product from your wishlist ?',
+      icon:'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'No, keep it',
+    }).then((reult) =>{
+      if (reult.isConfirmed){
+      const sentbody: Object = {
+        products: id,
+      };
+  
+      this.wishlistService.deleteItemFromWishlist(sentbody);
+      this.toaster.error('Product Removed From Wishlist', 'Remove');
+      this.userWishlist = this.userWishlist.filter(
+        (product: any) => product.id != id
+      );
+      }
+    })
   }
-
   addProductToCart(e: HTMLButtonElement, id: number) {
     const sentbody: Object = {
       products: {
@@ -91,6 +108,7 @@ export class WishListContentComponent implements OnInit, OnDestroy {
     };
     this.cartService.deleteItemFromCart(sentbody);
     this.toaster.error('Product Removed From Cart', 'Remove');
+    console.log(sentbody);
     // Change button text
     e.textContent = 'Add to cart';
   }
