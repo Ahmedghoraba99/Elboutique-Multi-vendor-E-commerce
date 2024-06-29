@@ -7,30 +7,39 @@ import { ToastrService } from 'ngx-toastr';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeartBroken } from '@fortawesome/free-solid-svg-icons';
 import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../../service/auth.service';
+import { NgIf } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-wish-list-content',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, NgIf, RouterLink],
   templateUrl: './wish-list-content.component.html',
   styleUrl: './wish-list-content.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class WishListContentComponent implements OnInit, OnDestroy {
-  faHeartBroken=faHeartBroken;
-  faShoppingBasket=faShoppingBasket;
+  faHeartBroken = faHeartBroken;
+  faShoppingBasket = faShoppingBasket;
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
+  isAuthenticated = false;
+
   constructor(
     private wishlistService: WishlistService,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private authService: AuthService
   ) {}
   ngOnDestroy(): void {
     this.getWishlistSub?.unsubscribe();
     this.deleteFromWishlistSub?.unsubscribe();
   }
   ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
     this.getWishlistSub = this.wishlistService
       .getUserWishlist()
       .subscribe((wishlist) => {
