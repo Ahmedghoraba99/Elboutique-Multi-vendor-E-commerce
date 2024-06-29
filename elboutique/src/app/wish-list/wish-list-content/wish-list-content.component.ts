@@ -96,7 +96,7 @@ export class WishListContentComponent implements OnInit, OnDestroy {
   }
 
   addToCartToggler(e: HTMLButtonElement, id: number) {
-    if (e.textContent === 'Add to cart') {
+    if (!this.userCartId.includes(id)) {
       this.addProductToCart(e, id);
     } else {
       this.removeProductFromCart(e, id);
