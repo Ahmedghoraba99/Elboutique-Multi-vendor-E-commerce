@@ -17,19 +17,19 @@ export class VendorComponent {
       name: 'Overview',
     },
     {
-      path: 'products',
-      icon: '<i class="fa-solid fa-boxes-stacked"></i>',
-      name: 'My Products',
-    },
-    {
       path: 'account',
       icon: '<i class="fa-solid fa-user-gear"></i>',
       name: 'My Account',
     },
     {
-      path: 'account/change-password',
-      icon: '<i class="fa-solid fa-lock"></i>',
-      name: 'Change Password',
+      path: 'products',
+      icon: '<i class="fa-solid fa-boxes-stacked"></i>',
+      name: 'My Products',
     },
+    {
+      path: 'products/add',
+      icon: '<i class="fa-solid fa-plus"></i>',
+      name: 'Add Product',
+    }
   ];
 }

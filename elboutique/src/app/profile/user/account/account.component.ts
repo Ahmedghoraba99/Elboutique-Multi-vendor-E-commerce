@@ -104,8 +104,6 @@ export class AccountComponent implements OnInit {
   saveProfile() {
     if (this.profileForm.valid) {
       const formData = { ...this.profileForm.value, image: this.imageFile };
-      console.log(this.profileImage);
-
       this.profileService.updateProfile(formData,this.user.data.id).subscribe({
         next: (data) => {
           console.log(data);

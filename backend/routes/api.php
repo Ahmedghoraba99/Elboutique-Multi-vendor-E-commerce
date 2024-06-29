@@ -12,7 +12,7 @@ use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\category\CategoryController;
 use App\Http\Controllers\tag\TagController;
 use App\Http\Controllers\product\ProductController;
- 
+
 use App\Http\Controllers\order\OrderProductController;
 use App\Http\Controllers\vendor\VendorController;
 use App\Http\Controllers\VendorReceivablesController;
@@ -54,11 +54,11 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
 
-//cart endpoint
-Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
-Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
-Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
-Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
+    //cart endpoint
+    // Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
+    // Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
+    // Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
+    // Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
 
 
     Route::apiResource('tags', TagController::class);
@@ -68,29 +68,28 @@ Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
     Route::get('/product/featured/{id}', [ProductController::class, "featureAndUnfeatureProduct"]);
     Route::apiResource('vendor-eceivables', VendorReceivablesController::class);
     Route::post('/changeorderstatus/{order}', [OrderController::class, "changeStatus"]);
-
-    });
+});
 
 
 // Endpoints that use vendor gaurd
-Route::group(['middleware' => ['auth:sanctum','AdminVendorAuth']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'AdminVendorAuth']], function () {
     Route::apiResource('products', ProductController::class);
     Route::patch('vendors/{vendor}', [VendorController::class, 'update']);
     Route::put('vendors/{vendor}', [VendorController::class, 'update']);
     Route::delete('vendors/{vendor}', [VendorController::class, 'destroy']);
 
     Route::get('vendors/vendoreceivables/{vendor}', [VendorController::class, 'getVendorReceivables']);
-
-    });
+});
 
 
 // Endpoints that use customer guard
-Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function () {
+Route::group(['middleware' => ['auth:sanctum', 'AdminCustomerAuth']], function () {
 
     //cart endpoint
     Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
     Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
     Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
+    Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
 
     //wishlist endpoint
     Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachProductToCustomerWishlist']);
@@ -99,7 +98,7 @@ Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function ()
 
     // Order related routes
     Route::apiResource('orders', OrderController::class);
-    Route::get('/orders/users/{id}',[OrderController::class,'getUserOrders']);
+    Route::get('/orders/users/{id}', [OrderController::class, 'getUserOrders']);
     Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProductToOrder']);
     Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
     Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
@@ -107,10 +106,7 @@ Route::group(['middleware' => ['auth:sanctum','AdminCustomerAuth']], function ()
     Route::patch('customers/{customer}', [CustomerController::class, 'update']);
     Route::put('customers/{customer}', [CustomerController::class, 'update']);
     Route::delete('customers/{customer}', [CustomerController::class, 'destroy']);
-
-
-
-    });
+});
 
 
 
@@ -126,7 +122,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 
- 
+
 
 // Endpoints that don't require authentication.
 
@@ -160,7 +156,7 @@ Route::get('/product/category/{id}', [ProductController::class, "getProductsByCa
 
 Route::get('/product/onsale', [ProductController::class, "getProductsOnSale"]);
 Route::get('/product/newarrivals', [ProductController::class, "getNewArrivalProducts"]);
-Route::get('/product/search', [ProductController::class,"searchProduct"]);
+Route::get('/product/search', [ProductController::class, "searchProduct"]);
 Route::get('/product/vendor/{id}', [ProductController::class, "getVendorProducts"])->where('id', '[0-9]+');
 
 
@@ -181,4 +177,3 @@ Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name(
 Route::post('payment', [PayPalController::class, 'createPayment'])->name('payment');
 Route::get('payment/success', [PayPalController::class, 'success'])->name('payment.success');
 Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment.cancel');
-

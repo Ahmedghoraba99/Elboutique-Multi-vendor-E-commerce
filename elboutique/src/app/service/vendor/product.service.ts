@@ -24,9 +24,9 @@ export class VendorAddProductService {
       'Authorization': `Bearer ${this.authService.getToken()}`
     });
 
-    return this.http.put(`${this.apiUrl}/${id}`, product, { headers });
+    return this.http.post(`${this.apiUrl}/${id}?_method=PUT`, product, { headers });
   }
   deleteProdcutVendor(id:number):Observable<any>{
-   return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

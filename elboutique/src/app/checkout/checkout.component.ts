@@ -183,7 +183,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   CreateOrder() {
     const sentBody = {
       status: 'midway',
-      total: this.getOrderTotalPrice() + this.getOrderTotalPrice() * 0.2,
+      total: this.getOrderTotalPrice() - this.getDiscountedAmount() + 50,
     };
 
     this.addOrderSub = this.orderService
@@ -211,11 +211,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       });
   }
   clearCart() {
-    this.clearCartSub = this.cartService
-      .clearCustomerCart()
-      .subscribe((res) => {
-        // console.log(res);
-      });
+    // this.clearCartSub = this.cartService
+    //   .clearCustomerCart()
+    //   .subscribe((res) => {
+    //     // console.log(res);
+    //   });
+    this.cartService.clearCart();
   }
   successOrderCreatedAlert() {
     Swal.fire({
