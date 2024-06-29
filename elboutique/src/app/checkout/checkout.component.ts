@@ -19,7 +19,6 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
 import { AuthService } from '../service/auth.service';
-import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -28,12 +27,8 @@ import { RouterLink } from '@angular/router';
     SummaryOrderComponent,
     FontAwesomeModule,
     CommonModule,
-<<<<<<< HEAD
-    RouterLink
-=======
     NgIf,
     RouterLink,
->>>>>>> 37270dbd237569b1de94be4d18b8adf3e105efd5
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
