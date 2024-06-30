@@ -40,7 +40,7 @@ export class SimilarproductComponent {
         })
       )
       .subscribe((product) => {
-        // console.log('The product from subscription', product.data);
+        console.log('The product from subscription', product.data);
         this.products = product.data;
         this;
       });
