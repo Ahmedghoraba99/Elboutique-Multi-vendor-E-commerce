@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
       <label for="idFront">ID Image Front</label>
       <input type="file" class="form-control" id="idFront" (change)="onIdFrontChange($event)">
     </div>
@@ -49,8 +49,11 @@
     <div class="form-group">
       <label for="idBack">ID Image Back</label>
       <input type="file" class="form-control" id="idBack" (change)="onIdBackChange($event)">
+    </div> -->
+
+    <div class="form-group mb-y">
+      <button *ngIf="isEditable" type="button" class="btn primary-bg-color w-auto ms-auto" (click)="saveProfile()">Save</button>
     </div>
 
-    <button *ngIf="isEditable" type="button" class="btn primary-bg-color w-auto ms-auto" (click)="saveProfile()">Save</button>
   </form>
 </div>

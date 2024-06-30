@@ -13,7 +13,8 @@ export interface Customer {
   phone: string | null;
   addresses: Address[];
   phones: Phone[];
-  role: string
+  role: string,
+  image_url:string
 }
 export interface Phone {
   id: number;
