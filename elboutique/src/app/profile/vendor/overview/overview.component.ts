@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import {VendorReceivables} from '../../../_model/vendor-receivables';
 import { ReceivablesService } from '../../../service/receivables.service';
 import { CommonModule } from '@angular/common';
-import {LogoutComponent} from '../logout/logout.component';
 import { AuthService } from '../../../service/auth.service';
 
 
 @Component({
   selector: 'app-vendor-overview',
   standalone: true,
-  imports: [CommonModule,LogoutComponent],
+  imports: [CommonModule],
   templateUrl: './overview.component.html',
   styleUrl: './overview.component.css',
 })
