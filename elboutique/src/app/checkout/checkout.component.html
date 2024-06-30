@@ -35,7 +35,6 @@
                             }
                           </swiper-container>
                         </a>
-                     
                       </div>
                     </div>
                   </div>
@@ -161,7 +160,7 @@
                     >
                   </div>
                 </div>
-
+                <app-summary-order></app-summary-order>
                 <div class="checkout-btn text-center my-4">
                   <button class="btn" type="submit" (click)="CreateOrder()">
                     ckeckout
@@ -190,17 +189,20 @@
     </div>
     <div class="wishList-section px-2 py-4 my-5" *ngIf="!isAuthenticated">
       <div class="container my-5">
-      <div class="row justify-content-center align-items-center">
-        <img src="../../../assets/images/login-access-protection-vector.jpg" alt="" class="img-fluid img-login">
-        <h3 class="text-center text-capitalize my-3 wishlist-h3">
-          Please login first to use this feature
-        </h3>
-        <button class="btn btn-primary p3 mx-auto d-block login-btn">
-          <a routerLink="/login" class="text-light fw-medium">Login</a>
-        </button>
+        <div class="row justify-content-center align-items-center">
+          <img
+            src="../../../assets/images/login-access-protection-vector.jpg"
+            alt=""
+            class="img-fluid img-login"
+          />
+          <h3 class="text-center text-capitalize my-3 wishlist-h3">
+            Please login first to use this feature
+          </h3>
+          <button class="btn btn-primary p3 mx-auto d-block login-btn">
+            <a routerLink="/login" class="text-light fw-medium">Login</a>
+          </button>
+        </div>
       </div>
-      </div>
-     
     </div>
   </div>
 </div>
