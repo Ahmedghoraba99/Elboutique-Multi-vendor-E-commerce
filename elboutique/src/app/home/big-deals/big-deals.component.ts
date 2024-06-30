@@ -27,16 +27,13 @@ export class BigDealsComponent {
       this.products = data;
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      // console.log('Data from wishlist: ', data);
       data.forEach((item: { id: any }) => {
         this.userWishlist.push(item.id);
       });
     });
     this.cartService.getCartData().subscribe((data) => {
-      // console.log('Data from cart: ', data);
       data.forEach((item: { id: any }) => {
         this.userCart.push(item.id);
-        // console.log(this.userCart);
       });
     });
   }
