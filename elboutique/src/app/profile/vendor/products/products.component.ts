@@ -3,11 +3,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { VendorProdcutService } from '../../../service/vendor/productdata.service';
 import { VendorCatgoriesService } from '../../../service/vendor/categories.service';
 import { VendorAddProductService } from '../../../service/vendor/product.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { AddSaleComponent } from './add-sale/add-sale.component';
+import { TageProductComponent } from './tage-product/tage-product.component';
 declare const bootstrap: any;
+
 
 
 @Component({
@@ -15,14 +18,17 @@ declare const bootstrap: any;
   standalone: true,
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
-  imports: [CommonModule, ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, FormsModule,ReactiveFormsModule,RouterLink,AddSaleComponent,TageProductComponent],
 })
 export class ProductsComponent implements OnInit  {
   products: any[] = [];
   categories: any[] = [];
+  filteredProducts: any[] = [];
+  searchTerm: string = '';
   editingIndex: number | null = null;
   userInfo: string | null = localStorage.getItem('user_info');
   user_id: number = 0;
+  product_id: number = 0;
 
   constructor(
     private VendorProdcutService: VendorProdcutService,
@@ -51,7 +57,7 @@ export class ProductsComponent implements OnInit  {
     this.vendorCatgoriesService.getCategories().subscribe(
       response => {
         this.categories = response.data;
-        console.log(this.categories);
+        // console.log(this.categories);
       },
       error => {
         console.error('Error loading categories:', error);
@@ -68,12 +74,19 @@ export class ProductsComponent implements OnInit  {
   this.VendorProdcutService.getVendorProducts(this.user_id).subscribe(
       response => {
         this.products = response.data;
-        console.log(`the respnse:`);
-        console.log(this.products);
+        this.filteredProducts = this.products;
+        // console.log(`the respnse:`);
+        // console.log(this.products);
       },
       error => {
         console.error('Error loading products:', error);
       }
+    );
+  }
+
+  filterProducts() {
+    this.filteredProducts = this.products.filter(product =>
+      product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 
@@ -109,5 +122,10 @@ export class ProductsComponent implements OnInit  {
     )
   }
 
+  changeProductId(id:number){
+    this.product_id = id;
+    console.log(this.product_id);
+
+  }
 
 }

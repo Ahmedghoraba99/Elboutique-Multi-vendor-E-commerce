@@ -184,6 +184,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Srmklive\PayPal\Providers\PayPalServiceProvider::class,
+        PayMob\PayMobServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -213,6 +214,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'PayPal' => Srmklive\PayPal\Facades\PayPal::class,
+        'PayMob' => PayMob\Facades\PayMob::class,
          
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),

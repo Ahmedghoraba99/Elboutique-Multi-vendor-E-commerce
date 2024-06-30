@@ -1,3 +1,6 @@
+@if (loading) {
+<p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
+    fill="var(--surface-ground)" animationDuration=".5s" />}@else {
 <div class="h6 text-uppercase">Orders</div>
 <hr class="hr">
 <div class="container">
@@ -88,4 +91,4 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div>}

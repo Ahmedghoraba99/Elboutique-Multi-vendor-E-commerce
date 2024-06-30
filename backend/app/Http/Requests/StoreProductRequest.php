@@ -29,8 +29,8 @@ class StoreProductRequest extends FormRequest
             'stock' => "required|numeric|min:0",
             'images' => "required|array",
             "category_id" => "required|string|exists:categories,id",
-            "tags" => "sometimes|array",
             "attributes" => "required|array",
+            "tags" => "sometimes|array",
             "tags.*" => "exists:tags,id",
             "images.*" => "required|image|mimes:jpeg,png,jpg|max:2048", // Added max file size validation
             "vendor_id" => "required|string|exists:vendors,id",

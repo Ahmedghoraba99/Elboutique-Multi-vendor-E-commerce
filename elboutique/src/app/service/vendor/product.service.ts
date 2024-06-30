@@ -29,4 +29,12 @@ export class VendorAddProductService {
   deleteProdcutVendor(id:number):Observable<any>{
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  addSale(id: number, product: FormData): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+    });
+
+    return this.http.post(`${this.apiUrl}/${id}`, product, { headers });
+  }
 }
