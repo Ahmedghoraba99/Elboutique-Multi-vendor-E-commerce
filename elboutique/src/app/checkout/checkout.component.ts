@@ -139,11 +139,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         toChangeProduct[key].quantity = quantity;
       }
     });
-    this.updateInCart = this.cartService
-      .addToCustomerCart(sentBody)
-      .subscribe((res) => {
-        // console.log(res);
-      });
+    this.cartService.addItemToCart(sentBody);
   }
 
   addToast() {
@@ -168,22 +164,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#270949',
       cancelButtonColor: '#f95b3d',
-      confirmButtonText: 'Yes, Delete it!'
+      confirmButtonText: 'Yes, Delete it!',
     }).then((result) => {
-      if (result.isConfirmed){
+      if (result.isConfirmed) {
         const sentBody = {
           products: id,
         };
         this.cartService.deleteItemFromCart(sentBody);
       }
-    }
-  )
-  
+    });
   }
   CreateOrder() {
     const sentBody = {
       status: 'midway',
-      total: this.getOrderTotalPrice() - this.getDiscountedAmount() + 50,
+      total: this.getOrderTotalPrice() - this.getDiscountedAmount() + 50, //value of shipping
     };
 
     this.addOrderSub = this.orderService
@@ -204,6 +198,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.customerCart.forEach((product: any) => {
       orderProductBody.products[`${product.id}`] = product.cart_table.quantity;
     });
+    console.log('Order Product Body', orderProductBody);
+
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)
       .subscribe((res) => {
@@ -211,11 +207,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       });
   }
   clearCart() {
-    // this.clearCartSub = this.cartService
-    //   .clearCustomerCart()
-    //   .subscribe((res) => {
-    //     // console.log(res);
-    //   });
     this.cartService.clearCart();
   }
   successOrderCreatedAlert() {

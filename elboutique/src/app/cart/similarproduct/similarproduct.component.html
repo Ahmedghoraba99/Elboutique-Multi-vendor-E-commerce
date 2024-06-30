@@ -24,13 +24,17 @@
         class="big-deal-product-big-tag"
       >
         <span *ngIf="product.sale">{{ product.sale }}% Off</span>
+
         </div>
           <div class="d-flex flex-column">
         <div class="big-deal-product-data p-4">
           <div
-            class="big-deal-product-big-tags d-flex flex-row justify-content-end align-items-end"
-          >
-            
+          class="big-deal-product-big-tags d-flex flex-row align-items-end"
+          [ngClass]="{'justify-content-between': product.is_featured, 'justify-content-end': !product.is_featured}"
+        >
+          <div *ngIf="product.is_featured" class="products-tag">
+            <span class="text-capitalize">Featured</span>
+          </div>
           <div class="products-wish">
             <div class="con-like">
               <input
