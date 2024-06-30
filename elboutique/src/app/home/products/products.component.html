@@ -38,8 +38,9 @@
               </div>
             </div>
             <div class="products-slider">
-              <a routerLink="/products/{{ product.id }}">
+          <a routerLink="/products/{{ product.id }}">
 
+       
               <swiper-container pagination="true">
                 <swiper-slide
                   *ngFor="let image of product.images"
@@ -52,7 +53,6 @@
                 </swiper-slide>
               </swiper-container>
             </a>
-
             </div>
             <div class="products-detail">
               <div class="products-detail-header">

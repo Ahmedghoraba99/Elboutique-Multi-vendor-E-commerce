@@ -73,7 +73,9 @@ export class WishListContentComponent implements OnInit, OnDestroy {
       text:'Do you really want to delete this product from your wishlist ?',
       icon:'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, remove it!',
+      confirmButtonColor: '#270949',
+      cancelButtonColor: '#f95b3d',
+      confirmButtonText: 'Yes, Remove it!',
       cancelButtonText: 'No, keep it',
     }).then((reult) =>{
       if (reult.isConfirmed){
