@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CustomerService } from '../../service/admin/customer.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProgressSpinnerModule],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit {
   customers: any[] = [];
+  loading = true;
   constructor(private customerService: CustomerService) {}
 
   ngOnInit(): void {
@@ -27,6 +29,7 @@ export class UsersComponent implements OnInit {
           )
           .join(', '),
       }));
+      this.loading = false;
     });
   }
   deleteCustomer(id: number): void {
