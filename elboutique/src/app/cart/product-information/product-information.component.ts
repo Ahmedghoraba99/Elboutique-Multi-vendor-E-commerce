@@ -9,6 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 import { CartService } from '../../service/cart.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../../service/auth.service';
+
 @Component({
   selector: 'app-product-information',
   standalone: true,
@@ -29,7 +31,9 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     private productService: ProductDetailsService,
     private wishlistService: WishlistService,
     private toaster: ToastrService,
-    private cartService: CartService
+    private cartService: CartService,
+    private authService: AuthService
+
   ) {}
   ngOnDestroy(): void {
     this.addToCartSub?.unsubscribe();
@@ -40,9 +44,13 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
   addToWishlistSub: Subscription | null = null;
   addToCartSub: Subscription | null = null;
   currentWishlist: number[] = [];
+  isAuthenticated = false;
 
   id: number = 0;
   ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
     this.route.params.subscribe((params) => {
       this.id = +params['id'];
       this.productService.getProduct(this.id).subscribe((product) => {
@@ -63,13 +71,21 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
   }
 
   addToCart(select: HTMLSelectElement) {
-    const selectedValue = String(select.value);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
+    }else{
+      const selectedValue = String(select.value);
+      const sentBody = {
+        products: {
+          [`${this.product.id}`]: selectedValue,
+        },
+      };
+      this.cartService.addItemToCart(sentBody);
+      this.toaster.success('Product Added To Cart', 'success');
+
+    }
     // console.log(typeof selectedValue);
-    const sentBody = {
-      products: {
-        [`${this.product.id}`]: selectedValue,
-      },
-    };
     // console.log('this is sentbody :');
     // console.log(sentBody);
 
@@ -79,28 +95,32 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     //     console.log(res);
     //     this.toaster.success('Product Added To Cart', 'success');
     //   });
-    this.cartService.addItemToCart(sentBody);
-    this.toaster.success('Product Added To Cart', 'success');
   }
 
   addToWishlist(div: HTMLDivElement) {
-    const sentBody: Object = {
-      products: [this.product.id],
-    };
-    if (this.currentWishlist.includes(this.product.id)) {
-      this.wishlistService.deleteItemFromWishlist({
-        products: this.product.id,
-      });
-      this.toaster.error('Product removed from Wishlist', 'Error');
-      div.innerHTML = `<i class="fa-regular fa-heart fs-6 text-danger"></i>`;
-      this.currentWishlist = this.currentWishlist.filter(
-        (item) => item !== this.product.id
-      );
-    } else {
-      this.wishlistService.addItemToWishlist(sentBody);
-      this.toaster.success('Product added to Wishlist', 'Added');
-      this.currentWishlist.push(this.product.id);
-      div.innerHTML = `<i class="fa-solid fa-heart fs-6 "></i>`;
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
+    }else{
+      const sentBody: Object = {
+        products: [this.product.id],
+      };
+      if (this.currentWishlist.includes(this.product.id)) {
+        this.wishlistService.deleteItemFromWishlist({
+          products: this.product.id,
+        });
+        this.toaster.error('Product removed from Wishlist', 'Error');
+        div.innerHTML = `<i class="fa-regular fa-heart fs-6 text-danger"></i>`;
+        this.currentWishlist = this.currentWishlist.filter(
+          (item) => item !== this.product.id
+        );
+      } else {
+        this.wishlistService.addItemToWishlist(sentBody);
+        this.toaster.success('Product added to Wishlist', 'Added');
+        this.currentWishlist.push(this.product.id);
+        div.innerHTML = `<i class="fa-solid fa-heart fs-6 "></i>`;
+      }
     }
+   
   }
 }

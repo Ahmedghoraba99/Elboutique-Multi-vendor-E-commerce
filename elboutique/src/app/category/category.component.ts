@@ -9,6 +9,7 @@ import { ProductCategoryService } from '../service/product-category.service';
 import { FormsModule } from '@angular/forms';
 import { WishlistService } from '../service/wishlist.service';
 import { CartService } from '../service/cart.service';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-category',
@@ -32,20 +33,22 @@ export class CategoryComponent implements OnInit {
   id: string | null;
   userWishlist: any[] = [];
   userCart: any[] = [];
+  isAuthenticated = false;
+
   constructor(
     private route: ActivatedRoute,
     private categoryService: ProductCategoryService,
     private toast: ToastrService,
     private cartService: CartService,
-    private wishlisteService: WishlistService
+    private wishlisteService: WishlistService,
+    private authService: AuthService,
+    private toaster: ToastrService,
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((queryParams) => {
-      // console.log('*****************');
-
       const name = queryParams.get('name');
       if (name) {
         const paramObject = { name };
@@ -62,16 +65,13 @@ export class CategoryComponent implements OnInit {
       }
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      // console.log('Data from wishlist: ', data);
       data.forEach((item: { id: any }) => {
         this.userWishlist.push(item.id);
       });
     });
     this.cartService.getCartData().subscribe((data) => {
-      // console.log('Data from cart: ', data);
       data.forEach((item: { id: any }) => {
         this.userCart.push(item.id);
-        // console.log(this.userCart);
       });
     });
   }
@@ -130,18 +130,29 @@ export class CategoryComponent implements OnInit {
   }
 
   toggleCart(event: Event, id: number): void {
-    if ((event.target as HTMLInputElement).checked) {
-      this.addToCart(id);
-    } else {
-      this.removeFromCart(id);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
+    }else {
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToCart(id);
+      } else {
+        this.removeFromCart(id);
+      }
     }
   }
 
   toggleWishList(event: Event, id: number): void {
-    if ((event.target as HTMLInputElement).checked) {
-      this.addToWishlist(id);
-    } else {
-      this.removeFromWishlist(id);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
+    }else {
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToWishlist(id);
+      } else {
+        this.removeFromWishlist(id);
+      }
+
     }
   }
 
