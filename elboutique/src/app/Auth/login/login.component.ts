@@ -87,8 +87,9 @@ export class LoginComponent {
 
   handleSuccess(response: any) {
     this.nextStep();
-    localStorage.setItem('user_info', JSON.stringify(response));
-    console.log(response);
+    // TODO: Link to service
+    this.authService.updateAuthStatus(true);
+
     if (response.role === 'admin') {
       this.showToastMessage(
         'Welcome! Redirecting to admin dashboard...',
@@ -106,14 +107,18 @@ export class LoginComponent {
 
     setTimeout(() => {
       if (response.role === 'admin') {
-        this.router.navigateByUrl('/dashboard');
-      } else if (response.role === 'vendor') {
-        this.router.navigateByUrl('/v');
-      } else this.router.navigateByUrl('/');
+        // this.router.navigateByUrl('/dashboard');
+        window.location.href = '/dashboard';
+      } else if (response.role == 'vendor') {
+        window.location.href = '/dashboard';
+        // this.router.navigateByUrl('/v');
+      }
+      // else this.router.navigateByUrl('/');
+      else window.location.href = '/';
     }, 3000);
   }
   handleError(error: any) {
-    console.log(error)
+    console.log(error);
     this.showToastMessage('Login failed. Please try again.', 'Error');
   }
 
