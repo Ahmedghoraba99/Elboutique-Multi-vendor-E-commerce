@@ -1,0 +1,49 @@
+<div
+  class="modal fade"
+  id="tages"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Add Tage
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div *ngIf="tags.data.length > 0">
+            <div *ngFor="let tag of tags.data; let i = index" class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [id]="'flexCheck' + i"
+                [(ngModel)]="tag.selected"
+              />
+              <label class="form-check-label" [for]="'flexCheck' + i">
+                {{ tag.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" (click)="submitTags()">
+          Add Tags
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

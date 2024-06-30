@@ -139,7 +139,7 @@ Route::get('customers/{customer}', [CustomerController::class, 'show']);
 
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
-
+Route::post('products/tages',[ProductController::class, 'storeProductTags']);
 
 Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -147,7 +147,7 @@ Route::get('categories', [CategoryController::class, 'index'])->name('categories
 
 Route::get('tags/{tag}', [TagController::class, 'show'])->name('tags.show');
 Route::get('tags', [TagController::class, 'index'])->name('tags.index');
-
+Route::get('tages/product/{id}',[TagController::class , 'getAllTags']);
 
 
 // Product related

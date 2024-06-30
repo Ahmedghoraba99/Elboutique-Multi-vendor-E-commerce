@@ -7,7 +7,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { AddSaleComponent } from './add-sale/add-sale.component';
+import { TageProductComponent } from './tage-product/tage-product.component';
 declare const bootstrap: any;
+
 
 
 @Component({
@@ -15,7 +18,7 @@ declare const bootstrap: any;
   standalone: true,
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
-  imports: [CommonModule, ReactiveFormsModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule,RouterLink,AddSaleComponent,TageProductComponent],
 })
 export class ProductsComponent implements OnInit  {
   products: any[] = [];
@@ -23,6 +26,7 @@ export class ProductsComponent implements OnInit  {
   editingIndex: number | null = null;
   userInfo: string | null = localStorage.getItem('user_info');
   user_id: number = 0;
+  product_id: number = 0;
 
   constructor(
     private VendorProdcutService: VendorProdcutService,
@@ -109,5 +113,10 @@ export class ProductsComponent implements OnInit  {
     )
   }
 
+  changeProductId(id:number){
+    this.product_id = id;
+    console.log(this.product_id);
+
+  }
 
 }

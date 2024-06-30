@@ -5,7 +5,9 @@ namespace App\Http\Controllers\tag;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
+use App\Models\Product;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
@@ -21,6 +23,23 @@ class TagController extends Controller
             ], 404);
         }
         return response()->json($tags);
+    }
+
+    public function getAllTags(Request $request, $product_id = null)
+    {
+        $tags = Tag::all();
+
+        if ($product_id) {
+            $product = Product::findOrFail($product_id);
+            $tags->each(function ($tag) use ($product) {
+                $tag->selected = $product->tags->contains($tag);
+            });
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $tags,
+        ], 200);
     }
 
     /**
