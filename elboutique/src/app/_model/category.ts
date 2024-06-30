@@ -1,3 +1,5 @@
+
+
 export interface Category {
   id: number,
   name: string
@@ -12,12 +14,22 @@ export interface Attributes{
   value:string
 }
 
+export interface Tages{
+  id:number,
+  name:string,
+}
+
 export interface Product{
   id: number,
   name: string,
   description: string,
   price: number,
+  stock: number,
+  sale:number
   category: Category
   images: Image[],
-  attributes:Attributes[]
+  attributes:Attributes[],
+  tages:Tages[]
 }
+
+

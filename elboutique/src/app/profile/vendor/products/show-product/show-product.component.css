@@ -1,0 +1,11 @@
+#carouselExampleInterval{
+  width: 500px !important;
+  height: 500px !important
+}
+.carousel-item{
+  text-align: center;
+}
+.carousel-item img{
+  width: 500px !important;
+  height: 500px;
+}

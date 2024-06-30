@@ -25,6 +25,12 @@ export class TagesService {
     );
   }
 
+  getTagesByProductId(productId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}products/tages/${productId}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any): Observable<never> {
     console.error('An error occurred', error);
     throw error;
