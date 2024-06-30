@@ -36,5 +36,10 @@ export class DashboardComponent {
       icon: '<i class="fa-solid fa-receipt"></i>',
       name: 'Orders',
     },
+    {
+      path: 'reports',
+      icon: '<i class="fa-solid fa-circle-exclamation"></i>',
+      name: 'Reports',
+    },
   ];
 }

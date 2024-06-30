@@ -26,7 +26,9 @@
                   <input
                     class="like"
                     type="checkbox"
+                    [checked]="isInWishlist(product.id)"
                     title="Wishlist"
+                    (change)="toggleWishList($event, product.id)"
                   />
                   <div class="checkmark">
                     <svg
@@ -90,7 +92,8 @@
                             class="like-cart"
                             type="checkbox"
                             title="Cart"
-                         
+                            [checked]="isInCart(product.id)"
+                            (change)="toggleCart($event, product.id)"
                           />
                           <div class="checkmark-cart">
                             <svg

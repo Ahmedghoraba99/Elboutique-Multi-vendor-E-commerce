@@ -37,6 +37,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { authGuardGuard } from './_guards/auth.guard';
 import { AddProductComponent } from './profile/vendor/products/add-product/add-product.component';
 import { UpdateProductComponent } from './profile/vendor/products/update-product/update-product.component';
+import { WelcomeComponent } from './dashboard/products/welcome/welcome.component';
+import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
 
 export const routes: Routes = [
   {
@@ -121,7 +123,31 @@ export const routes: Routes = [
       {
         path: 'products',
         title: 'Products',
-        component: ProductsComponent,
+        component: WelcomeComponent,
+
+        children: [
+          {
+            path: '',
+            redirectTo: 'products',
+            pathMatch: 'full',
+          },
+          {
+            path: '',
+            title: 'Products',
+            component: ProductsComponent,
+          },
+
+          {
+            path: 'new',
+            title: 'New Product',
+            component: AddProductComponent,
+          },
+          {
+            path: 'edit/:id',
+            title: 'Update Product',
+            component: UpdateProductComponent,
+          },
+        ],
       },
       {
         path: 'orders',
@@ -132,6 +158,11 @@ export const routes: Routes = [
         path: 'categories',
         title: 'Categories',
         component: VendorCategoryComponent,
+      },
+      {
+        path: 'reports',
+        title: 'Reports',
+        component: ReviewReportsComponent,
       },
     ],
   },
@@ -253,12 +284,12 @@ export const routes: Routes = [
       {
         path: 'products/add',
         title: 'Add Product',
-        component: AddProductComponent
+        component: AddProductComponent,
       },
       {
         path: 'products/edit/:id',
         title: 'Edit Product',
-        component: UpdateProductComponent
+        component: UpdateProductComponent,
       },
       {
         path: 'account',
