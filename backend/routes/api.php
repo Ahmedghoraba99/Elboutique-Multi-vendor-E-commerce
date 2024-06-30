@@ -11,6 +11,7 @@ use App\Http\Controllers\customer\CustomerAddressController;
 use App\Http\Controllers\customer\CustomerPhoneController;
 use App\Http\Controllers\order\OrderController;
 use App\Http\Controllers\category\CategoryController;
+use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\tag\TagController;
 use App\Http\Controllers\product\ProductController;
 
@@ -20,7 +21,7 @@ use App\Http\Controllers\vendor\VendorController;
 use App\Http\Controllers\VendorReceivablesController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\wishlist\WishlistController;
-use App\Http\Controllers\PayPalController;
+ 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Payment\GetwayCheckoutController;
@@ -56,12 +57,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
 
-    //cart endpoint
-    // Route::post('/customer/addCart/{id}', [CartController::class, 'attachProductToCustomerCart']);
-    // Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
-    // Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
-    // Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
-
+    
 
     Route::apiResource('tags', TagController::class);
     Route::apiResource('categories', CategoryController::class);
@@ -184,9 +180,7 @@ Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment
 
 Route::post('/getway-checkout/processed',[PaymentController::class, 'checkout_processed']);
 Route::get('/checkout/response', function (Request $request) {
+    redirect(config('frontend_url') . '/checkout'.'?success=true');
     return $request->all() ;
-     
-    // return redirect()->route('home')->with('success', 'Payment successful!');
-    
 });
 Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
