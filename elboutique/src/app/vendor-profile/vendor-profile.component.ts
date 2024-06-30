@@ -13,11 +13,11 @@ import { WishlistService } from '../service/wishlist.service';
 import { CartService } from '../service/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../service/auth.service';
-
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-vendor-profile',
   standalone: true,
-  imports: [FontAwesomeModule, RouterLink, NgIf, NgFor],
+  imports: [ CommonModule,FontAwesomeModule, RouterLink, NgIf, NgFor],
   templateUrl: './vendor-profile.component.html',
   styleUrl: './vendor-profile.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
