@@ -264,6 +264,9 @@
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.125);
   color: #ffff;
-  padding: 0.4rem 0.5rem;
+  padding: 0.4rem ;
   margin: 0;
+}
+.products-tag span{
+  font-size: 0.9rem;
 }
