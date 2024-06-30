@@ -10,22 +10,23 @@ use PayMob\Facades\PayMob;
 class PayMobController extends Controller
 {
     public static function pay(float $total ,int $order_Id){
+         
         $auth = PayMob::AuthenticationRequest();
-        // dd($auth->token);
+         
         $order = PayMob::OrderRegistrationAPI([
             'auth_token' => $auth->token,
-            'amount_cents' => $total * 100, //put your price
+            'amount_cents' => $total * 100,  
             'currency' => 'EGP',
-            'delivery_needed' => false, // another option true
-            'merchant_order_id' => $order_Id, //put order id from your database must be unique id
-            'items' => [] // all items information or leave it empty
+            'delivery_needed' => false,  
+            'merchant_order_id' => $order_Id,  
+            'items' => []  
         ]);
         $PaymentKey = PayMob::PaymentKeyRequest([
             'auth_token' => $auth->token,
-            'amount_cents' => $total * 100, //put your price
+            'amount_cents' => $total * 100,  
             'currency' => 'EGP',
             'order_id' => $order->id,
-            "billing_data" => [ // put your client information
+            "billing_data" => [  
                 "apartment" => "803",
                 "email" => "claudette09@exa.com",
                 "floor" => "42",
