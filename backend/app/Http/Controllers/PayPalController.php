@@ -17,7 +17,7 @@ class PayPalController extends Controller
 
     public function createPayment(Request $request)
     {
-        $invoiceId = 1;
+       
         $data = $this->getPaymentData($request);
 
         $response = $this->payPalService->createPayment($data);
@@ -70,8 +70,10 @@ class PayPalController extends Controller
 
     private function getFrontendUrl()
     {
-        return env('FRONTEND_URL', 'http://localhost:4200') . '/checkout';
+   
+        return config('frontend_url') . '/checkout';
     }
+
 
     private function isPaymentSuccessful($response)
     {

@@ -41,9 +41,11 @@
           <div class="product-description-amount">
             <span>Amount</span>
             <select class="m-3" name="" id="" #select>
-              @for(item of getStock(product.stock) ; track $index ){
-              <option value="{{ item }}">{{ item }}</option>
-              }
+              @for(item of getStock(product.stock).slice(0, 5) ; track $index ){
+                  <option value="{{ item }}">{{ item }}</option>
+
+                }
+    
             </select>
             <span
               [ngClass]="{
