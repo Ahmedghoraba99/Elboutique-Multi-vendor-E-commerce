@@ -12,6 +12,8 @@ import { NgFor, NgIf } from '@angular/common';
 import { WishlistService } from '../service/wishlist.service';
 import { CartService } from '../service/cart.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../service/auth.service';
+
 @Component({
   selector: 'app-vendor-profile',
   standalone: true,
@@ -25,13 +27,16 @@ export class VendorProfileComponent {
   vendor: any = {};
   userWishlist: any[] = [];
   userCart: any[] = [];
+  isAuthenticated = false;
 
   constructor(
     private vendorPortofolio: VendorPortofolioService,
     private route: ActivatedRoute,
     private toast: ToastrService,
     private cartService: CartService,
-    private wishlisteService: WishlistService
+    private wishlisteService: WishlistService,
+    private authService: AuthService,
+    private toaster: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -55,31 +60,41 @@ export class VendorProfileComponent {
         this.userCart.push(item.id);
       });
     });
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
   }
   faLocationDot = faLocationDot;
   faPhone = faPhone;
   faEnvelope = faEnvelope;
 
   toggleCart(event: Event, id: number): void {
-    if ((event.target as HTMLInputElement).checked) {
-      this.addToCart(id);
-    } else {
-      this.removeFromCart(id);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
+    }else {
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToCart(id);
+      } else {
+        this.removeFromCart(id);
+      }
     }
   }
 
   toggleWishList(event: Event, id: number): void {
-    if ((event.target as HTMLInputElement).checked) {
-      this.addToWishlist(id);
-    } else {
-      this.removeFromWishlist(id);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
+    }else{
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToWishlist(id);
+      } else {
+        this.removeFromWishlist(id);
+      }
     }
   }
 
   isInWishlist(id: number): boolean {
-    // console.log("**************");
-    // console.log(this.userWishlist.includes(id));
-
     return this.userWishlist.includes(id);
   }
 
