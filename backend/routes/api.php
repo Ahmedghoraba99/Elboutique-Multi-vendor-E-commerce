@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\API\Payment\PaymentController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\cart\CartController;
 use App\Http\Controllers\customer\CustomerController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\tag\TagController;
 use App\Http\Controllers\product\ProductController;
 
 use App\Http\Controllers\order\OrderProductController;
+ 
 use App\Http\Controllers\vendor\VendorController;
 use App\Http\Controllers\VendorReceivablesController;
 use App\Http\Controllers\VerificationController;
@@ -21,7 +23,7 @@ use App\Http\Controllers\wishlist\WishlistController;
 use App\Http\Controllers\PayPalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Payment\GetwayCheckoutController;
 
 
 
@@ -177,3 +179,14 @@ Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name(
 Route::post('payment', [PayPalController::class, 'createPayment'])->name('payment');
 Route::get('payment/success', [PayPalController::class, 'success'])->name('payment.success');
 Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment.cancel');
+
+
+
+Route::post('/getway-checkout/processed',[PaymentController::class, 'checkout_processed']);
+Route::get('/checkout/response', function (Request $request) {
+    return $request->all() ;
+     
+    // return redirect()->route('home')->with('success', 'Payment successful!');
+    
+});
+Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
