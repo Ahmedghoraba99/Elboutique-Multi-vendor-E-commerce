@@ -47,7 +47,9 @@
         </div>
         <div class="d-flex">
           <p>{{ product.price }} EGP</p>
-          <p class="ms-3 fw-bold">x{{ product.quantity }} <span>1</span></p>
+          <p class="ms-3 fw-bold">
+            x <span>{{ product.pivot.quantity }}</span>
+          </p>
           @if (order.status === "arrived") {
           <i
             class="ms-3 fa-regular fa-flag fs-5 report-flag"

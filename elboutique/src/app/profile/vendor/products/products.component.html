@@ -1,6 +1,6 @@
 <div class="h6 text-uppercase">Products</div>
 <hr class="hr">
-<div class="container">
+<div class="container mb-2">
   <div class="row height d-flex justify-content-center align-items-center">
     <div class="col-md-8">
       <div class="search">
@@ -11,11 +11,15 @@
   </div>
 </div>
 
-<div class="custom-btn-1 my-3 " [routerLink]="['/v/products', 'add']">
+
+
+<div class="custom-btn-1 my-3" (click)="navigateToAddProduct()">
   Add new product
 </div>
 
-<div class="table-responsive  ">
+
+@if (filteredProducts.length > 0) {
+  <div class="table-responsive  ">
     <table class="table">
         <thead>
             <tr >
@@ -29,51 +33,61 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let product of filteredProducts; let i = index">
-                <th scope="row">{{ i + 1 }}</th>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description }}</td>
-                <td>{{ product.price | currency }}</td>
-                <td>{{ getCategoryName(product.category_id) }}</td>
-                <td>{{ product.stock }}</td>
-                <td>
+          <tr *ngFor="let product of filteredProducts; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ product.name }}</td>
+              <td>{{ product.description }}</td>
+              <td>{{ product.price | currency }}</td>
+              <td>{{ getCategoryName(product.category_id) }}</td>
+              <td>{{ product.stock }}</td>
+              <td>
+                @if(currentVendor.data.active === 'true'){
+                <!-- show -->
+                <button type="button" class="btn btn-success btn-sm me-2" (click)="navigateToProductPage('/v/products/show', product.id)">
+                  <i class="fa-solid fa-eye"></i>
+                  <span class="visually-hidden">Show</span>
+                </button>
 
-                  <!-- show -->
-                  <button type="button" class="btn btn-success btn-sm me-2" [routerLink]="['/v/products/edit', product.id]">
-                    <i class="fa-solid fa-eye"></i>
-                    <span class="visually-hidden">Show</span>
-                  </button>
+                <!-- update -->
+                <button type="button" class="btn btn-warning btn-sm me-2" (click)="navigateToProductPage('/v/products/show', product.id)">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  <span class="visually-hidden">Edit</span>
+                </button>
 
-                  <!-- update -->
-                  <button type="button" class="btn btn-warning btn-sm me-2" [routerLink]="['/v/products/edit', product.id]">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <span class="visually-hidden">Edit</span>
-                  </button>
+                <!-- delete -->
+                <button type="button" class="btn btn-danger btn-sm me-2" (click)="confirmDelete(product.id)">
+                  <i class="fa-solid fa-trash"></i>
+                  <span class="visually-hidden">Delete</span>
+                </button>
 
-                  <!-- delete -->
-                  <button type="button" class="btn btn-danger btn-sm me-2" (click)="confirmDelete(product.id)">
-                    <i class="fa-solid fa-trash"></i>
-                    <span class="visually-hidden">Delete</span>
-                  </button>
-
-                  <!-- Sale -->
-                  <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#addSale">
-                    <!-- <i class="fa-brands fa-salesforce"></i> -->
-                    <span class="">Sale</span>
-                  </button>
+                <!-- Sale -->
+                <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#addSale">
+                  <!-- <i class="fa-brands fa-salesforce"></i> -->
+                  <span class="">Sale</span>
+                </button>
 
 
-                  <!-- tages -->
-                  <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#tages">
-                    <i class="fa-solid fa-tags"></i>
-                    <span class="visually-hidden">tages</span>
-                  </button>
+                <!-- tages -->
+                <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#tages">
+                  <i class="fa-solid fa-tags"></i>
+                  <span class="visually-hidden">tages</span>
+                </button>
+              }@else {
+                <tr>
+                  <td class="text-danger text-center">You are Not Active Know Cant Make any thing on Product</td>
+                </tr>
+              }
 
-                </td>
-            </tr>
+              </td>
+          </tr>
+
         </tbody>
     </table>
 </div>
+}@else {
+  <h3 class="text-center mb-3">No products found.</h3>
+}
+
 
 <app-add-sale [productId]="product_id"></app-add-sale>
 <app-tage-product [product_id]="product_id"></app-tage-product>

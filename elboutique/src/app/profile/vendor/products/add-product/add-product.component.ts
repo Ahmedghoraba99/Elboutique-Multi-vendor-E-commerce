@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import { VendorCatgoriesService } from '../../../../service/vendor/categories.service';
 import { Category } from '../../../../_model/category';
 
+
 @Component({
   selector: 'app-add-product',
   standalone: true,
@@ -30,7 +31,7 @@ export class AddProductComponent implements OnInit {
     private fb: FormBuilder,
     private vendorAddProductService: VendorAddProductService,
     private router: Router,
-    private categoryService: VendorCatgoriesService
+    private categoryService: VendorCatgoriesService,
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],

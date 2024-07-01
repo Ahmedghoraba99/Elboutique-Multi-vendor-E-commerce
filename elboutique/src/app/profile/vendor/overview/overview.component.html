@@ -1,14 +1,60 @@
 <div class="overview">
+  <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="h6 text-uppercase">Overview</div>
-    <hr class="hr">
-    <div class="row">
-        <div class="col">
-            <p class="m-0">$565262</p>
-            <h6 class="m-0">Total Earnings</h6>
-        </div>
-        <div class="col">
-            <p class="m-0">565</p>
-            <h6 class="m-0">Total Products</h6>
-        </div>
-    </div>
+    <button class="btn btn-primary float-end"  data-bs-toggle="modal" data-bs-target="#logout">logout</button>
+  </div>
+  <hr class="hr">
+  <div class="row">
+      <div class="col">
+          <p class="m-0">{{ vendorReceivables?.data?.amount | currency }}</p>
+          <h6 class="m-0">Total Receivables</h6>
+      </div>
+      <div class="col">
+          <p class="m-0">565</p>
+          <h6 class="m-0">Total Products</h6>
+      </div>
+  </div>
 </div>
+
+
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="logout"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Logout
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">Are You Sure to logout ...?</div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-danger" (click)="logout()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
 import { Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ import { Router, RouterLink } from '@angular/router';
     RouterLink,
   ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
+  private loginSubscriptions!: Subscription;
   currentStep = 0;
   loginForm: FormGroup;
   showToast = false;
@@ -73,10 +75,12 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { userType, email, password } = this.loginForm.value;
-      this.authService.login(email, password, userType).subscribe({
-        next: (response: any) => this.handleSuccess(response),
-        error: (error: any) => this.handleError(error),
-      });
+      this.loginSubscriptions = this.authService
+        .login(email, password, userType)
+        .subscribe({
+          next: (response: any) => this.handleSuccess(response),
+          error: (error: any) => this.handleError(error),
+        });
     } else {
       this.showToastMessage(
         'Please fill out the form correctly',
@@ -87,8 +91,9 @@ export class LoginComponent {
 
   handleSuccess(response: any) {
     this.nextStep();
-    localStorage.setItem('user_info', JSON.stringify(response));
-    console.log(response);
+    // TODO: Link to service
+    this.authService.updateAuthStatus(true);
+
     if (response.role === 'admin') {
       this.showToastMessage(
         'Welcome! Redirecting to admin dashboard...',
@@ -106,14 +111,18 @@ export class LoginComponent {
 
     setTimeout(() => {
       if (response.role === 'admin') {
-        this.router.navigateByUrl('/dashboard');
-      } else if (response.role === 'vendor') {
-        this.router.navigateByUrl('/v');
-      } else this.router.navigateByUrl('/');
+        // this.router.navigateByUrl('/dashboard');
+        window.location.href = '/dashboard';
+      } else if (response.role == 'vendor') {
+        window.location.href = '/v';
+        // this.router.navigateByUrl('/v');
+      }
+      // else this.router.navigateByUrl('/');
+      else window.location.href = '/';
     }, 3000);
   }
   handleError(error: any) {
-    console.log(error)
+    console.log(error);
     this.showToastMessage('Login failed. Please try again.', 'Error');
   }
 
@@ -124,5 +133,10 @@ export class LoginComponent {
     setTimeout(() => {
       this.showToast = false;
     }, 5000);
+  }
+  ngOnDestroy() {
+    if (this.loginSubscriptions) {
+      this.loginSubscriptions.unsubscribe();
+    }
   }
 }

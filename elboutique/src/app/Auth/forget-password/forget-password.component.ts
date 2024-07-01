@@ -1,24 +1,16 @@
-import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
-import { CommonModule } from '@angular/common';
-import { ToastComponent } from '../../widgets/toast/toast.component';
-import { NavComponent } from '../nav/nav.component';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forget-password',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ToastComponent, NavComponent],
   templateUrl: './forget-password.component.html',
-  styleUrl: './forget-password.component.css',
+  styleUrls: ['./forget-password.component.css'],
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnDestroy {
+  private forgotPasswordSubscriptions!: Subscription;
   forgotPasswordForm: FormGroup;
   showToast = false;
   toastMessage = '';
@@ -37,10 +29,13 @@ export class ForgotPasswordComponent {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       const { email } = this.forgotPasswordForm.value;
-      this.authService.forgotPassword(email).subscribe({
-        next: (response: any) => this.handleSuccess(response),
-        error: (error: any) => this.handleError(error),
-      });
+
+      this.forgotPasswordSubscriptions = this.authService
+        .forgotPassword(email)
+        .subscribe({
+          next: (response: any) => this.handleSuccess(response),
+          error: (error: any) => this.handleError(error),
+        });
     } else {
       this.showToastMessage('Please enter a valid email', 'Validation Error');
     }
@@ -64,7 +59,7 @@ export class ForgotPasswordComponent {
       );
     } else if (error.status == 400) {
       this.showToastMessage(
-        ' We alrady sent link to your Email Please check your inbox.',
+        ' We already sent link to your Email Please check your inbox.',
         'Error'
       );
     }
@@ -77,5 +72,9 @@ export class ForgotPasswordComponent {
     setTimeout(() => {
       this.showToast = false;
     }, 5000);
+  }
+
+  ngOnDestroy() {
+    this.forgotPasswordSubscriptions.unsubscribe();
   }
 }

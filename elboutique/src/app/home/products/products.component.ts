@@ -6,6 +6,8 @@ import { RouterLink } from '@angular/router';
 import { WishlistService } from '../../service/wishlist.service';
 import { CartService } from '../../service/cart.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../service/auth.service';
+
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -20,28 +22,43 @@ export class ProductsComponent {
   products: any[] = [];
   userWishlist: any[] = [];
   userCart: any[] = [];
+
+  isAuthenticated = false;
+
   ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
     this.homeService.getFeaturedProducts().subscribe((data) => {
       this.products = data;
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userWishlist.push(item.id);
-      });
+      if (data) {
+        data.forEach((item: { id: any }) => {
+          this.userWishlist.push(item.id);
+        });
+      }
     });
     this.cartService.getCartData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userCart.push(item.id);
-      });
+      if (data) {
+        data.forEach((item: { id: any }) => {
+          this.userCart.push(item.id);
+        });
+      }
     });
   }
   constructor(
     private toast: ToastrService,
     private cartService: CartService,
-    private wishlisteService: WishlistService){}
-
+    private wishlisteService: WishlistService,
+    private authService: AuthService
+  ) {}
 
   toggleCart(event: Event, id: number): void {
+    if (!this.isAuthenticated) {
+      this.toast.warning('Please login first', 'Not Authenticated');
+      return;
+    }
     if ((event.target as HTMLInputElement).checked) {
       this.addToCart(id);
     } else {
@@ -50,6 +67,10 @@ export class ProductsComponent {
   }
 
   toggleWishList(event: Event, id: number): void {
+    if (!this.isAuthenticated) {
+      this.toast.warning('Please login first', 'Not Authenticated');
+      return;
+    }
     if ((event.target as HTMLInputElement).checked) {
       this.addToWishlist(id);
     } else {
@@ -58,8 +79,6 @@ export class ProductsComponent {
   }
 
   isInWishlist(id: number): boolean {
-  
-
     return this.userWishlist.includes(id);
   }
 

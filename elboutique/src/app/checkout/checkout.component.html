@@ -35,7 +35,6 @@
                             }
                           </swiper-container>
                         </a>
-                     
                       </div>
                     </div>
                   </div>
@@ -70,10 +69,8 @@
                               <span class="me-2">Quantity:</span>
                               <select
                                 #select
-                                class="form-select w-25"
-                                (change)="update(product, +select.value)"
-                              >
-                                @for(item of getstock(product.stock) ; track
+                                class="form-select w-25" (change)="update(product, + select.value)"     >
+                                @for(item of getstock(product.stock).slice(0, 5) ; track
                                 $index){ @if(item ==
                                 product.cart_table.quantity){
                                 <option selected value="{{ item }}">
@@ -161,7 +158,7 @@
                     >
                   </div>
                 </div>
-
+                <!-- <app-summary-order></app-summary-order> -->
                 <div class="checkout-btn text-center my-4">
                   <button class="btn" type="submit" (click)="CreateOrder()">
                     ckeckout
@@ -189,12 +186,21 @@
       </div>
     </div>
     <div class="wishList-section px-2 py-4 my-5" *ngIf="!isAuthenticated">
-      <h3 class="text-center text-capitalize my-3">
-        Please login first to use this feature
-      </h3>
-      <button class="btn btn-primary p3 mx-auto d-block">
-        <a routerLink="/login" class="text-light fw-medium">Login</a>
-      </button>
+      <div class="container my-5">
+        <div class="row justify-content-center align-items-center">
+          <img
+            src="../../../assets/images/login-access-protection-vector.jpg"
+            alt=""
+            class="img-fluid img-login"
+          />
+          <h3 class="text-center text-capitalize my-3 wishlist-h3">
+            Please login first to use this feature
+          </h3>
+          <button class="btn btn-primary p3 mx-auto d-block login-btn">
+            <a routerLink="/login" class="text-light fw-medium">Login</a>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

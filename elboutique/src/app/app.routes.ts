@@ -38,6 +38,7 @@ import { authGuardGuard } from './_guards/auth.guard';
 import { AddProductComponent } from './profile/vendor/products/add-product/add-product.component';
 import { UpdateProductComponent } from './profile/vendor/products/update-product/update-product.component';
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
+import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
 
 export const routes: Routes = [
   {
@@ -49,8 +50,8 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, data: { title: 'Login' } },
       {
         path: 'wishlist',
-        component: WishListComponent,
-        data: { title: 'WishList' },
+        loadChildren: () =>
+          import('./wish-list/wish-list.module').then((m) => m.WishListModule),
       },
       {
         path: 'products/:id',
@@ -62,11 +63,12 @@ export const routes: Routes = [
         component: CheckoutComponent,
         data: { title: 'Checkout' },
       },
-      // { path: 'categories', component: CategoryComponent, data: { title: 'Category' } },
       {
         path: 'categories/:id',
-        component: CategoryComponent,
         data: { title: 'Category' },
+        // component: CategoryComponent,
+        loadChildren: () =>
+          import('./category/category.module').then((m) => m.CategoryModule),
       },
       {
         path: 'vendor/:id',
@@ -147,36 +149,13 @@ export const routes: Routes = [
     component: LoginComponent,
     canActivate: [authGuard],
   },
-  // ,
-  // {
-  //   path: 'wishlist',
-  //   title: 'WishList',
-  //   component: WishListComponent,
-  // },
-  // {
-  //   path: 'products/:id',
-  //   title: 'Details',
-  //   component: CartComponent,
-  // },
-  // {
-  //   path: 'checkout',
-  //   title: 'Checkout',
-  //   component: CheckoutComponent,
-  // },
-  // {
-  //   path: 'categories/:id',
-  //   title: 'Category',
-  //   component: CategoryComponent,
-  // },
-  // {
-  //   path: 'vendor/:id',
-  //   title: 'Vendor Profile',
-  //   component: VendorProfileComponent,
-  // },
   {
     path: 'login/forget-password',
     title: 'ForgetPassword',
-    component: ForgotPasswordComponent,
+    loadChildren: () =>
+      import('./Auth/forget-password/forget-password.module').then(
+        (m) => m.ForgetPasswordModule
+      ),
   },
   {
     path: 'register',
@@ -265,6 +244,11 @@ export const routes: Routes = [
         path: 'products/edit/:id',
         title: 'Edit Product',
         component: UpdateProductComponent,
+      },
+      {
+        path: 'products/show/:id',
+        title: 'Show Product',
+        component: ShowProductComponent,
       },
       {
         path: 'account',

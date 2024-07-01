@@ -1,22 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ProductCategoryService } from '../service/product-category.service';
-import { FormsModule } from '@angular/forms';
 import { WishlistService } from '../service/wishlist.service';
 import { CartService } from '../service/cart.service';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-category',
-  standalone: true,
-  imports: [FontAwesomeModule, FormsModule, RouterLink, CommonModule],
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CategoryComponent implements OnInit {
   faChevronRight = faChevronRight;
@@ -32,20 +26,22 @@ export class CategoryComponent implements OnInit {
   id: string | null;
   userWishlist: any[] = [];
   userCart: any[] = [];
+  isAuthenticated = false;
+
   constructor(
     private route: ActivatedRoute,
     private categoryService: ProductCategoryService,
     private toast: ToastrService,
     private cartService: CartService,
-    private wishlisteService: WishlistService
+    private wishlistService: WishlistService,
+    private authService: AuthService,
+    private toaster: ToastrService
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((queryParams) => {
-      // console.log('*****************');
-
       const name = queryParams.get('name');
       if (name) {
         const paramObject = { name };
@@ -61,17 +57,14 @@ export class CategoryComponent implements OnInit {
         this.handleCategoryLoading();
       }
     });
-    this.wishlisteService.getWishlistData().subscribe((data) => {
-      // console.log('Data from wishlist: ', data);
+    this.wishlistService.getWishlistData().subscribe((data) => {
       data.forEach((item: { id: any }) => {
         this.userWishlist.push(item.id);
       });
     });
     this.cartService.getCartData().subscribe((data) => {
-      // console.log('Data from cart: ', data);
       data.forEach((item: { id: any }) => {
         this.userCart.push(item.id);
-        // console.log(this.userCart);
       });
     });
   }
@@ -80,7 +73,6 @@ export class CategoryComponent implements OnInit {
     if (this.id === 'all') {
       this.categoryService.getAllProductsInAll().subscribe((data) => {
         this.setPageParameters(data);
-
         this.title = 'All Products';
       });
     } else if (parseInt(this.id as string)) {
@@ -130,25 +122,32 @@ export class CategoryComponent implements OnInit {
   }
 
   toggleCart(event: Event, id: number): void {
-    if ((event.target as HTMLInputElement).checked) {
-      this.addToCart(id);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
     } else {
-      this.removeFromCart(id);
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToCart(id);
+      } else {
+        this.removeFromCart(id);
+      }
     }
   }
 
   toggleWishList(event: Event, id: number): void {
-    if ((event.target as HTMLInputElement).checked) {
-      this.addToWishlist(id);
+    if (!this.isAuthenticated) {
+      this.toaster.warning('Please login first', 'Not Authenticated');
+      return;
     } else {
-      this.removeFromWishlist(id);
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToWishlist(id);
+      } else {
+        this.removeFromWishlist(id);
+      }
     }
   }
 
   isInWishlist(id: number): boolean {
-    // console.log("**************");
-    // console.log(this.userWishlist.includes(id));
-
     return this.userWishlist.includes(id);
   }
 
@@ -173,14 +172,14 @@ export class CategoryComponent implements OnInit {
   }
 
   private addToWishlist(id: number): void {
-    this.wishlisteService.addItemToWishlist({
+    this.wishlistService.addItemToWishlist({
       products: [id],
     });
     this.toast.success('Product added to wishlist', 'Added');
   }
 
   private removeFromWishlist(id: number): void {
-    this.wishlisteService.deleteItemFromWishlist({
+    this.wishlistService.deleteItemFromWishlist({
       products: id,
     });
     this.toast.error('Product removed from wishlist', 'Removed');
@@ -205,7 +204,6 @@ export class CategoryComponent implements OnInit {
     } else if (event === 'sale') {
       this.products.sort((a, b) => b.sale - a.sale);
     }
-    // this.orderByValue = 'recent';
   }
 
   orderByPrice(event: string): void {
