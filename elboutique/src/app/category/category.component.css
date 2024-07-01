@@ -305,3 +305,9 @@ a {
   top: 9px;
   left: -6px;
 }
+
+::selection {
+  background: var(--accent-color-2);
+  color: #fff;
+  text-shadow: none;
+}
