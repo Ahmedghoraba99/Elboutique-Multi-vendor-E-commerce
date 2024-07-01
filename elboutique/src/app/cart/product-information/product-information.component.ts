@@ -74,7 +74,6 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
     } else {
-    } else {
       const selectedValue = String(select.value);
       const sentBody = {
         products: {
@@ -100,7 +99,6 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    } else {
     } else {
       const sentBody: Object = {
         products: [this.product.id],
