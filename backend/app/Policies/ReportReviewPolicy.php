@@ -30,16 +30,11 @@ class ReportReviewPolicy
      */
     public function create( $user): bool
     {
-        if($user instanceof Admin){
-            return true;
-        }
-        if($user->banned =='true') {
-            return false;
-        }
-        $userReview = $user->reviews()->where('customer_id', $user->id )->exist();
-        return  $userReview == false;
-        
-    //   return  $user  instanceof Admin || ($user->banned =='false'&&$user->);
+       
+         
+ return $user instanceof Admin || (!$user->banned && !$user->reviews->where('customer_id', $user->id)->exists());
+}
+     
     }
 
     /**
