@@ -58,11 +58,10 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     });
 
     this.wishlistService.getWishlistData().subscribe((res: any) => {
-      if (res) {
-        res.forEach((element: any) => {
-          this.currentWishlist.push(element.id);
-        });
-      }
+      console.log('this is wishlist data :', res);
+      res?.forEach((element: any) => {
+        this.currentWishlist.push(element.id);
+      });
     });
   }
 
@@ -74,6 +73,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
+    } else {
     } else {
       const selectedValue = String(select.value);
       const sentBody = {
@@ -100,6 +100,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
+    } else {
     } else {
       const sentBody: Object = {
         products: [this.product.id],

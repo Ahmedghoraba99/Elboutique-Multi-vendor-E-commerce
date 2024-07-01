@@ -109,7 +109,8 @@ class VendorController extends Controller
     {
         return response()->json([
             'message' => 'Vendor Receivables retrieved successfully',
-            'data' => $vendor->vendorReceivables
+            'data' => $vendor->vendorReceivables,
+            'vendor_projects'=>
         ], 200);
 
 
