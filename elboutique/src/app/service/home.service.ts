@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
@@ -35,9 +35,15 @@ export class HomeService {
   }
 
   getAllCategories(): Observable<any> {
-    return this.httpClient
-      .get<any>(`${this.baseUrl}/categories`)
-      .pipe(tap((data) => data));
+    try {
+      const res = this.httpClient
+        .get<any>(`${this.baseUrl}/categories`)
+        .pipe(tap((data) => data));
+      return res;
+    } catch (error) {
+      console.log(error);
+      return of(null);
+    }
   }
 
   constructor() {}

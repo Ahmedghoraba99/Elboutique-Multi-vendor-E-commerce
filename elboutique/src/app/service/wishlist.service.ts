@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,20 +9,28 @@ export class WishlistService {
   private baseUrl = 'http://127.0.0.1:8000/api/customer';
   private userInfo = localStorage.getItem('user_info');
   private userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
+  private userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
 
   private wishlist = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {}
 
   getUserWishlist(): Observable<any> {
-    console.log(this.userID);
-
+    if (!this.userID || this.userRole === 'vendor') {
+      return of(null);
+    }
     return this.http.get(`${this.baseUrl}/showWishlist/${this.userID}`);
   }
   addToUserWishlist(body: Object): Observable<any> {
+    if (!this.userID) {
+      return of(null);
+    }
     return this.http.post(`${this.baseUrl}/addWishlist/${this.userID}`, body);
   }
   deleteFromUserWishlist(body: Object): Observable<any> {
+    if (!this.userID) {
+      return of(null);
+    }
     return this.http.post(
       `${this.baseUrl}/deleteWishlist/${this.userID}`,
       body

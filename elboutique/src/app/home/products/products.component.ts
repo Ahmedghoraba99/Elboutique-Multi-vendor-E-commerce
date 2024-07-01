@@ -33,14 +33,18 @@ export class ProductsComponent {
       this.products = data;
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userWishlist.push(item.id);
-      });
+      if (data) {
+        data.forEach((item: { id: any }) => {
+          this.userWishlist.push(item.id);
+        });
+      }
     });
     this.cartService.getCartData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userCart.push(item.id);
-      });
+      if (data) {
+        data.forEach((item: { id: any }) => {
+          this.userCart.push(item.id);
+        });
+      }
     });
   }
   constructor(
@@ -48,8 +52,7 @@ export class ProductsComponent {
     private cartService: CartService,
     private wishlisteService: WishlistService,
     private authService: AuthService
-  ){}
-
+  ) {}
 
   toggleCart(event: Event, id: number): void {
     if (!this.isAuthenticated) {

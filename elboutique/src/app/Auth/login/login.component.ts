@@ -25,7 +25,7 @@ import { Subscription } from 'rxjs';
     RouterLink,
   ],
 })
-export class LoginComponent implements OnDestroy  {
+export class LoginComponent implements OnDestroy {
   private loginSubscriptions!: Subscription;
   currentStep = 0;
   loginForm: FormGroup;
@@ -135,7 +135,8 @@ export class LoginComponent implements OnDestroy  {
     }, 5000);
   }
   ngOnDestroy() {
-    this.loginSubscriptions.unsubscribe()
+    if (this.loginSubscriptions) {
+      this.loginSubscriptions.unsubscribe();
+    }
   }
-  
 }

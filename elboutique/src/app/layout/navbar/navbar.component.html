@@ -55,7 +55,10 @@
               *ngIf="isAuthenticated"
               [class]="!isAuthenticated ? 'd-none' : ''"
             >
-              <a routerLink="/u/account" class="user-profile">
+              <a
+                [routerLink]="currentUser.active ? '/v/overview' : '/u/account'"
+                class="user-profile"
+              >
                 <img
                   src="{{ currentUser.image_url }}"
                   class="user-profile-img img-fluid"
