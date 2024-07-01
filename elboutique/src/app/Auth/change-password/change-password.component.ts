@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../service/auth.service';
 import { Router } from '@angular/router';
 import { passwordMatchValidator } from '../validators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-change-password',
@@ -17,7 +18,8 @@ import { passwordMatchValidator } from '../validators';
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css'],
 })
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent implements OnInit, OnDestroy {
+  private changePasswordSubscriptions!: Subscription;
   changePasswordForm: FormGroup = new FormGroup({});
   private token = this.getParams('token');
   private email = this.getParams('email');
@@ -59,14 +61,16 @@ export class ChangePasswordComponent implements OnInit {
   onSubmit() {
     if (this.changePasswordForm.valid) {
       const dataObject = this.creatDataObject();
-      this.authService.resetPassword(dataObject).subscribe(
-        (res) => {
-          this.handleSuccess();
-        },
-        (err) => {
-          this.handleError(err);
-        }
-      );
+      this.changePasswordSubscriptions = this.authService
+        .resetPassword(dataObject)
+        .subscribe(
+          (res) => {
+            this.handleSuccess();
+          },
+          (err) => {
+            this.handleError(err);
+          }
+        );
       console.log(this.changePasswordForm.value);
     } else {
       console.log('Form is invalid');
@@ -97,5 +101,8 @@ export class ChangePasswordComponent implements OnInit {
   getParams(param: string) {
     const searchBarParams = new URLSearchParams(window.location.search);
     return searchBarParams.get(param);
+  }
+  ngOnDestroy() {
+    this.changePasswordSubscriptions.unsubscribe();
   }
 }

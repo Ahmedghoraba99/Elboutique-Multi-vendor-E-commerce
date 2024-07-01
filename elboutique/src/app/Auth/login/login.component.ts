@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
 import { Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ import { Router, RouterLink } from '@angular/router';
     RouterLink,
   ],
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy  {
+  private loginSubscriptions!: Subscription;
   currentStep = 0;
   loginForm: FormGroup;
   showToast = false;
@@ -73,10 +75,12 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { userType, email, password } = this.loginForm.value;
-      this.authService.login(email, password, userType).subscribe({
-        next: (response: any) => this.handleSuccess(response),
-        error: (error: any) => this.handleError(error),
-      });
+      this.loginSubscriptions = this.authService
+        .login(email, password, userType)
+        .subscribe({
+          next: (response: any) => this.handleSuccess(response),
+          error: (error: any) => this.handleError(error),
+        });
     } else {
       this.showToastMessage(
         'Please fill out the form correctly',
@@ -130,4 +134,8 @@ export class LoginComponent {
       this.showToast = false;
     }, 5000);
   }
+  ngOnDestroy() {
+    this.loginSubscriptions.unsubscribe()
+  }
+  
 }
