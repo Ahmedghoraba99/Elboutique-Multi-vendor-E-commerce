@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
@@ -6,13 +6,16 @@ import { ProductCategoryService } from '../service/product-category.service';
 import { WishlistService } from '../service/wishlist.service';
 import { CartService } from '../service/cart.service';
 import { AuthService } from '../service/auth.service';
-
+import { Subscription } from 'rxjs';
+import { HomeService } from '../service/home.service';
+import { VendorService } from '../service/admin/vendor.service';
+import { TagesService } from '../service/tages.service';
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements OnInit , OnDestroy {
   faChevronRight = faChevronRight;
   productsPerPage = 10;
   products: any[] = [];
@@ -26,6 +29,12 @@ export class CategoryComponent implements OnInit {
   id: string | null;
   userWishlist: any[] = [];
   userCart: any[] = [];
+  // 
+  sub:Subscription |null = null ;
+  categories :any [] = []  ;
+  vendors :any [] = [];
+  tags: any [] = [] ;
+// 
   isAuthenticated = false;
 
   constructor(
@@ -35,11 +44,18 @@ export class CategoryComponent implements OnInit {
     private cartService: CartService,
     private wishlistService: WishlistService,
     private authService: AuthService,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private HomeService :HomeService ,
+    private VendorService:VendorService ,
+    private TagesService:TagesService
+
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
 
+  ngOnDestroy(): void {
+      this.sub?.unsubscribe;
+  }
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((queryParams) => {
       const name = queryParams.get('name');
@@ -67,6 +83,18 @@ export class CategoryComponent implements OnInit {
         this.userCart.push(item.id);
       });
     });
+    this.sub = this.HomeService.getAllCategories().subscribe(res=>{
+        this.categories = res.data ;
+        // console.log(this.categories)
+    })
+    // this.sub = this.VendorService.getVendors().subscribe(res=>{
+    //   this.vendors =  res;
+    //   console.log(res);
+    // })
+    this.sub = this.TagesService.getAllTags().subscribe(res =>{
+      console.log(res);
+    })
+  
   }
 
   private handleCategoryLoading(): void {

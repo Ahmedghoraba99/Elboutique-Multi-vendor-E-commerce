@@ -23,15 +23,15 @@
               }'
             >
               @for(item of categories ; track item.id){
-              <swiper-slide class="swiper-slide shop-now-swiper-slider">
-                <span>{{ item.name }}</span>
-                <a routerLink="/categories/{{ item.id }}">
-                  <img
-                    src="http://localhost:8000/storage/{{ item.image }}"
-                    alt="{{ item.name }}"
-                  />
-                </a>
-              </swiper-slide>
+                <swiper-slide class="swiper-slide shop-now-swiper-slider">
+                  <span>{{ item.name }}</span>
+                  <a routerLink="/categories/{{ item.id }}">
+                    <img
+                      src="http://localhost:8000/storage/{{ item.image }}"
+                      alt="{{ item.name }}"
+                    />
+                  </a>
+                </swiper-slide>
               }
             </swiper-container>
           </div>

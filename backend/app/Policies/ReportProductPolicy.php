@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\ReportProduct;
-use Illuminate\Auth\Access\Response;
+ 
 
 class ReportProductPolicy
 {

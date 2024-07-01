@@ -12,6 +12,10 @@ export class TagesService {
   private apiUrl = 'http://127.0.0.1:8000/api/';
 
   constructor(private http:HttpClient) { }
+  
+  getAllTags():Observable<Tag>{
+    return this.http.get<Tag>(`${this.apiUrl}tags`);
+  }
 
   getTagesProduct(id:number):Observable<Tag>{
     return this.http.get<Tag>(`${this.apiUrl}tages/product/${id}`).pipe(
