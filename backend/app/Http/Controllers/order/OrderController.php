@@ -69,9 +69,12 @@ class OrderController extends Controller
             return response()->json(['message' => 'Order not found'], 404);
         }
         $this->authorize('update',$order);
+        
         $order->update([
             'customer_id'=>$request->customer_id,
-            "total" => $request->total
+            "total" => $request->total,
+            "payment_status" => $request->payment_status,
+             
         ]);
         return response()->json(['message' => 'Order updated successfully'], 200);
     }

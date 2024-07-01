@@ -39,6 +39,8 @@ import { AddProductComponent } from './profile/vendor/products/add-product/add-p
 import { UpdateProductComponent } from './profile/vendor/products/update-product/update-product.component';
 import { WelcomeComponent } from './dashboard/products/welcome/welcome.component';
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
+import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
+
 
 export const routes: Routes = [
   {
@@ -290,6 +292,11 @@ export const routes: Routes = [
         path: 'products/edit/:id',
         title: 'Edit Product',
         component: UpdateProductComponent,
+      },
+      {
+        path: 'products/show/:id',
+        'title': 'Show Product',
+        component: ShowProductComponent,
       },
       {
         path: 'account',

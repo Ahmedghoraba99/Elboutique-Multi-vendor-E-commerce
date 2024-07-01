@@ -26,14 +26,14 @@ export class WishListContentComponent implements OnInit, OnDestroy {
   faHeartBroken = faHeartBroken;
   faShoppingBasket = faShoppingBasket;
 
-  faHeart=faHeart;
+  faHeart = faHeart;
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
   userCartId: any[] = [];
   // userCart: any = [];
 
-  faTrashCan=faTrashCan;
+  faTrashCan = faTrashCan;
 
   userCart: any = [];
 
@@ -57,39 +57,40 @@ export class WishListContentComponent implements OnInit, OnDestroy {
       .getUserWishlist()
       .subscribe((wishlist) => {
         this.userWishlist = wishlist;
-        console.log(this.userWishlist);
       });
 
     this.cartService.getCartData().subscribe((cart) => {
-      cart.forEach((element: { id: any }) => {
-        this.userCartId.push(element.id);
-      });
+      if (cart) {
+        cart.forEach((element: { id: any }) => {
+          this.userCartId.push(element.id);
+        });
+      }
     });
   }
-  // with the sweetalert 
+  // with the sweetalert
   removeProductFromWishlist(id: number) {
     Swal.fire({
-      title:'Are you sure ?',
-      text:'Do you really want to delete this product from your wishlist ?',
-      icon:'warning',
+      title: 'Are you sure ?',
+      text: 'Do you really want to delete this product from your wishlist ?',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#270949',
       cancelButtonColor: '#f95b3d',
       confirmButtonText: 'Yes, Remove it!',
       cancelButtonText: 'No, keep it',
-    }).then((reult) =>{
-      if (reult.isConfirmed){
-      const sentbody: Object = {
-        products: id,
-      };
-  
-      this.wishlistService.deleteItemFromWishlist(sentbody);
-      this.toaster.error('Product Removed From Wishlist', 'Remove');
-      this.userWishlist = this.userWishlist.filter(
-        (product: any) => product.id != id
-      );
+    }).then((reult) => {
+      if (reult.isConfirmed) {
+        const sentbody: Object = {
+          products: id,
+        };
+
+        this.wishlistService.deleteItemFromWishlist(sentbody);
+        this.toaster.error('Product Removed From Wishlist', 'Remove');
+        this.userWishlist = this.userWishlist.filter(
+          (product: any) => product.id != id
+        );
       }
-    })
+    });
   }
   addProductToCart(e: HTMLButtonElement, id: number) {
     const sentbody: Object = {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
 import { Router } from '@angular/router';
-
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-forget-password',
   standalone: true,
@@ -18,7 +18,8 @@ import { Router } from '@angular/router';
   templateUrl: './forget-password.component.html',
   styleUrl: './forget-password.component.css',
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent  implements OnDestroy{
+  private forgotPasswordSubscriptions!: Subscription;
   forgotPasswordForm: FormGroup;
   showToast = false;
   toastMessage = '';
@@ -37,7 +38,8 @@ export class ForgotPasswordComponent {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       const { email } = this.forgotPasswordForm.value;
-      this.authService.forgotPassword(email).subscribe({
+
+     this.forgotPasswordSubscriptions= this.authService.forgotPassword(email).subscribe({
         next: (response: any) => this.handleSuccess(response),
         error: (error: any) => this.handleError(error),
       });
@@ -78,4 +80,10 @@ export class ForgotPasswordComponent {
       this.showToast = false;
     }, 5000);
   }
+  ngOnDestroy() {
+
+    this.forgotPasswordSubscriptions.unsubscribe();
+    
+  }
+
 }

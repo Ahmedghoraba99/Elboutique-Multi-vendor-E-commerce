@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, switchMap, tap } from 'rxjs';
+import { Observable, BehaviorSubject, switchMap, tap, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,8 @@ export class CartService {
   private baseUrl = 'http://127.0.0.1:8000/api/customer';
   private userInfo = localStorage.getItem('user_info');
   private userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
+  private userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
+
   private cart = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
@@ -19,6 +21,9 @@ export class CartService {
   }
 
   getCustomerCart(): Observable<any> {
+    if (!this.userID || this.userRole === 'vendor') {
+      return of(null);
+    }
     return this.http.get(`${this.baseUrl}/showCart/${this.userID}`);
   }
   addToCustomerCart(body: Object): Observable<any> {
