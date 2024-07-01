@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-
 @Component({
   selector: 'app-side-bar',
   standalone: true,
@@ -10,7 +9,12 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './side-bar.component.css',
 })
 export class SideBarComponent {
-  @Input() user: any;
+  @Input() user: any = {
+    name: 'John Doe',
+    email: 'pKqQH@example.com',
+    image:
+      'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png',
+  };
   @Input() navLinks: Array<{
     name: string;
     icon: string;
@@ -18,5 +22,9 @@ export class SideBarComponent {
     primary?: boolean;
   }> = [];
 
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
   constructor(private router: Router) {}
 }

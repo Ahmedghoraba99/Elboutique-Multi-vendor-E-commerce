@@ -1,4 +1,28 @@
 @if (loading) {
 <p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
     fill="var(--surface-ground)" animationDuration=".5s" />}@else {
-<p>reports works!</p>}
+<div class="card">
+    <h5 class="m-3">Manage Reports</h5>
+    <p-tabView>
+        <p-tabPanel header="Products">
+            <ng-template pTemplate="content">
+                <p-fieldset>
+                    <ng-template pTemplate="header">
+                        <div class="flex align-items-center gap-2 px-2">
+                            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                                shape="circle" />
+                            <span class="font-bold fs-6">Amy Elsner</span>
+                        </div>
+                    </ng-template>
+                    <p class="m-0">
+                        Lorem ipsum dolor sit amet...
+                    </p>
+                </p-fieldset>
+            </ng-template>
+        </p-tabPanel>
+        <p-tabPanel header="Reviews">
+            <ng-template pTemplate="content"> Complex Content to Lazy Load </ng-template>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+}

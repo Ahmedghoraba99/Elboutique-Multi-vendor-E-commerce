@@ -4,7 +4,7 @@
 </div>
 <div *ngIf="!loading" class="card overflow-auto">
     <p-table #dt [value]="orders" [paginator]="false" [rows]="pageSize"
-        [globalFilterFields]="['customer_name', 'status']" [tableStyle]="{'min-width': '6rem'}"
+        [globalFilterFields]="['id', 'customer_name', 'status']" [tableStyle]="{'min-width': '6rem'}"
         [(selection)]="selectedOrders" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
         [totalRecords]="totalItems">
@@ -13,7 +13,8 @@
                 <h5 class="my-2">Manage Orders
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="onFilter($event)" placeholder="Search..." />
+                        <input pInputText type="text" (input)="onFilter($event)"
+                            placeholder="Search...id, name, status" />
                     </span>
                 </h5>
             </div>
@@ -21,6 +22,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 2rem" scope="col">#</th>
+                <th scope="col">ID</th>
                 <th pSortableColumn="customerName" style="min-width: 15rem" scope="col">Customer <p-sortIcon
                         field="customerName"></p-sortIcon></th>
                 <th pSortableColumn="status" style="min-width: 7rem" id="status">Status <p-sortIcon
@@ -35,6 +37,7 @@
         <ng-template pTemplate="body" let-order let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
+                <td>{{ order.id }}</td>
                 <td>{{ order.customer_name }}</td>
                 <td>
                     <p-dropdown [options]="statuses" [(ngModel)]="order.status"
