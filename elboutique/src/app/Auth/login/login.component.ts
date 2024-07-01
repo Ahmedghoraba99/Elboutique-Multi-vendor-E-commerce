@@ -114,7 +114,7 @@ export class LoginComponent implements OnDestroy {
         // this.router.navigateByUrl('/dashboard');
         window.location.href = '/dashboard';
       } else if (response.role == 'vendor') {
-        window.location.href = '/dashboard';
+        window.location.href = '/v';
         // this.router.navigateByUrl('/v');
       }
       // else this.router.navigateByUrl('/');
