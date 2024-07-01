@@ -30,7 +30,7 @@ class ReportReviewPolicy
      */
     public function create(  $user): bool
     {
-        $user  instanceof Admin || $user->banned =='false';
+      return  $user  instanceof Admin || $user->banned =='false';
     }
 
     /**
