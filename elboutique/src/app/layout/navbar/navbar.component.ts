@@ -38,20 +38,17 @@ export class NavbarComponent {
 
       if (isAuth) {
         this.authService.getUserDataObservable().subscribe((data) => {
-          console.log('setting user data: ', data);
           if (data) {
             this.currentUser = data.data;
           }
         });
         this.wislistService.getWishlistData().subscribe((data) => {
-          // console.log('Data from wishlist: ', data);
           if (data) {
             this.wishListItems = data.length;
           }
         });
 
         this.cartService.getCartData().subscribe((data) => {
-          console.log('Data form cart: ', data);
           if (data) {
             this.cartItems = data.length;
           }

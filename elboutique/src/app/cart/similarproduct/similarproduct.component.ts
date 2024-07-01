@@ -45,23 +45,26 @@ export class SimilarproductComponent {
         })
       )
       .subscribe((product) => {
-        console.log('The product from subscription', product.data);
         this.products = product.data;
         this;
       });
-      this.wishlisteService.getWishlistData().subscribe((data) => {
+    this.wishlisteService.getWishlistData().subscribe((data) => {
+      if (data) {
         data.forEach((item: { id: any }) => {
           this.userWishlist.push(item.id);
         });
-      });
-      this.cartService.getCartData().subscribe((data) => {
+      }
+    });
+    this.cartService.getCartData().subscribe((data) => {
+      if (data) {
         data.forEach((item: { id: any }) => {
           this.userCart.push(item.id);
         });
-      });
-      this.authService.isAuthObservable().subscribe((isAuth) => {
-        this.isAuthenticated = isAuth;
-      });
+      }
+    });
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
   }
 
   constructor(
@@ -71,23 +74,21 @@ export class SimilarproductComponent {
     private cartService: CartService,
     private wishlisteService: WishlistService,
     private authService: AuthService,
-    private toaster: ToastrService,
-
+    private toaster: ToastrService
   ) {}
 
   faHeart = faHeart;
-  
+
   toggleCart(event: Event, id: number): void {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       if ((event.target as HTMLInputElement).checked) {
         this.addToCart(id);
       } else {
         this.removeFromCart(id);
       }
-    
     }
   }
 
@@ -95,18 +96,16 @@ export class SimilarproductComponent {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       if ((event.target as HTMLInputElement).checked) {
         this.addToWishlist(id);
       } else {
         this.removeFromWishlist(id);
       }
-
     }
   }
 
   isInWishlist(id: number): boolean {
-
     return this.userWishlist.includes(id);
   }
 
