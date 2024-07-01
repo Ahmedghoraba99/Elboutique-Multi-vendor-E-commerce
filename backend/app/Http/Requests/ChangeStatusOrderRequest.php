@@ -22,7 +22,7 @@ class ChangeStatusOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "status"=> ["required","in:arrived,midway,returned"],
+            "status"=> ["required","in:arrived,midway,cancelled"],
         ];
     }
 }

@@ -24,7 +24,7 @@ class OrderController extends Controller
     public function index()
     {
         $this->authorize('viewAny',Order::class);
-        return OrderResource::collection(Order::with('products')->get());
+        return OrderResource::collection(Order::with(['products','customer'])->get());
     }
 
 
@@ -38,6 +38,7 @@ class OrderController extends Controller
             'customer_id'=>$request->customer_id,
             "total" => $request->total
         ]);
+        $order->load('customer');
         return response()->json([
             "message" => 'Order Added',
             "order" => $order
@@ -49,7 +50,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order=Order::with('products')->find($id);
+        $order=Order::with(['products','customer'])->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -107,34 +108,64 @@ class OrderController extends Controller
 
 
     public function changeStatus(ChangeStatusOrderRequest $request, Order $order) 
-{
-    DB::beginTransaction();
-    try {
-    $order->update(['status' => $request->status]);
-
+    {
     
-    if ($request->status === 'arrived') {
-         
-        $order->load('products.vendor.vendorReceivables');
-
-        foreach ($order->products as $product) {
-            $vendor = $product->vendor;
-            if ($vendor) {
-                $vendorReceivables = $vendor->vendorReceivables()->firstOrNew([
-                    'vendor_id' => $vendor->id
-                ]);
-
-                $vendorReceivables->amount += $product->price;
-                $vendorReceivables->save();
+        DB::beginTransaction();
+    
+        try {
+            $order->update(['status' => $request->status]);
+    
+            if ($request->status === 'arrived') {
+                $order->load('products.vendor.vendorReceivables');
+    
+                foreach ($order->products as $product) {
+                    $vendor = $product->vendor;
+                    if ($vendor) {
+                        $vendorReceivables = $vendor->vendorReceivables()->firstOrNew([
+                            'vendor_id' => $vendor->id
+                        ]);
+    
+                        $vendorReceivables->amount += $product->price;
+                        $vendorReceivables->save();
+                    }
+                }
             }
+    
+            DB::commit();
+            return response()->json(['message' => 'Order status updated successfully'], 200);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Failed to update order status.', 'error' => $e->getMessage()], 500);
         }
     }
-    DB::commit();
-    return response()->json(['message' => 'Order status updated successfully'], 200);
-}
-catch (Exception $e) {
-    DB::rollBack();
-    return response()->json(['message' => 'Failed to update order status.'], 500);
-}
-}
+
+    public function cancelOrder(int $id){
+        $order=Order::with(['products'])->find($id);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+        if($order->status === 'midway'){
+            $pivots = $order->products->map(function ($product) {
+                return [
+                    'order_id' => $product->pivot->order_id,
+                    'product_id' => $product->pivot->product_id,
+                    'quantity' => $product->pivot->quantity
+                ];
+            });
+            foreach ($pivots as $key => $pivot) {
+                $product = Product::find($pivot['product_id']);
+                $product->stock += $pivot['quantity'];
+                $product->save();
+            }
+            $order->status = 'cancelled';
+            $order->save();
+            return response()->json(['msg'=>"Order cancelled"],200);
+        }else if($order->status === 'cancelled'){
+            return response()->json(['msg'=>"Order already cancelled"]);
+        }
+        else{
+            return response()->json(['msg'=>"can't cancel this order"]);
+        }
+    }
+    
 }
