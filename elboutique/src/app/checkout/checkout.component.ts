@@ -172,6 +172,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const sentBody = {
           products: id,
         };
+        const orderProductBody: any = {
+          products: {},
+        };
+        this.customerCart.forEach((product: any) => {
+          orderProductBody.products[`${product.id}`] =
+            product.cart_table.quantity;
+        });
         this.cartService.deleteItemFromCart(sentBody);
       }
     });
@@ -200,7 +207,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.customerCart.forEach((product: any) => {
       orderProductBody.products[`${product.id}`] = product.cart_table.quantity;
     });
-    console.log('Order Product Body', orderProductBody);
+    // console.log('Order Product Body', orderProductBody);
 
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)

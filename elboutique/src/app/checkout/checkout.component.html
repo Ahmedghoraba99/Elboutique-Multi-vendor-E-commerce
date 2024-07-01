@@ -55,10 +55,26 @@
                             <div class="product-info-price">
                               <div class="big-deal-price">
                                 <span class="me-2">EGP</span>
-                                <strong class="fs-4">{{
-                                  product.price
-                                }}</strong>
-                                <strong> </strong>
+                                <strong
+                                  class="fs-4"
+                                  [ngClass]="{
+                                    'text-decoration-line-through': product.sale
+                                  }"
+                                  >{{
+                                    product.price * product.cart_table.quantity
+                                  }}
+                                </strong>
+
+                                <strong
+                                  *ngIf="product.sale"
+                                  class="ms-2 text-danger fs-5"
+                                >
+                                  Only EGP
+                                  {{
+                                    ((product.price * product.sale) / 100) *
+                                      product.cart_table.quantity
+                                  }}!
+                                </strong>
                               </div>
                             </div>
                           </div>
@@ -69,9 +85,11 @@
                               <span class="me-2">Quantity:</span>
                               <select
                                 #select
-                                class="form-select w-25" (change)="update(product, + select.value)"     >
-                                @for(item of getstock(product.stock).slice(0, 5) ; track
-                                $index){ @if(item ==
+                                class="form-select w-25"
+                                (change)="update(product, +select.value)"
+                              >
+                                @for(item of getstock(product.stock).slice(0, 5)
+                                ; track $index){ @if(item ==
                                 product.cart_table.quantity){
                                 <option selected value="{{ item }}">
                                   {{ item }}
@@ -123,7 +141,7 @@
             <div class="container">
               <div class="row order-section">
                 <div class="order-summery">
-                  <h1>order summery</h1>
+                  <h1>Order summery</h1>
                 </div>
                 <div class="total-details d-flex justify-content-between my-3">
                   <span

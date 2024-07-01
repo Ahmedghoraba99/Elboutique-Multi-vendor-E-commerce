@@ -21,7 +21,10 @@
                 class="big-deal-product-data d-flex flex-column justify-content-evenly p-4"
               >
                 <div class="d-flex">
-                  <div *ngIf="product.is_featured" class="products-tag">
+                  <div
+                    *ngIf="product.is_featured && !product.sale"
+                    class="products-tag"
+                  >
                     <span class="text-capitalize">Featured</span>
                   </div>
                   <div class="my-2">
