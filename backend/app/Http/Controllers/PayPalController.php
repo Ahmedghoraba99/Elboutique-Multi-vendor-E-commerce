@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\PayPalService;
@@ -16,7 +17,7 @@ class PayPalController extends Controller
         $this->payPalService = $payPalService;
     }
 
-    public function createPayment(Request $request)
+    public function createPayment(PaymentRequest $request)
     {
        
         $data = $this->getPaymentData($request);
