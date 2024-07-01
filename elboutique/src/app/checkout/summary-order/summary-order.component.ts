@@ -114,11 +114,4 @@ export class SummaryOrderComponent implements OnInit {
     }
     this.paymentForm.controls['ccv'].setValue(value, { emitEvent: false });
   }
-  onSubmit() {
-    if (this.paymentForm.valid) {
-      console.log('Form Submitted!', this.paymentForm.value);
-    } else {
-      console.log('Form is invalid');
-    }
-  }
 }
