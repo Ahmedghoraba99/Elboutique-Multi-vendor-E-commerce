@@ -46,7 +46,9 @@ class PayPalController extends Controller
                 'payment_status' => 'finished',
                 'transaction_id' => $response['PAYERID']
             ]);
+        
             return redirect($frontEndUrl . '?success=true');
+            
         }
             $order->update([
                     'payment_status' => "failed",
@@ -79,8 +81,8 @@ class PayPalController extends Controller
 
     private function getFrontendUrl()
     {
-   
-        return config('frontend_url') . '/checkout';
+     
+        return env('frontend_url') . '/checkout';
     }
 
 
