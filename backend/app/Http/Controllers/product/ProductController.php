@@ -374,4 +374,24 @@ class ProductController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
+
+    // get tages by product id
+
+    function getTagsByProductId($id)
+    {
+        try {
+            $product = Product::find($id);
+            $tags = $product->tags->map(function ($tag) {
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                ];
+            });
+            return response()->json($tags);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+
 }

@@ -9,11 +9,24 @@
         <div class="row my-3">
           <!-- prodcut-card -->
           @for (product of userWishlist; track $index) {
-          <div class="col-md-4">
+          <div class="col-md-4 my-2 position-relative">
+            <div class="big-deal-product-big-tag-deal position-absolute" *ngIf="product.sale">
+              <span>{{ product.sale }}% Off</span>
+              
+          </div>
             <div class="d-flex flex-column">
               <div
                 class="big-deal-product-data d-flex flex-column justify-content-evenly p-4"
               >
+             
+              <div class="d-flex">
+                <div *ngIf="product.is_featured" class="products-tag">
+                  <span class="text-capitalize">Featured</span>
+                </div>
+                <div class="my-2">
+                  <span class="opacity-0">space holder</span>
+                </div>
+              </div>
                 <div class="big-deal-product-slider">
                   <div class="swiper mySwiper big-deal-product-swiper">
                     <div class="swiper-wrapp" id="big-deal-product-wrapper">

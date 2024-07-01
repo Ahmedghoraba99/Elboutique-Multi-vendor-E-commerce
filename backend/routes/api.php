@@ -16,12 +16,12 @@ use App\Http\Controllers\tag\TagController;
 use App\Http\Controllers\product\ProductController;
 
 use App\Http\Controllers\order\OrderProductController;
- 
+
 use App\Http\Controllers\vendor\VendorController;
 use App\Http\Controllers\VendorReceivablesController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\wishlist\WishlistController;
- 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Payment\GetwayCheckoutController;
@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('vendors', [VendorController::class, 'index'])->name('vendors.index');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers.index');
 
-    
+
 
     Route::apiResource('tags', TagController::class);
     Route::apiResource('categories', CategoryController::class);
@@ -138,6 +138,7 @@ Route::get('customers/{customer}', [CustomerController::class, 'show']);
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('products', [ProductController::class, 'index'])->name('products.index');
 Route::post('products/tages',[ProductController::class, 'storeProductTags']);
+Route::get('products/tages/{id}', [ProductController::class, 'getTagsByProductId']);
 
 Route::get('categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -146,7 +147,6 @@ Route::get('categories', [CategoryController::class, 'index'])->name('categories
 Route::get('tags/{tag}', [TagController::class, 'show'])->name('tags.show');
 Route::get('tags', [TagController::class, 'index'])->name('tags.index');
 Route::get('tages/product/{id}',[TagController::class , 'getAllTags']);
-
 
 // Product related
 Route::get('/product/featured', [ProductController::class, "getFeaturedProducts"]);

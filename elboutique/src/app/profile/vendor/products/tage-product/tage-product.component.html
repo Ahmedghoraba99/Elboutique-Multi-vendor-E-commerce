@@ -21,7 +21,7 @@
       </div>
       <div class="modal-body">
         <div class="container-fluid">
-          <div *ngIf="tags.data.length > 0">
+          <div *ngIf="tags?.data!.length > 0">
             <div *ngFor="let tag of tags.data; let i = index" class="form-check">
               <input
                 class="form-check-input"
