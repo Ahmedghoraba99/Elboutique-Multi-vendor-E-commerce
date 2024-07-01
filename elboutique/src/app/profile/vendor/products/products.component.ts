@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { VendorProdcutService } from '../../../service/vendor/productdata.service';
 import { VendorCatgoriesService } from '../../../service/vendor/categories.service';
 import { VendorAddProductService } from '../../../service/vendor/product.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Subscription } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AddSaleComponent } from './add-sale/add-sale.component';
 import { TageProductComponent } from './tage-product/tage-product.component';
-declare const bootstrap: any;
-
+import { AuthService } from '../../../service/auth.service';
+import { VendorPortofolioService } from '../../../service/vendor-portofolio.service';
+import { CurrentUser } from '../../../_model/customer';
 
 
 @Component({
@@ -20,7 +20,7 @@ declare const bootstrap: any;
   styleUrls: ['./products.component.css'],
   imports: [CommonModule, FormsModule,ReactiveFormsModule,RouterLink,AddSaleComponent,TageProductComponent],
 })
-export class ProductsComponent implements OnInit  {
+export class ProductsComponent implements OnInit{
   products: any[] = [];
   categories: any[] = [];
   filteredProducts: any[] = [];
@@ -29,11 +29,18 @@ export class ProductsComponent implements OnInit  {
   userInfo: string | null = localStorage.getItem('user_info');
   user_id: number = 0;
   product_id: number = 0;
-
+  active:boolean = false;
+  currentVendor: CurrentUser={
+    data:{
+      active: ''
+    }
+  } ;
   constructor(
     private VendorProdcutService: VendorProdcutService,
     private VendorAddProductService: VendorAddProductService,
-    private vendorCatgoriesService: VendorCatgoriesService
+    private vendorCatgoriesService: VendorCatgoriesService,
+    private router: Router,
+    private currentUserService:VendorPortofolioService
   ) {
     if (this.userInfo) {
       try {
@@ -43,11 +50,25 @@ export class ProductsComponent implements OnInit  {
         console.error('Error parsing user info from local storage', error);
       }
     }
+
   }
+
 
   ngOnInit() {
     this.loadCategories();
     this.loadProducts();
+    this.loadCurrentVendor(this.user_id);
+  }
+
+  loadCurrentVendor(vendorId: number): void {
+    this.currentUserService.getCurrentVendor(vendorId).subscribe(
+      (response) => {
+        this.currentVendor = response;
+      },
+      (error) => {
+        console.error('Error fetching vendor data', error);
+      }
+    );
   }
 
 
@@ -125,7 +146,34 @@ export class ProductsComponent implements OnInit  {
   changeProductId(id:number){
     this.product_id = id;
     console.log(this.product_id);
+  }
 
+  navigateToAddProduct(){
+    console.log(this.currentVendor.data.active);
+    if(this.currentVendor.data.active === 'true'){
+      this.router.navigate(['/v/products', 'add']);
+    }else{
+      //add Error sweet alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Inactive Vendor',
+        text: 'You cannot add a new product because your account is inactive.',
+        confirmButtonText: 'OK'
+      });
+    }
+  }
+
+  navigateToProductPage(route: string, productId: number): void{
+    if (this.currentVendor.data.active === 'true') {
+      this.router.navigate([route, productId]);
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Inactive Vendor',
+        text: 'You cannot perform this action because your account is inactive.',
+        confirmButtonText: 'OK'
+      });
+    }
   }
 
 }

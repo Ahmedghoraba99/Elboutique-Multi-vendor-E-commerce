@@ -31,7 +31,7 @@ export class AddProductComponent implements OnInit {
     private fb: FormBuilder,
     private vendorAddProductService: VendorAddProductService,
     private router: Router,
-    private categoryService: VendorCatgoriesService
+    private categoryService: VendorCatgoriesService,
   ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
