@@ -1,77 +1,73 @@
 @if (loading) {
 <p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
     fill="var(--surface-ground)" animationDuration=".5s" />}@else {
-<div class="h6 text-uppercase">Vendors</div>
-<hr class="hr">
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Email</th>
 
-                <th colspan="4">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (vendor of vendors; track $index) {
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td><img [src]="vendor.image" alt="{{ vendor.name }}" width="50"></td>
-                <td>{{ vendor.name }}</td>
-                <td>{{ vendor.email }}</td>
-                <td>
-                    <button (click)="viewVendor(vendor)" class="btn btn-sm secondary-bg-color" data-toggle="modal"
-                        data-target="#vendorModal"><i class="fa-solid fa-eye"></i><span
-                            class="visually-hidden">View</span></button>
-                </td>
-                <td> @if(vendor.active=='true') {
-                    <button (click)="activateVendor(vendor)" class="btn btn-sm btn-warning">Deactivate</button>
-                    }@else {
-                    <button (click)="activateVendor(vendor)" class="btn btn-sm btn-success">Activate</button>
-                    }
-                </td>
-                <td> @if (vendor.banned == 'true') {
-                    <button (click)="banVendor(vendor)" class="btn btn-sm btn-success">Unban</button>
-                    }@else {
-                    <button (click)="banVendor(vendor)" class="btn btn-sm btn-warning">Ban</button>
-                    }
-                </td>
-                <td>
-                    <button (click)="deleteVendor(vendor.id)" class="btn btn-sm btn-danger">Delete</button>
-                </td>
-            </tr>
-            }
+<div class="card overflow-auto">
+    <p-table #dt class="p-datatable" [value]="vendors" [rows]="pageSize" [paginator]="false"
+        [globalFilterFields]="['name', 'email']" [tableStyle]="{'min-width': '75rem'}" [(selection)]="selectedVendor"
+        [rowHover]="true" dataKey="id" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [showCurrentPageReport]="true" [totalRecords]="totalItems">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="my-2">Manage Vendors</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onFilter($event)" placeholder="Search..." />
+                </span>
 
-        </tbody>
-    </table>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 2rem" scope="col">#</th>
+                <th pSortableColumn="image" scope="col">Image</th>
+                <th pSortableColumn="name" style="min-width:15rem" scope="col">Name <p-sortIcon
+                        field="name"></p-sortIcon></th>
+                <th pSortableColumn="email" scope="col">Email <p-sortIcon field="email"></p-sortIcon></th>
+                <th scope="col" style="min-width:10rem">Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-vendor let-i="rowIndex">
+            <tr>
+                <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                <td><img [src]="'http://localhost:8000/storage/images/vendors/' + vendor.image" alt="{{ vendor.name }}"
+                        width="50">
+                </td>
+                <td>{{vendor.name}}</td>
+                <td>{{vendor.email}}</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-secondary"
+                        (click)="viewVendor(vendor)"><span class="visually-hidden">View</span></button>
+                    <button pButton pRipple [icon]="vendor.active=='true' ? 'pi pi-times' : 'pi pi-check'"
+                        [class]="'p-button-rounded mx-1 ' + (vendor.active=='true' ? 'p-button-success' : 'p-button-warning')"
+                        (click)="activateVendor(vendor)">
+                        <span class="visually-hidden">{{ vendor.active ? 'Deactivate' : 'Activate' }}</span>
+                    </button>
+                    <button pButton pRipple [icon]="vendor.banned=='true' ? 'pi pi-unlock' : 'pi pi-ban'"
+                        [class]="'p-button-rounded mx-1 ' + (vendor.banned=='true' ? 'p-button-warning' : 'p-button-danger')"
+                        (click)="banVendor(vendor)">
+                        <span class="visually-hidden">{{ vendor.banned ? 'Unban' : 'Ban' }}</span>
+                    </button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                        (click)="deleteVendor(vendor.id)"><span class="visually-hidden">Delete</span></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>
 
 <!-- Vendor Details Modal -->
-<div class="modal fade show" id="vendorModal" tabindex="-1" aria-labelledby="vendorModalLabel"
-    [ngStyle]="{'display': selectedVendor ? 'block' : 'none'}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="vendorModalLabel">Vendor Details</h5>
-            </div>
-            <div class="modal-body" *ngIf="selectedVendor">
-
-                <img [src]="selectedVendor.image" alt="{{ selectedVendor.name }}"
-                    class="img-fluid mb-3 user-avatar-100">
-                <p><strong>Name:</strong> {{ selectedVendor.name }}</p>
-                <p><strong>Email:</strong> {{ selectedVendor.email }}</p>
-                <p><strong>Address:</strong> {{ selectedVendor.address }}</p>
-                <p><strong>Phone:</strong> {{ selectedVendor.phone }}</p>
-                <p><strong>National ID:</strong> <a [href]="selectedVendor.national_id_url" target="_blank">View</a></p>
-                <p><strong>Active:</strong> {{ selectedVendor.active }}</p>
-                <p><strong>Banned:</strong> {{ selectedVendor.banned }}</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-            </div>
-        </div>
+<p-dialog header="Vendor Details" [(visible)]="selectedVendor" [modal]="true" [closable]="true" (onHide)="closeModal()">
+    <div *ngIf="selectedVendor">
+        <img [src]="'http://localhost:8000/storage/images/vendors/'+selectedVendor.image"
+            alt="{{ selectedVendor.name }}" class="img-fluid mb-3 user-avatar-100">
+        <p><strong>Name:</strong> {{ selectedVendor.name }}</p>
+        <p><strong>Email:</strong> {{ selectedVendor.email }}</p>
+        <p><strong>Address:</strong> {{ selectedVendor.address }}</p>
+        <p><strong>Phone:</strong> {{ selectedVendor.phone }}</p>
+        <p><strong>National ID:</strong> <a [href]="selectedVendor.national_id_url" target="_blank">View</a></p>
+        <p><strong>Active:</strong> {{ selectedVendor.active }}</p>
+        <p><strong>Banned:</strong> {{ selectedVendor.banned }}</p>
     </div>
-</div>}
+</p-dialog>
+}
