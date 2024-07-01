@@ -41,7 +41,6 @@ import { WelcomeComponent } from './dashboard/products/welcome/welcome.component
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
 import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
 
-
 export const routes: Routes = [
   {
     path: '',
@@ -65,11 +64,12 @@ export const routes: Routes = [
         component: CheckoutComponent,
         data: { title: 'Checkout' },
       },
-      // { path: 'categories', component: CategoryComponent, data: { title: 'Category' } },
       {
         path: 'categories/:id',
-        component: CategoryComponent,
         data: { title: 'Category' },
+        // component: CategoryComponent,
+        loadChildren: () =>
+          import('./category/category.module').then((m) => m.CategoryModule),
       },
       {
         path: 'vendor/:id',
@@ -174,36 +174,13 @@ export const routes: Routes = [
     component: LoginComponent,
     canActivate: [authGuard],
   },
-  // ,
-  // {
-  //   path: 'wishlist',
-  //   title: 'WishList',
-  //   component: WishListComponent,
-  // },
-  // {
-  //   path: 'products/:id',
-  //   title: 'Details',
-  //   component: CartComponent,
-  // },
-  // {
-  //   path: 'checkout',
-  //   title: 'Checkout',
-  //   component: CheckoutComponent,
-  // },
-  // {
-  //   path: 'categories/:id',
-  //   title: 'Category',
-  //   component: CategoryComponent,
-  // },
-  // {
-  //   path: 'vendor/:id',
-  //   title: 'Vendor Profile',
-  //   component: VendorProfileComponent,
-  // },
   {
     path: 'login/forget-password',
     title: 'ForgetPassword',
-    component: ForgotPasswordComponent,
+    loadChildren: () =>
+      import('./Auth/forget-password/forget-password.module').then(
+        (m) => m.ForgetPasswordModule
+      ),
   },
   {
     path: 'register',
@@ -295,7 +272,7 @@ export const routes: Routes = [
       },
       {
         path: 'products/show/:id',
-        'title': 'Show Product',
+        title: 'Show Product',
         component: ShowProductComponent,
       },
       {
