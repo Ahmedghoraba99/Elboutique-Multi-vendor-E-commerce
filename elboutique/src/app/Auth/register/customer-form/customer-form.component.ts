@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,7 @@ import { passwordMatchValidator } from '../../validators';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { ToastComponent } from '../../../widgets/toast/toast.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-customer-form',
@@ -18,7 +19,9 @@ import { ToastComponent } from '../../../widgets/toast/toast.component';
   templateUrl: './customer-form.component.html',
   styleUrls: ['./customer-form.component.css'],
 })
-export class CustomerFormComponent {
+export class CustomerFormComponent implements OnDestroy {
+  private customerSubscriptions: Subscription[] = [];
+
   customerForm: FormGroup;
   showToast = false;
   toastMessage = '';
@@ -97,7 +100,8 @@ export class CustomerFormComponent {
   }
   onBlur(controler: string) {
     const query = { [controler]: this.customerForm.get(controler)?.value };
-    this.authService.emailAndPasswordExisting(query).subscribe(
+
+   const emailAndPasswordExisting=  this.authService.emailAndPasswordExisting(query).subscribe(
       () => {},
       (err) => {
         if (err.status == 422) {
@@ -111,13 +115,15 @@ export class CustomerFormComponent {
         }
       }
     );
+    this.customerSubscriptions.push(emailAndPasswordExisting);
+
   }
   onSubmit() {
     this.markFormGroupTouched(this.customerForm);
 
     if (this.customerForm.valid) {
       const from = this.createForm();
-      this.authService.register('customers', from).subscribe(
+    const register=   this.authService.register('customers', from).subscribe(
         (res) => {
           console.log('Vendor Form Data:', res);
 
@@ -127,9 +133,9 @@ export class CustomerFormComponent {
           this.handleError(err);
         }
       );
-      const formData = this.customerForm.getRawValue();
-      console.log('Vendor Form Data:', formData);
+      this.customerSubscriptions.push(register);
     }
+    
   }
 
   handleSuccess() {
@@ -200,5 +206,7 @@ export class CustomerFormComponent {
       this.showToast = false;
     }, 5000);
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.customerSubscriptions.forEach((sub) => sub.unsubscribe());
+  }
 }

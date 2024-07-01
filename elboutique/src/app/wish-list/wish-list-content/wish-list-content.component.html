@@ -10,46 +10,45 @@
           <!-- prodcut-card -->
           @for (product of userWishlist; track $index) {
           <div class="col-md-4 my-2 position-relative">
-            <div class="big-deal-product-big-tag-deal position-absolute" *ngIf="product.sale">
+            <div
+              class="big-deal-product-big-tag-deal position-absolute"
+              *ngIf="product.sale"
+            >
               <span>{{ product.sale }}% Off</span>
-              
-          </div>
+            </div>
             <div class="d-flex flex-column">
               <div
                 class="big-deal-product-data d-flex flex-column justify-content-evenly p-4"
               >
-             
-              <div class="d-flex">
-                <div *ngIf="product.is_featured" class="products-tag">
-                  <span class="text-capitalize">Featured</span>
+                <div class="d-flex">
+                  <div *ngIf="product.is_featured" class="products-tag">
+                    <span class="text-capitalize">Featured</span>
+                  </div>
+                  <div class="my-2">
+                    <span class="opacity-0">space holder</span>
+                  </div>
                 </div>
-                <div class="my-2">
-                  <span class="opacity-0">space holder</span>
-                </div>
-              </div>
                 <div class="big-deal-product-slider">
                   <div class="swiper mySwiper big-deal-product-swiper">
                     <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                      <!-- <a routerLink="/products/{{ product.id }}"> -->
-                      <a href="/products/{{ product.id }}">
-     
-                      <swiper-container pagination="true">
-                        @for(image of product.images ;track $index){
-                        <swiper-slide
-                          class="swiper-slide big-deal-product-swiper-slider"
-                        >
-                          <img
-                            [src]="
-                              'http://localhost:8000/storage/' + image.image
-                            "
-                            alt="{{ product.name }}"
-                          />
-                        </swiper-slide>
+                      <a routerLink="/products/{{ product.id }}">
+                        <!-- <a href="/products/{{ product.id }}"> -->
+                        <swiper-container pagination="true">
+                          @for(image of product.images ;track $index){
+                          <swiper-slide
+                            class="swiper-slide big-deal-product-swiper-slider"
+                          >
+                            <img
+                              [src]="
+                                'http://localhost:8000/storage/' + image.image
+                              "
+                              alt="{{ product.name }}"
+                            />
+                          </swiper-slide>
 
-                        }
-                      </swiper-container>
-                    </a>
-
+                          }
+                        </swiper-container>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -72,31 +71,28 @@
                 <div
                   class="wishlist-actions d-flex flex-row justify-content-between text-capitalize"
                 >
-              
-                <button
-                #myButton
-                class="btn btn-wishlist"
-                (click)="addToCartToggler(myButton, product.id)"
-              >
-  
-                {{
-                  userCartId.includes(product.id)
-                    ? "Remove from cart"
-                    : "Add to cart"
-                }}
-              </button>
-              
+                  <button
+                    #myButton
+                    class="btn btn-wishlist"
+                    (click)="addToCartToggler(myButton, product.id)"
+                  >
+                    {{
+                      userCartId.includes(product.id)
+                        ? "Remove from cart"
+                        : "Add to cart"
+                    }}
+                  </button>
 
                   <button
-                  class="btn btn-wishlist-delete"
-                  (click)="removeProductFromWishlist(product.id)"
-                >
-                  <fa-icon
-                    class="animated-heart"
-                    [icon]="faTrashCan"
-                  ></fa-icon
-                  >Remove
-                </button>
+                    class="btn btn-wishlist-delete"
+                    (click)="removeProductFromWishlist(product.id)"
+                  >
+                    <fa-icon
+                      class="animated-heart"
+                      [icon]="faTrashCan"
+                    ></fa-icon
+                    >Remove
+                  </button>
                 </div>
               </div>
             </div>
@@ -121,17 +117,20 @@
     </div>
     <div class="wishList-section px-2 py-4 my-5" *ngIf="!isAuthenticated">
       <div class="container my-5">
-      <div class="row justify-content-center align-items-center">
-        <img src="../../../assets/images/login-access-protection-vector.jpg" alt="" class="img-fluid img-login">
-        <h3 class="text-center text-capitalize my-3 wishlist-h3">
-          Please login first to use this feature
-        </h3>
-        <button class="btn btn-primary p3 mx-auto d-block login-btn">
-          <a routerLink="/login" class="text-light fw-medium">Login</a>
-        </button>
+        <div class="row justify-content-center align-items-center">
+          <img
+            src="../../../assets/images/login-access-protection-vector.jpg"
+            alt=""
+            class="img-fluid img-login"
+          />
+          <h3 class="text-center text-capitalize my-3 wishlist-h3">
+            Please login first to use this feature
+          </h3>
+          <button class="btn btn-primary p3 mx-auto d-block login-btn">
+            <a routerLink="/login" class="text-light fw-medium">Login</a>
+          </button>
+        </div>
       </div>
-      </div>
-     
     </div>
   </div>
 </div>

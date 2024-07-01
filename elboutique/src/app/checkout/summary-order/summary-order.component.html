@@ -1,28 +1,28 @@
 <div class="container">
-    <div class="row order-section">
-      <div class="order-summery">
-        <h1>order summery</h1>
+  <div class="row order-section">
+    <div class="order-summery">
+      <h1>order summery</h1>
+    </div>
+    <div class="total-details d-flex justify-content-between my-3">
+      <span>Subtotal ( {{ cartProduct.length }} items )</span>
+      <span class="price">{{ totalPrice }} <sub>EGP</sub></span>
+    </div>
+    <div class="totalshiping d-flex justify-content-between my-3">
+      <span>Shipping Fee</span>
+      <span class="price">{{ totalPrice * 0.4 }} <sub>EGP</sub></span>
+    </div>
+    <div class="tatla-price d-flex justify-content-between my-3">
+      <div class="total-price-info my-3">
+        <span class="fw-bold">Total</span>
+        <sub class="mx-2">inclusive of VAT</sub>
       </div>
-      <div class="total-details d-flex justify-content-between my-3">
-        <span>Subtotal ( {{ cartProduct.length }} items )</span>
-        <span class="price">{{ totalPrice }} <sub>EGP</sub></span>
+      <div class="total-price-order my-3">
+        <span class="price"
+          >{{ totalPrice + totalPrice * 0.4 }} <sub>EGP</sub></span
+        >
       </div>
-      <div class="totalshiping d-flex justify-content-between my-3">
-        <span>Shipping Fee</span>
-        <span class="price">{{ totalPrice * 0.4 }} <sub>EGP</sub></span>
-      </div>
-      <div class="tatla-price d-flex justify-content-between my-3">
-        <div class="total-price-info my-3">
-          <span class="fw-bold">Total</span>
-          <sub class="mx-2">inclusive of VAT</sub>
-        </div>
-        <div class="total-price-order my-3">
-          <span class="price"
-            >{{ totalPrice + totalPrice * 0.4 }} <sub>EGP</sub></span
-          >
-        </div>
-      </div>
-      <!-- <div class="payment-section">
+    </div>
+    <!-- <div class="payment-section">
         <div class="payment">
           <div class="payment-type my-2">
             <label>Payment Type</label>
@@ -127,8 +127,8 @@
           </form>
         </div>
       </div> -->
-      <div class="checkout-btn text-center my-4">
-        <button class="btn" type="submit">ckeckout</button>
-      </div>
+    <div class="checkout-btn text-center my-4">
+      <button class="btn" type="submit">ckeckout</button>
     </div>
   </div>
+</div>

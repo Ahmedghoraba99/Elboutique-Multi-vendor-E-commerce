@@ -90,14 +90,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
     this.getCartSub = this.cartService.getCartData().subscribe((cart) => {
       this.customerCart = cart;
-      this.customerCart.forEach((product: any) => {
-        this.cartPriceAndQuantity.push({
-          [`${product.name}`]: {
-            price: product.price,
-            quantity: product.cart_table.quantity,
-          },
+      if (cart) {
+        this.customerCart.forEach((product: any) => {
+          this.cartPriceAndQuantity.push({
+            [`${product.name}`]: {
+              price: product.price,
+              quantity: product.cart_table.quantity,
+            },
+          });
         });
-      });
+      }
     });
   }
   getOrderTotalPrice() {

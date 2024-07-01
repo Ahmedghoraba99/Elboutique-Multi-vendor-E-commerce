@@ -24,7 +24,6 @@ export class BigDealsComponent {
   userCart: any[] = [];
   isAuthenticated = false;
 
-
   ngOnInit(): void {
     this.authService.isAuthObservable().subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
@@ -33,87 +32,89 @@ export class BigDealsComponent {
       this.products = data;
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userWishlist.push(item.id);
-      });
+      if (data) {
+        data.forEach((item: { id: any }) => {
+          this.userWishlist.push(item.id);
+        });
+      }
     });
     this.cartService.getCartData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userCart.push(item.id);
-      });
+      if (data) {
+        data.forEach((item: { id: any }) => {
+          this.userCart.push(item.id);
+        });
+      }
     });
   }
 
-  constructor( private toast: ToastrService,
+  constructor(
+    private toast: ToastrService,
     private cartService: CartService,
     private wishlisteService: WishlistService,
     private authService: AuthService
   ) {}
 
-    toggleCart(event: Event, id: number): void {
-      if (!this.isAuthenticated) {
-        this.toast.warning('Please login first', 'Not Authenticated');
-        return;
-      }else{
-        if ((event.target as HTMLInputElement).checked) {
-          this.addToCart(id);
-        } else {
-          this.removeFromCart(id);
-        }
-
+  toggleCart(event: Event, id: number): void {
+    if (!this.isAuthenticated) {
+      this.toast.warning('Please login first', 'Not Authenticated');
+      return;
+    } else {
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToCart(id);
+      } else {
+        this.removeFromCart(id);
       }
     }
-  
-    toggleWishList(event: Event, id: number): void {
-      if (!this.isAuthenticated) {
-        this.toast.warning('Please login first', 'Not Authenticated');
-        return;
-      }else{
-        
-        if ((event.target as HTMLInputElement).checked) {
-          this.addToWishlist(id);
-        } else {
-          this.removeFromWishlist(id);
-        }
+  }
+
+  toggleWishList(event: Event, id: number): void {
+    if (!this.isAuthenticated) {
+      this.toast.warning('Please login first', 'Not Authenticated');
+      return;
+    } else {
+      if ((event.target as HTMLInputElement).checked) {
+        this.addToWishlist(id);
+      } else {
+        this.removeFromWishlist(id);
       }
     }
-  
-    isInWishlist(id: number): boolean {
+  }
 
-      return this.userWishlist.includes(id);
-    }
-  
-    isInCart(id: number): boolean {
-      return this.userCart.includes(id);
-    }
-  
-    private addToCart(id: number): void {
-      this.cartService.addItemToCart({
-        products: {
-          [id.toString()]: 1,
-        },
-      });
-      this.toast.success('Product added to cart', 'Added');
-    }
-  
-    private removeFromCart(id: number): void {
-      this.cartService.deleteItemFromCart({
-        products: id,
-      });
-      this.toast.error('Product removed from cart', 'Removed');
-    }
-  
-    private addToWishlist(id: number): void {
-      this.wishlisteService.addItemToWishlist({
-        products: [id],
-      });
-      this.toast.success('Product added to wishlist', 'Added');
-    }
-  
-    private removeFromWishlist(id: number): void {
-      this.wishlisteService.deleteItemFromWishlist({
-        products: id,
-      });
-      this.toast.error('Product removed from wishlist', 'Removed');
-    }
+  isInWishlist(id: number): boolean {
+    return this.userWishlist.includes(id);
+  }
+
+  isInCart(id: number): boolean {
+    return this.userCart.includes(id);
+  }
+
+  private addToCart(id: number): void {
+    this.cartService.addItemToCart({
+      products: {
+        [id.toString()]: 1,
+      },
+    });
+    this.toast.success('Product added to cart', 'Added');
+  }
+
+  private removeFromCart(id: number): void {
+    this.cartService.deleteItemFromCart({
+      products: id,
+    });
+    this.toast.error('Product removed from cart', 'Removed');
+  }
+
+  private addToWishlist(id: number): void {
+    this.wishlisteService.addItemToWishlist({
+      products: [id],
+    });
+    this.toast.success('Product added to wishlist', 'Added');
+  }
+
+  private removeFromWishlist(id: number): void {
+    this.wishlisteService.deleteItemFromWishlist({
+      products: id,
+    });
+    this.toast.error('Product removed from wishlist', 'Removed');
+  }
 }
