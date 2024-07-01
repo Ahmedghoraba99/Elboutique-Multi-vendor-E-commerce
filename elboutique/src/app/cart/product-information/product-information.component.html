@@ -42,10 +42,9 @@
             <span>Amount</span>
             <select class="m-3" name="" id="" #select>
               @for(item of getStock(product.stock).slice(0, 5) ; track $index ){
-                  <option value="{{ item }}">{{ item }}</option>
+              <option value="{{ item }}">{{ item }}</option>
 
-                }
-    
+              }
             </select>
             <span
               [ngClass]="{
@@ -63,19 +62,19 @@
           <div class="product-description-vendor my-2">
             <div class="vendor-data d-flex align-items-center p-3">
               <div class="vendor-profile position-relative">
-                <img src="{{ product.vendor.image_url }}" alt="" />
+                <img src="{{ product.vendor?.image_url }}" alt="" />
                 <fa-icon
                   [icon]="faCircleCheck"
-                  *ngIf="product.vendor.national_id"
+                  *ngIf="product.vendor?.national_id"
                 ></fa-icon>
               </div>
               <div class="vendor-profile-info ms-3">
                 <h5>
-                  <a class="" routerLink="/vendor/{{ product.vendor.id }}">{{
-                    product.vendor.name
+                  <a class="" routerLink="/vendor/{{ product.vendor?.id }}">{{
+                    product.vendor?.name
                   }}</a>
                 </h5>
-                <p class="vendor-email m-0 p-0">{{ product.vendor.email }}</p>
+                <p class="vendor-email m-0 p-0">{{ product.vendor?.email }}</p>
               </div>
             </div>
           </div>
