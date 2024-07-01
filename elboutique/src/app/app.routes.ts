@@ -51,8 +51,8 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, data: { title: 'Login' } },
       {
         path: 'wishlist',
-        component: WishListComponent,
-        data: { title: 'WishList' },
+        loadChildren: () =>
+          import('./wish-list/wish-list.module').then((m) => m.WishListModule),
       },
       {
         path: 'products/:id',
