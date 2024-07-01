@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\product_images;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Request as DefalutRequest;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -86,6 +87,33 @@ class ProductController extends Controller
             }
             return response()->json(['error' => $th->getMessage()], 500);
         }
+    }
+
+
+    public function storeProductTags(DefalutRequest $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'tag_ids' => 'required|array',
+            'tag_ids.*' => 'exists:tags,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $product = Product::findOrFail($request->input('product_id'));
+
+        // Attach the new tags to the product
+        $product->tags()->attach($request->input('tag_ids'));
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product tags updated successfully.',
+        ], 200);
     }
 
 
@@ -316,7 +344,7 @@ class ProductController extends Controller
     function getVendorProducts($id)
     {
         try {
-            // paginate products 
+            // paginate products
 
             $products = Product::where('vendor_id', $id)->with('images', 'vendor')->paginate(10);
             // $products = Product::where('vendor_id', $id)->with('images', 'vendor')->get();
@@ -346,4 +374,24 @@ class ProductController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
+
+    // get tages by product id
+
+    function getTagsByProductId($id)
+    {
+        try {
+            $product = Product::find($id);
+            $tags = $product->tags->map(function ($tag) {
+                return [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                ];
+            });
+            return response()->json($tags);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+
 }

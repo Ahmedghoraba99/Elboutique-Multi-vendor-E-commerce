@@ -1,23 +1,35 @@
 <div class="h6 text-uppercase">Products</div>
 <hr class="hr">
-<div class="custom-btn-1 my-3" [routerLink]="['/v/products', 'add']">
+<div class="container">
+  <div class="row height d-flex justify-content-center align-items-center">
+    <div class="col-md-8">
+      <div class="search">
+          <i class="fa fa-search"></i>
+          <input type="text" class="form-control" placeholder="Can you search About Product" [(ngModel)]="searchTerm" (input)="filterProducts()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="custom-btn-1 my-3 " [routerLink]="['/v/products', 'add']">
   Add new product
 </div>
-<div class="table-responsive overflow-auto">
+
+<div class="table-responsive  ">
     <table class="table">
         <thead>
-            <tr>
+            <tr >
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Price</th>
                 <th scope="col">Category</th>
                 <th scope="col">Stock</th>
-                <th scope="col">Actions</th>
+                <th scope="col" class="text-center">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let product of products; let i = index">
+            <tr *ngFor="let product of filteredProducts; let i = index">
                 <th scope="row">{{ i + 1 }}</th>
                 <td>{{ product.name }}</td>
                 <td>{{ product.description }}</td>
@@ -25,17 +37,44 @@
                 <td>{{ getCategoryName(product.category_id) }}</td>
                 <td>{{ product.stock }}</td>
                 <td>
-                    <button type="button" class="btn btn-warning btn-sm me-2"
-                    [routerLink]="['/v/products/edit', product.id]"><i
-                        class="fa-solid fa-pen-to-square"></i>
+
+                  <!-- show -->
+                  <button type="button" class="btn btn-success btn-sm me-2" [routerLink]="['/v/products/show', product.id]">
+                    <i class="fa-solid fa-eye"></i>
+                    <span class="visually-hidden">Show</span>
+                  </button>
+
+                  <!-- update -->
+                  <button type="button" class="btn btn-warning btn-sm me-2" [routerLink]="['/v/products/edit', product.id]">
+                    <i class="fa-solid fa-pen-to-square"></i>
                     <span class="visually-hidden">Edit</span>
-                </button>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="confirmDelete(product.id)"><i
-                            class="fa-solid fa-trash"></i><span class="visually-hidden">Delete</span></button>
+                  </button>
+
+                  <!-- delete -->
+                  <button type="button" class="btn btn-danger btn-sm me-2" (click)="confirmDelete(product.id)">
+                    <i class="fa-solid fa-trash"></i>
+                    <span class="visually-hidden">Delete</span>
+                  </button>
+
+                  <!-- Sale -->
+                  <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#addSale">
+                    <!-- <i class="fa-brands fa-salesforce"></i> -->
+                    <span class="">Sale</span>
+                  </button>
+
+
+                  <!-- tages -->
+                  <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#tages">
+                    <i class="fa-solid fa-tags"></i>
+                    <span class="visually-hidden">tages</span>
+                  </button>
+
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
 
+<app-add-sale [productId]="product_id"></app-add-sale>
+<app-tage-product [product_id]="product_id"></app-tage-product>
 

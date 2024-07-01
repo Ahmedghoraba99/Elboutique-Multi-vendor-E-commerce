@@ -1,0 +1,46 @@
+
+<div
+  class="modal fade"
+  id="addSale"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalTitleId"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitleId">
+          Add Sale
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="mb-3">
+            <label for="sale" class="form-label">Sale</label>
+            <input type="number" class="form-control" id="sale" (change)="onChangeEvent()" placeholder="Enter The Sale Number " [(ngModel)]="sale">
+          </div>
+          <div class="mb-3 alert-danger">{{errorMessage}}</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" [disabled]="!isValid" (click)="onSubmit()" data-bs-toggle="modal" data-bs-target="#addSale">Add Sale</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

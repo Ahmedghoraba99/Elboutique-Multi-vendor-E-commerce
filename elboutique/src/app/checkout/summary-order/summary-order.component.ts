@@ -54,4 +54,37 @@ export class SummaryOrderComponent implements OnInit {
     
       this.totalPrice = totalPrice;
   }
+  ormatCardNumber(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+    value = value.match(/.{1,4}/g)?.join(' ') || value;
+    this.paymentForm.controls['cardNumber'].setValue(value, {
+      emitEvent: false,
+    });
+  }
+
+  formatExpDate(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9]/g, '');
+    if (value.length > 2) {
+      value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    this.paymentForm.controls['expDate'].setValue(value, { emitEvent: false });
+  }
+
+  formatCcv(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9]/g, '');
+    if (value.length > 3) {
+      value = value.slice(0, 3);
+    }
+    this.paymentForm.controls['ccv'].setValue(value, { emitEvent: false });
+  }
+  onSubmit() {
+    if (this.paymentForm.valid) {
+      console.log('Form Submitted!', this.paymentForm.value);
+    } else {
+      console.log('Form is invalid');
+    }
+  }
 }

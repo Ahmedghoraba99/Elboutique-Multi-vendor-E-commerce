@@ -5,13 +5,19 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ProgressSpinnerModule,
+  ],
 })
 export class OrdersComponent implements OnInit {
   @ViewChild('orderForm') orderForm!: any;
@@ -21,7 +27,7 @@ export class OrdersComponent implements OnInit {
   newOrder: any = { customer_id: '', status: 'midway', total: '' };
   editOrder: any = { id: null, customer_id: '', status: 'midway', total: '' };
   validationErrors: any = {};
-
+  loading = true;
   constructor(
     private orderService: OrderService,
     private customerService: CustomerService,
@@ -36,8 +42,8 @@ export class OrdersComponent implements OnInit {
   loadOrders(): void {
     this.orderService.getOrders().subscribe({
       next: (response: any) => {
-        console.log('Orders loaded', response);
-        this.orders = response.data; // Access the data property
+        this.orders = response.data;
+        this.loading = false;
       },
       error: (error: any) => console.error('Error loading orders', error),
     });
@@ -46,8 +52,8 @@ export class OrdersComponent implements OnInit {
   loadCustomers(): void {
     this.customerService.getCustomers().subscribe({
       next: (response: any) => {
-        console.log('Customers loaded', response);
         this.customers = response;
+        this.loading = false;
       },
       error: (error: any) => console.error('Error loading customers', error),
     });

@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentRequest;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\PayPalService;
 
@@ -15,9 +17,9 @@ class PayPalController extends Controller
         $this->payPalService = $payPalService;
     }
 
-    public function createPayment(Request $request)
+    public function createPayment(PaymentRequest $request)
     {
-        $invoiceId = 1;
+       
         $data = $this->getPaymentData($request);
 
         $response = $this->payPalService->createPayment($data);
@@ -36,13 +38,23 @@ class PayPalController extends Controller
 
     public function success(Request $request)
     {
+        
         $response = $this->payPalService->getPaymentDetails($request->token);
         $frontEndUrl = $this->getFrontendUrl();
-
+        $order = Order::find($response['INVNUM']) ;
         if ($this->isPaymentSuccessful($response)) {
+            $order->update([
+                'payment_status' => 'finished',
+                'transaction_id' => $response['PAYERID']
+            ]);
+        
             return redirect($frontEndUrl . '?success=true');
+            
         }
-
+            $order->update([
+                    'payment_status' => "failed",
+                    'transaction_id' => $response['PAYERID']
+                ]);
         return redirect($frontEndUrl . '?success=false');
     }
 
@@ -70,8 +82,10 @@ class PayPalController extends Controller
 
     private function getFrontendUrl()
     {
-        return env('FRONTEND_URL', 'http://localhost:4200') . '/checkout';
+     
+        return env('frontend_url') . '/checkout';
     }
+
 
     private function isPaymentSuccessful($response)
     {

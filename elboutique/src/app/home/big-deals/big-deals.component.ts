@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { WishlistService } from '../../service/wishlist.service';
 import { CartService } from '../../service/cart.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-big-deals',
@@ -21,50 +22,64 @@ export class BigDealsComponent {
   products: any[] = [];
   userWishlist: any[] = [];
   userCart: any[] = [];
+  isAuthenticated = false;
+
 
   ngOnInit(): void {
+    this.authService.isAuthObservable().subscribe((isAuth) => {
+      this.isAuthenticated = isAuth;
+    });
     this.homeService.getOnSaleProducts().subscribe((data) => {
       this.products = data;
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      // console.log('Data from wishlist: ', data);
       data.forEach((item: { id: any }) => {
         this.userWishlist.push(item.id);
       });
     });
     this.cartService.getCartData().subscribe((data) => {
-      // console.log('Data from cart: ', data);
       data.forEach((item: { id: any }) => {
         this.userCart.push(item.id);
-        // console.log(this.userCart);
       });
     });
   }
 
   constructor( private toast: ToastrService,
     private cartService: CartService,
-    private wishlisteService: WishlistService) {}
+    private wishlisteService: WishlistService,
+    private authService: AuthService
+  ) {}
 
     toggleCart(event: Event, id: number): void {
-      if ((event.target as HTMLInputElement).checked) {
-        this.addToCart(id);
-      } else {
-        this.removeFromCart(id);
+      if (!this.isAuthenticated) {
+        this.toast.warning('Please login first', 'Not Authenticated');
+        return;
+      }else{
+        if ((event.target as HTMLInputElement).checked) {
+          this.addToCart(id);
+        } else {
+          this.removeFromCart(id);
+        }
+
       }
     }
   
     toggleWishList(event: Event, id: number): void {
-      if ((event.target as HTMLInputElement).checked) {
-        this.addToWishlist(id);
-      } else {
-        this.removeFromWishlist(id);
+      if (!this.isAuthenticated) {
+        this.toast.warning('Please login first', 'Not Authenticated');
+        return;
+      }else{
+        
+        if ((event.target as HTMLInputElement).checked) {
+          this.addToWishlist(id);
+        } else {
+          this.removeFromWishlist(id);
+        }
       }
     }
   
     isInWishlist(id: number): boolean {
-      // console.log("**************");
-      // console.log(this.userWishlist.includes(id));
-  
+
       return this.userWishlist.includes(id);
     }
   

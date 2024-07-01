@@ -19,6 +19,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RouterLink, RouterOutlet } from '@angular/router';
+
 @Component({
   selector: 'app-products',
   standalone: true,
@@ -34,6 +37,9 @@ import { Table, TableModule } from 'primeng/table';
     DropdownModule,
     ConfirmDialogModule,
     InputTextModule,
+    ProgressSpinnerModule,
+    RouterLink,
+    RouterOutlet,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './products.component.html',
@@ -42,22 +48,16 @@ import { Table, TableModule } from 'primeng/table';
 export class ProductsComponent {
   @ViewChild('dt') dt: Table | undefined;
 
+  loading: boolean = false;
   products: any[] = [];
   categories: any[] = [];
   vendors: any[] = [];
-  productDialog: boolean = false;
-  selectedProducts: any[] = [];
   product: any = {};
-  submitted: boolean = false;
+  selectedProducts: any[] = [];
   page = 1;
-  pageSize = 10;
+  pageSize = 16;
   totalItems = 0;
-  images: File[] = [];
-  statuses: any[] = [
-    { label: 'INSTOCK', value: 'instock' },
-    { label: 'LOWSTOCK', value: 'lowstock' },
-    { label: 'OUTOFSTOCK', value: 'outofstock' },
-  ];
+  paginationLinks: any[] = [];
 
   constructor(
     private productService: ProductService,
@@ -75,6 +75,7 @@ export class ProductsComponent {
   getCategoriesAndVendors(callback: () => void): void {
     let categoriesLoaded = false;
     let vendorsLoaded = false;
+    this.loading = true;
 
     // Fetch categories
     this.categoryService.getCategories().subscribe({
@@ -82,10 +83,12 @@ export class ProductsComponent {
         this.categories = response.data;
         categoriesLoaded = true;
         if (vendorsLoaded) {
+          this.loading = false;
           callback();
         }
       },
       error: (error) => {
+        this.loading = false;
         console.error('Error fetching categories:', error);
       },
     });
@@ -96,6 +99,7 @@ export class ProductsComponent {
         this.vendors = response.data;
         vendorsLoaded = true;
         if (categoriesLoaded) {
+          this.loading = false;
           callback();
         }
       },
@@ -113,64 +117,13 @@ export class ProductsComponent {
           categoryName: this.getCategoryName(product.category_id),
           vendorName: this.getVendorName(product.vendor_id),
         }));
-        console.log(this.products);
-
         this.totalItems = response.total;
+        this.paginationLinks = response.links;
       },
       error: (error) => {
         console.error('Error fetching products:', error);
       },
     });
-  }
-
-  openNew() {
-    this.product = {};
-    this.submitted = false;
-    this.productDialog = true;
-  }
-
-  hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-  }
-
-  saveProduct() {
-    this.submitted = true;
-
-    if (this.product.name.trim()) {
-      if (this.product.id) {
-        this.productService
-          .updateProduct(this.product.id, this.product)
-          .subscribe(() => {
-            this.getProducts();
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Successful',
-              detail: 'Product Updated',
-              life: 3000,
-            });
-          });
-      } else {
-        this.productService.addProduct(this.product).subscribe(() => {
-          this.getProducts();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Product Created',
-            life: 3000,
-          });
-        });
-      }
-
-      this.products = [...this.products];
-      this.productDialog = false;
-      this.product = {};
-    }
-  }
-
-  editProduct(product: any) {
-    this.product = { ...product };
-    this.productDialog = true;
   }
 
   deleteProduct(id: number) {
@@ -192,27 +145,6 @@ export class ProductsComponent {
     });
   }
 
-  deleteSelectedProducts() {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected products?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        let ids = this.selectedProducts.map((product) => product.id);
-        this.productService.deleteProducts(ids).subscribe(() => {
-          this.getProducts();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Products Deleted',
-            life: 3000,
-          });
-        });
-        this.selectedProducts = [];
-      },
-    });
-  }
-
   onFilter(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.dt?.filterGlobal(inputElement.value, 'contains');
@@ -227,9 +159,8 @@ export class ProductsComponent {
     return vendor ? vendor.name : '-';
   }
 
-  onImageChange(event: any) {
-    for (let file of event.files) {
-      this.images.push(file);
-    }
+  loadPage(page: number): void {
+    this.page = page;
+    this.getProducts();
   }
 }

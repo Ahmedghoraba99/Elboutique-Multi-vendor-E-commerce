@@ -200,21 +200,20 @@
         <i class="fa-solid fa-ghost mx-2"></i>
       </div>
       <div class="row">
-        <div class="col-sm-4 col-md-3 my-3" *ngFor="let product of products">
+        <div class="col-sm-4 col-md-3 my-3 position-relative" *ngFor="let product of products">
+          <div class="big-deal-product-big-tag-deal position-absolute" *ngIf="product.sale">
+            <span>{{ product.sale }}% Off</span>
+        </div>
           <div class="d-flex flex-column">
             <div class="big-deal-product-data p-3">
+              
               <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-between align-items-center"
-              >
-                <div
-                  class="big-deal-product-big-tag"
-                  [ngClass]="{
-                    'd-inline': product.deal,
-                    invisible: !product.sale
-                  }"
-                >
-                  <span>Deal {{ product.sale }}% Off</span>
-                </div>
+              class="big-deal-product-big-tags d-flex flex-row align-items-end"
+              [ngClass]="{'justify-content-between': product.is_featured, 'justify-content-end': !product.is_featured}"
+            >
+              <div *ngIf="product.is_featured" class="products-tag">
+                <span class="text-capitalize">Featured</span>
+              </div>
                 <div class="products-wish">
                   <div class="con-like">
                     <input

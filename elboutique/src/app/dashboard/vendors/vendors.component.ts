@@ -2,17 +2,19 @@ import { Component } from '@angular/core';
 import { VendorService } from '../../service/admin/vendor.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-vendors',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProgressSpinnerModule],
   templateUrl: './vendors.component.html',
   styleUrl: './vendors.component.css',
 })
 export class VendorsComponent {
   vendors: any[] = [];
   selectedVendor: any = null;
+  loading = true;
 
   constructor(private vendorService: VendorService) {}
   ngOnInit(): void {
@@ -21,8 +23,9 @@ export class VendorsComponent {
         ...vendor,
         image: vendor.image_url,
       }));
-      console.log(this.vendors);
     });
+
+    this.loading = false;
   }
 
   viewVendor(vendor: any): void {

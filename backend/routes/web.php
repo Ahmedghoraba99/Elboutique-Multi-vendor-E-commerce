@@ -5,6 +5,7 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Client\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,4 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // })->middleware(['auth:sanctum'])->name('verification.verify');
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+

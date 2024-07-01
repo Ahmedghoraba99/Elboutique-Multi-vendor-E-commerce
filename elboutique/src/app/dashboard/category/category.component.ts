@@ -8,11 +8,17 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbPaginationModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbPaginationModule,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
 })
@@ -23,6 +29,7 @@ export class CategoryComponent {
   totalItems = 0;
   paginationLinks: any[] = [];
   selectedCategory: any = {};
+  loading = true;
 
   constructor(
     private categoryService: CategoryService,
@@ -39,9 +46,11 @@ export class CategoryComponent {
         this.categories = response.data;
         this.totalItems = response.total;
         this.paginationLinks = response.links;
-        console.log('Categories:', this.categories);
+        this.loading = false;
       },
       error: (error) => {
+        this.loading = false;
+
         console.error('Error fetching categories:', error);
       },
     });

@@ -1,0 +1,131 @@
+
+<div class="container-fluid">
+  <div class="row">
+
+
+    <div class="col-lg-6">
+
+      @if (product.images.length > 0) {
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div *ngFor="let image of product.images; let i = index" [class.active]="i === 0" class="carousel-item" data-bs-interval="2000">
+              <img [src]="image.image_url" class="d-block w-100" alt="...">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      }@else {
+        <div class="col-lg-6">
+          <h3 class="text-center m-2">No images</h3>
+        </div>
+      }
+
+    </div><!-- carousel -->
+
+
+
+    <div class="col-lg-6 mt-5 pt-3">
+
+      <!-- Name -->
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Name</span>
+        <input [value]="product.name" type="text" class="form-control" placeholder="productName" aria-label="productName" disabled aria-describedby="basic-addon1">
+      </div>
+
+      <!-- description -->
+      <div class="input-group  mb-3">
+        <span class="input-group-text">Description</span>
+        <textarea [value]="product.description" class="form-control" rows="5" aria-label="With textarea" disabled></textarea>
+      </div>
+
+      <!-- price -->
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Price</span>
+        <input [value]="product.price" type="number" class="form-control" placeholder="price" aria-label="price" disabled aria-describedby="basic-addon1">
+      </div>
+
+      <!-- Stock -->
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Stock</span>
+        <input [value]="product.stock" type="number" class="form-control" placeholder="stock" aria-label="stock" disabled aria-describedby="basic-addon1">
+      </div>
+
+      <!-- category id -->
+      <select class="form-select mb-3" disabled>
+        <option *ngFor="let category of categories" [value]="category.id == product.id ? category.name : null">{{ category.name }}</option>
+
+      </select>
+
+      <!-- sale -->
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1">Sale</span>
+        <input [value]="product.sale" type="number" class="form-control" placeholder="sale" aria-label="sale" disabled aria-describedby="basic-addon1">
+      </div>
+
+    </div> <!-- product info -->
+
+  </div><!-- end row   -->
+
+  <div class="row container mt-3 ">
+    <div class="col-lg-6">
+      @if (product.attributes.length > 0) {
+        <h3 class="text-center m-2">Atrributes</h3>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">proberty</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let attribute of product.attributes; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ attribute.name }}</td>
+              <td>{{ attribute.value }}</td>
+            </tr>
+          </tbody>
+        </table>
+      }@else {
+        <div class="col-lg-6">
+          <h3 class="text-center m-2">No Attributes</h3>
+        </div>
+      }
+    </div><!-- Attributes -->
+
+
+    <div class="col-lg-6">
+      @if (tages.length > 0) {
+        <h3 class="text-center m-2">Tages</h3>
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">name</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let tag of tages; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ tag.name }}</td>
+            </tr>
+          </tbody>
+        </table>
+      }@else {
+        <div class="col-lg-6">
+          <h3 class="text-center m-2">No Tages</h3>
+        </div>
+      }
+
+    </div><!-- Tages -->
+  </div>
+</div>
