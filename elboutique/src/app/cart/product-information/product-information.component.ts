@@ -33,7 +33,6 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     private toaster: ToastrService,
     private cartService: CartService,
     private authService: AuthService
-
   ) {}
   ngOnDestroy(): void {
     this.addToCartSub?.unsubscribe();
@@ -59,10 +58,11 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     });
 
     this.wishlistService.getWishlistData().subscribe((res: any) => {
-      console.log('this is wishlist data :', res);
-      res.forEach((element: any) => {
-        this.currentWishlist.push(element.id);
-      });
+      if (res) {
+        res.forEach((element: any) => {
+          this.currentWishlist.push(element.id);
+        });
+      }
     });
   }
 
@@ -74,7 +74,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       const selectedValue = String(select.value);
       const sentBody = {
         products: {
@@ -83,7 +83,6 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
       };
       this.cartService.addItemToCart(sentBody);
       this.toaster.success('Product Added To Cart', 'success');
-
     }
     // console.log(typeof selectedValue);
     // console.log('this is sentbody :');
@@ -101,7 +100,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       const sentBody: Object = {
         products: [this.product.id],
       };
@@ -121,6 +120,5 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
         div.innerHTML = `<i class="fa-solid fa-heart fs-6 "></i>`;
       }
     }
-   
   }
 }

@@ -61,23 +61,27 @@
             </span>
           </div>
           <div class="product-description-vendor my-2">
-            <div class="vendor-data d-flex align-items-center p-3">
-              <div class="vendor-profile position-relative">
-                <img src="{{ product.vendor.image_url }}" alt="" />
-                <fa-icon
-                  [icon]="faCircleCheck"
-                  *ngIf="product.vendor.national_id"
-                ></fa-icon>
+            @if (product.vendor) {
+              <div class="vendor-data d-flex align-items-center p-3">
+                <div class="vendor-profile position-relative">
+                  @if(product.vendor.image_url){
+                    <img src="{{ product.vendor.image_url }}" alt="" />
+                  }
+                  <fa-icon
+                    [icon]="faCircleCheck"
+                    *ngIf="product.vendor.national_id"
+                  ></fa-icon>
+                </div>
+                <div class="vendor-profile-info ms-3">
+                  <h5>
+                    <a class="" routerLink="/vendor/{{ product.vendor.id }}">{{
+                      product.vendor.name
+                    }}</a>
+                  </h5>
+                  <p class="vendor-email m-0 p-0">{{ product.vendor.email }}</p>
+                </div>
               </div>
-              <div class="vendor-profile-info ms-3">
-                <h5>
-                  <a class="" routerLink="/vendor/{{ product.vendor.id }}">{{
-                    product.vendor.name
-                  }}</a>
-                </h5>
-                <p class="vendor-email m-0 p-0">{{ product.vendor.email }}</p>
-              </div>
-            </div>
+            }
           </div>
           <div class="product-adding d-flex flex-row gap-5 my-4">
             <div

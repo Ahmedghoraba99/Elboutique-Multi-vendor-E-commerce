@@ -52,10 +52,8 @@ export class ReviewsComponent implements OnInit{
 
   loadReviews(productId: number): void {
     this.reviewService.getReviews(productId).subscribe(response => {
-      console.log(response.data);
       this.reviews = response.data;
       this.calculateAverageRating();
-      console.log(this.reviews);
     });
   }
 

@@ -50,7 +50,7 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order=Order::with(['products','customer'])->find($id);
+        $order=Order::with(['products','customer','customer.addresses'])->find($id);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
