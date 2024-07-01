@@ -72,8 +72,12 @@ export const routes: Routes = [
       },
       {
         path: 'vendor/:id',
-        component: VendorProfileComponent,
         data: { title: 'Vendor Profile' },
+        // component: VendorProfileComponent,
+        loadChildren: () =>
+          import('./vendor-profile/vendor-profile.module').then(
+            (m) => m.VendorProfileModule
+          ),
       },
       {
         path: 'login/forget-password',
@@ -161,6 +165,8 @@ export const routes: Routes = [
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+    // loadChildren: () =>
+    //   import('./Auth/register/register.module').then((m) => m.RegisterModule),
     canActivate: [authGuard],
   },
   {
