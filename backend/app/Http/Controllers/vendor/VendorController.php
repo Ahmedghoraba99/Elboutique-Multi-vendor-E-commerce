@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\vendor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\VendorResource;
 use App\Models\Vendor;
 use App\Http\Requests\StoreVendorRequest;
@@ -110,7 +111,7 @@ class VendorController extends Controller
         return response()->json([
             'message' => 'Vendor Receivables retrieved successfully',
             'data' => $vendor->vendorReceivables,
-            'vendor_projects'=>
+            'vendor_products'=>   ProductResource::collection($vendor->products ) 
         ], 200);
 
 
