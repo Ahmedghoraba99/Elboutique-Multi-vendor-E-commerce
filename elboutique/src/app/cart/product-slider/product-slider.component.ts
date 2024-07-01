@@ -35,7 +35,6 @@ export class ProductSliderComponent implements AfterViewInit {
           (image: { image: string }) =>
             'http://localhost:8000/storage/' + image.image
         );
-        console.log(this.productImages);
         this.initSwipers();
       });
     });
