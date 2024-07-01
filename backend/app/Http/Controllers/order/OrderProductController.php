@@ -23,8 +23,16 @@ class OrderProductController extends Controller
             if(!$product){
             return response()->json(["message"=> "Product Doesn't exist"],404);
             }
+            if ($product->stock < $quantity) {
+                return response()->json(["message" => "Insufficient stock for product ID: $product_id"], 400);
+            }
             $products[$product_id]=["quantity" => $quantity];
-        }        
+        } 
+        foreach ($products as $product_id => $details) {
+            $product = Product::find($product_id);
+            $product->stock -= $details['quantity'];
+            $product->save();
+        }
         $order->products()->attach($products);
         return response()->json(['message'=> 'Products added to Order'], 200);
     }

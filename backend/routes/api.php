@@ -100,6 +100,7 @@ Route::group(['middleware' => ['auth:sanctum', 'AdminCustomerAuth']], function (
     Route::post('/orders/addProducts/{id}', [OrderProductController::class, 'addProductToOrder']);
     Route::post('/orders/deleteProducts/{id}', [OrderProductController::class, 'deleteProductFromOrder']);
     Route::get('/orders/showProducts/{id}', [OrderProductController::class, 'getOrderProduct']);
+    Route::post('/orders/cancelOrder/{id}',[OrderController::class,'cancelOrder']);
 
     Route::patch('customers/{customer}', [CustomerController::class, 'update']);
     Route::put('customers/{customer}', [CustomerController::class, 'update']);
