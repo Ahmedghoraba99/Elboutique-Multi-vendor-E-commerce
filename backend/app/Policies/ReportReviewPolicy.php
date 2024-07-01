@@ -33,8 +33,7 @@ class ReportReviewPolicy
        
          
  return $user instanceof Admin || (!$user->banned && !$user->reviews->where('customer_id', $user->id)->exists());
-}
-     
+      
     }
 
     /**
