@@ -34,3 +34,18 @@ interface Data{
 export interface ProfileUser{
   data: Data;
 }
+
+export interface CurrentUser{
+  data: {
+    id?: number,
+    name?: string,
+    email?: string,
+    phone?: string | null,
+    addresses?: Address[],
+    phones?: Phone[],
+    role?: string,
+    image_url?:string,
+    active:string,
+    token?:string
+  }
+}

@@ -37,10 +37,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { authGuardGuard } from './_guards/auth.guard';
 import { AddProductComponent } from './profile/vendor/products/add-product/add-product.component';
 import { UpdateProductComponent } from './profile/vendor/products/update-product/update-product.component';
-import { WelcomeComponent } from './dashboard/products/welcome/welcome.component';
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
 import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
-
 
 export const routes: Routes = [
   {
@@ -52,8 +50,8 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, data: { title: 'Login' } },
       {
         path: 'wishlist',
-        component: WishListComponent,
-        data: { title: 'WishList' },
+        loadChildren: () =>
+          import('./wish-list/wish-list.module').then((m) => m.WishListModule),
       },
       {
         path: 'products/:id',
@@ -65,16 +63,21 @@ export const routes: Routes = [
         component: CheckoutComponent,
         data: { title: 'Checkout' },
       },
-      // { path: 'categories', component: CategoryComponent, data: { title: 'Category' } },
       {
         path: 'categories/:id',
-        component: CategoryComponent,
         data: { title: 'Category' },
+        // component: CategoryComponent,
+        loadChildren: () =>
+          import('./category/category.module').then((m) => m.CategoryModule),
       },
       {
         path: 'vendor/:id',
-        component: VendorProfileComponent,
         data: { title: 'Vendor Profile' },
+        // component: VendorProfileComponent,
+        loadChildren: () =>
+          import('./vendor-profile/vendor-profile.module').then(
+            (m) => m.VendorProfileModule
+          ),
       },
       {
         path: 'login/forget-password',
@@ -125,31 +128,7 @@ export const routes: Routes = [
       {
         path: 'products',
         title: 'Products',
-        component: WelcomeComponent,
-
-        children: [
-          {
-            path: '',
-            redirectTo: 'products',
-            pathMatch: 'full',
-          },
-          {
-            path: '',
-            title: 'Products',
-            component: ProductsComponent,
-          },
-
-          {
-            path: 'new',
-            title: 'New Product',
-            component: AddProductComponent,
-          },
-          {
-            path: 'edit/:id',
-            title: 'Update Product',
-            component: UpdateProductComponent,
-          },
-        ],
+        component: ProductsComponent,
       },
       {
         path: 'orders',
@@ -174,41 +153,20 @@ export const routes: Routes = [
     component: LoginComponent,
     canActivate: [authGuard],
   },
-  // ,
-  // {
-  //   path: 'wishlist',
-  //   title: 'WishList',
-  //   component: WishListComponent,
-  // },
-  // {
-  //   path: 'products/:id',
-  //   title: 'Details',
-  //   component: CartComponent,
-  // },
-  // {
-  //   path: 'checkout',
-  //   title: 'Checkout',
-  //   component: CheckoutComponent,
-  // },
-  // {
-  //   path: 'categories/:id',
-  //   title: 'Category',
-  //   component: CategoryComponent,
-  // },
-  // {
-  //   path: 'vendor/:id',
-  //   title: 'Vendor Profile',
-  //   component: VendorProfileComponent,
-  // },
   {
     path: 'login/forget-password',
     title: 'ForgetPassword',
-    component: ForgotPasswordComponent,
+    loadChildren: () =>
+      import('./Auth/forget-password/forget-password.module').then(
+        (m) => m.ForgetPasswordModule
+      ),
   },
   {
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+    // loadChildren: () =>
+    //   import('./Auth/register/register.module').then((m) => m.RegisterModule),
     canActivate: [authGuard],
   },
   {
@@ -295,7 +253,7 @@ export const routes: Routes = [
       },
       {
         path: 'products/show/:id',
-        'title': 'Show Product',
+        title: 'Show Product',
         component: ShowProductComponent,
       },
       {

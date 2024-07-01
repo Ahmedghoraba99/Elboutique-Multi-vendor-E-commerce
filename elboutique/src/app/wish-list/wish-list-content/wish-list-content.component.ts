@@ -1,42 +1,36 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WishlistService } from '../../service/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faHeartBroken } from '@fortawesome/free-solid-svg-icons';
-import { faShoppingBasket } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHeartBroken,
+  faShoppingBasket,
+  faTrashCan,
+  faHeart,
+} from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../service/auth.service';
 import { NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../service/cart.service';
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-wish-list-content',
-  standalone: true,
-  imports: [FontAwesomeModule, NgIf, RouterLink],
   templateUrl: './wish-list-content.component.html',
-  styleUrl: './wish-list-content.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  styleUrls: ['./wish-list-content.component.css'],
 })
 export class WishListContentComponent implements OnInit, OnDestroy {
   faHeartBroken = faHeartBroken;
   faShoppingBasket = faShoppingBasket;
-
   faHeart = faHeart;
+  faTrashCan = faTrashCan;
+
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
   userWishlist: any = [];
   userCartId: any[] = [];
-  // userCart: any = [];
-
-  faTrashCan = faTrashCan;
-
   userCart: any = [];
-
   isAuthenticated = false;
 
   constructor(
@@ -45,10 +39,12 @@ export class WishListContentComponent implements OnInit, OnDestroy {
     private toaster: ToastrService,
     private authService: AuthService
   ) {}
+
   ngOnDestroy(): void {
     this.getWishlistSub?.unsubscribe();
     this.deleteFromWishlistSub?.unsubscribe();
   }
+
   ngOnInit(): void {
     this.authService.isAuthObservable().subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
@@ -67,7 +63,7 @@ export class WishListContentComponent implements OnInit, OnDestroy {
       }
     });
   }
-  // with the sweetalert
+
   removeProductFromWishlist(id: number) {
     Swal.fire({
       title: 'Are you sure ?',
@@ -78,8 +74,8 @@ export class WishListContentComponent implements OnInit, OnDestroy {
       cancelButtonColor: '#f95b3d',
       confirmButtonText: 'Yes, Remove it!',
       cancelButtonText: 'No, keep it',
-    }).then((reult) => {
-      if (reult.isConfirmed) {
+    }).then((result) => {
+      if (result.isConfirmed) {
         const sentbody: Object = {
           products: id,
         };
@@ -92,6 +88,7 @@ export class WishListContentComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   addProductToCart(e: HTMLButtonElement, id: number) {
     const sentbody: Object = {
       products: {
@@ -101,7 +98,6 @@ export class WishListContentComponent implements OnInit, OnDestroy {
 
     this.cartService.addItemToCart(sentbody);
     this.toaster.success('Product Added To Cart', 'Add');
-    // Change button text
     e.textContent = 'Remove from cart';
   }
 
@@ -111,8 +107,6 @@ export class WishListContentComponent implements OnInit, OnDestroy {
     };
     this.cartService.deleteItemFromCart(sentbody);
     this.toaster.error('Product Removed From Cart', 'Remove');
-    console.log(sentbody);
-    // Change button text
     e.textContent = 'Add to cart';
   }
 

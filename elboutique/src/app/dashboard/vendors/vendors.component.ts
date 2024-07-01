@@ -1,33 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { VendorService } from '../../service/admin/vendor.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { Table, TableModule } from 'primeng/table';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-vendors',
   standalone: true,
-  imports: [CommonModule, ProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    ProgressSpinnerModule,
+    FileUploadModule,
+    TableModule,
+    ToastModule,
+    ToolbarModule,
+    DialogModule,
+    DropdownModule,
+    ConfirmDialogModule,
+    InputTextModule,
+  ],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './vendors.component.html',
   styleUrl: './vendors.component.css',
 })
 export class VendorsComponent {
+  @ViewChild('dt') dt: Table | undefined;
+
   vendors: any[] = [];
   selectedVendor: any = null;
   loading = true;
+  totalItems: number = 0;
+  pageSize: number = 10;
+  page: number = 1;
 
   constructor(private vendorService: VendorService) {}
   ngOnInit(): void {
-    this.vendorService.getVendors().subscribe((data) => {
-      this.vendors = data.data.map((vendor: any) => ({
-        ...vendor,
-        image: vendor.image_url,
-      }));
-    });
-
-    this.loading = false;
+    this.loadVendors();
   }
 
+  loadVendors() {
+    this.loading = true;
+    this.vendorService.getVendors().subscribe({
+      next: (response) => {
+        this.vendors = response.data;
+        this.totalItems = response.total;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
+    });
+  }
+  onFilter(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.dt?.filterGlobal(inputElement.value, 'contains');
+  }
   viewVendor(vendor: any): void {
     this.selectedVendor = vendor;
   }

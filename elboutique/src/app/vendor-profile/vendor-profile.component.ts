@@ -16,11 +16,9 @@ import { AuthService } from '../service/auth.service';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-vendor-profile',
-  standalone: true,
-  imports: [ CommonModule,FontAwesomeModule, RouterLink, NgIf, NgFor],
+  // imports: [ CommonModule,FontAwesomeModule, RouterLink, NgIf, NgFor],
   templateUrl: './vendor-profile.component.html',
   styleUrl: './vendor-profile.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class VendorProfileComponent {
   productGroups: any = [];
@@ -36,7 +34,7 @@ export class VendorProfileComponent {
     private cartService: CartService,
     private wishlisteService: WishlistService,
     private authService: AuthService,
-    private toaster: ToastrService,
+    private toaster: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +49,7 @@ export class VendorProfileComponent {
         });
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
+      data?.forEach((item: { id: any }) => {
         this.userWishlist.push(item.id);
       });
     });
@@ -72,7 +70,7 @@ export class VendorProfileComponent {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else {
+    } else {
       if ((event.target as HTMLInputElement).checked) {
         this.addToCart(id);
       } else {
@@ -85,7 +83,7 @@ export class VendorProfileComponent {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       if ((event.target as HTMLInputElement).checked) {
         this.addToWishlist(id);
       } else {

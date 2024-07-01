@@ -43,16 +43,32 @@ export class SummaryOrderComponent implements OnInit {
   }
   ngOnInit(): void {
     const productsPrices = this.cartProduct.map(
-        (product: any) => product.price
-      );
-      const totalPrice = productsPrices.reduce(
-        (accumelator: number, current: number) => {
-          return accumelator + current;
-        },
-        0
-      );
-    
-      this.totalPrice = totalPrice;
+      (product: any) => product.price
+    );
+    const totalPrice = productsPrices.reduce(
+      (accumelator: number, current: number) => {
+        return accumelator + current;
+      },
+      0
+    );
+
+    this.totalPrice = totalPrice;
+  }
+  formatCardNumber(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\s+/g, '').replace(/[^0-9]/g, '');
+    value = value.match(/.{1,4}/g)?.join(' ') || value;
+    this.paymentForm.controls['cardNumber'].setValue(value, {
+      emitEvent: false,
+    });
+  }
+
+  onSubmit() {
+    if (this.paymentForm.valid) {
+      console.log('Form Submitted!', this.paymentForm.value);
+    } else {
+      console.log('Form is invalid');
+    }
   }
   ormatCardNumber(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -79,12 +95,5 @@ export class SummaryOrderComponent implements OnInit {
       value = value.slice(0, 3);
     }
     this.paymentForm.controls['ccv'].setValue(value, { emitEvent: false });
-  }
-  onSubmit() {
-    if (this.paymentForm.valid) {
-      console.log('Form Submitted!', this.paymentForm.value);
-    } else {
-      console.log('Form is invalid');
-    }
   }
 }

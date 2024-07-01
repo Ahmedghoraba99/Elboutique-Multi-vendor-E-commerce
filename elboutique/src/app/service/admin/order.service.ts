@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class OrderService {
   private baseUrl = 'http://127.0.0.1:8000/api/orders';
+  private statusUrl = 'http://127.0.0.1:8000/api/changeorderstatus';
   constructor(private http: HttpClient) {}
 
   getOrders(): Observable<any> {
@@ -19,6 +20,9 @@ export class OrderService {
 
   updateOrder(id: number, order: any): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/${id}`, order);
+  }
+  updateStatus(id: number, status: string): Observable<any> {
+    return this.http.post<any>(`${this.statusUrl}/${id}`, { status });
   }
   deleteOrder(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
