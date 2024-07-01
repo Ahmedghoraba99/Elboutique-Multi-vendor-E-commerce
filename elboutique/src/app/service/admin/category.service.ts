@@ -26,16 +26,12 @@ export class CategoryService {
     if (category.image) {
       formData.append('image', category.image);
     }
+    console.log(formData);
+
     return this.http.post(this.apiUrl, formData);
   }
 
-  editCategory(category: any): Observable<any> {
-    const formData = new FormData();
-    formData.append('name', category.name);
-    formData.append('description', category.description);
-    if (category.image) {
-      formData.append('image', category.image);
-    }
-    return this.http.put(`${this.apiUrl}/${category.id}`, formData);
+  editCategory(id: number, category: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}?_method=PATCH`, category);
   }
 }

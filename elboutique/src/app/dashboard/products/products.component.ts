@@ -3,11 +3,7 @@ import Swal from 'sweetalert2';
 import { ProductService } from '../../service/admin/product.service';
 import { VendorService } from '../../service/admin/vendor.service';
 import { CategoryService } from '../../service/admin/category.service';
-import {
-  NgbModal,
-  ModalDismissReasons,
-  NgbPaginationModule,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -58,6 +54,8 @@ export class ProductsComponent {
   pageSize = 16;
   totalItems = 0;
   paginationLinks: any[] = [];
+  selectedProduct: any;
+  displayDialog = false;
 
   constructor(
     private productService: ProductService,
@@ -125,23 +123,43 @@ export class ProductsComponent {
       },
     });
   }
-
+  getProduct(id: number): void {
+    this.productService.getProduct(id).subscribe((product) => {
+      this.selectedProduct = product;
+      this.displayDialog = true;
+    });
+  }
+  showProductDialog(product: any): void {
+    this.selectedProduct = this.getProduct(product.id);
+    console.log(this.selectedProduct);
+  }
   deleteProduct(id: number) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this product?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.productService.deleteProduct(id).subscribe(() => {
-          this.getProducts();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Product Deleted',
-            life: 3000,
-          });
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to delete this product?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deleteProduct(id).subscribe({
+          next: () => {
+            this.getProducts();
+            Swal.fire('Deleted!', 'Your product has been deleted.', 'success');
+          },
+          error: (error) => {
+            console.error('Error deleting product:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the product.',
+              'error'
+            );
+          },
         });
-      },
+      }
     });
   }
 
@@ -149,7 +167,7 @@ export class ProductsComponent {
     const inputElement = event.target as HTMLInputElement;
     this.dt?.filterGlobal(inputElement.value, 'contains');
   }
-  private getCategoryName(categoryId: number): string {
+  getCategoryName(categoryId: number): string {
     const category = this.categories.find((cat) => cat.id === categoryId);
     return category ? category.name : '-';
   }

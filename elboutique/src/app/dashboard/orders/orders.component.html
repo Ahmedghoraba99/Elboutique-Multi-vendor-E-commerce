@@ -1,94 +1,96 @@
-@if (loading) {
-<p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
-    fill="var(--surface-ground)" animationDuration=".5s" />}@else {
-<div class="h6 text-uppercase">Orders</div>
-<hr class="hr">
-<div class="container">
-    <button class="btn primary-bg-color mb-3" (click)="open(orderForm)">Add Order</button>
-
-    <ng-template #orderForm let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">{{ editOrder.id ? 'Edit Order' : 'Add Order' }}</h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-        </div>
-        <div class="modal-body">
-            <form (ngSubmit)="editOrder.id ? updateOrder() : addOrder()">
-                <div class="mb-3">
-                    <label for="customer" class="form-label">Customer</label>
-                    <select class="form-control" id="customer" [(ngModel)]="editOrder.customer_id" name="customer_id"
-                        *ngIf="editOrder.id; else newOrderInput" required>
-                        <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
-                    </select>
-                    <ng-template #newOrderInput>
-                        <select class="form-control" id="customer" [(ngModel)]="newOrder.customer_id" name="customer_id"
-                            *ngIf="!editOrder.id" required>
-                            <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}
-                            </option>
-                        </select>
-                    </ng-template>
-                </div>
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-control" id="status" [(ngModel)]="editOrder.status" name="status"
-                        *ngIf="editOrder.id; else newOrderStatus" required>
-                        <option value="midway">Midway</option>
-                        <option value="arrived">Arrived</option>
-                    </select>
-                    <ng-template #newOrderStatus>
-                        <select class="form-control" id="status" [(ngModel)]="newOrder.status" name="status"
-                            *ngIf="!editOrder.id" required>
-                            <option value="midway">Midway</option>
-                            <option value="arrived">Arrived</option>
-                        </select>
-                    </ng-template>
-                </div>
-                <div class="mb-3">
-                    <label for="total" class="form-label">Total</label>
-                    <input type="number" class="form-control" id="total" [(ngModel)]="editOrder.total" name="total"
-                        *ngIf="editOrder.id; else newOrderTotal" required />
-                    <ng-template #newOrderTotal>
-                        <input type="number" class="form-control" id="total" [(ngModel)]="newOrder.total" name="total"
-                            *ngIf="!editOrder.id" required />
-                    </ng-template>
-                </div>
-                <button type="submit" class="btn primary-bg-color">{{ editOrder.id ? 'Update' : 'Add' }}</button>
-            </form>
-        </div>
-    </ng-template>
-
-
-
-    <!-- Orders Table -->
-    <table class="table">
-        <thead>
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center">
+    <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="4" fill="var(--surface-ground)"
+        animationDuration=".5s"></p-progressSpinner>
+</div>
+<div *ngIf="!loading" class="card overflow-auto">
+    <p-table #dt [value]="orders" [paginator]="false" [rows]="pageSize"
+        [globalFilterFields]="['customer_name', 'status']" [tableStyle]="{'min-width': '6rem'}"
+        [(selection)]="selectedOrders" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        [totalRecords]="totalItems">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="my-2">Manage Orders
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="onFilter($event)" placeholder="Search..." />
+                    </span>
+                </h5>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
             <tr>
-                <th>#</th>
-                <th>Customer</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>Date</th>
-                <th colspan="2">Actions</th>
+                <th style="width: 2rem" scope="col">#</th>
+                <th pSortableColumn="customerName" style="min-width: 15rem" scope="col">Customer <p-sortIcon
+                        field="customerName"></p-sortIcon></th>
+                <th pSortableColumn="status" style="min-width: 7rem" id="status">Status <p-sortIcon
+                        field="status"></p-sortIcon></th>
+                <th pSortableColumn="total" style="min-width: 7rem" id="total">Total <p-sortIcon
+                        field="total"></p-sortIcon></th>
+                <th pSortableColumn="created_at" scope="col" style="min-width: 10rem">Date <p-sortIcon
+                        field="created_at"></p-sortIcon></th>
+                <th scope="col" style="min-width: 10rem">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let order of orders; let i = index">
+        </ng-template>
+        <ng-template pTemplate="body" let-order let-i="rowIndex">
+            <tr>
                 <td>{{ i + 1 }}</td>
-                <td>{{ getCustomerName(order.customer_id) }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.total }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>
+                    <p-dropdown [options]="statuses" [(ngModel)]="order.status"
+                        (onChange)="updateStatus(order.id, $event.value)" appendTo="body" [style]="{'z-index': 1000}">
+                    </p-dropdown>
+                </td>
+                <td>{{ order.total | currency:'USD' }}</td>
                 <td>{{ order.created_at | date }}</td>
                 <td>
-                    <button type="button" class="btn btn-sm secondary-bg-color"
-                        (click)="editOrder = order; open(orderForm)">
-                        Edit
+                    <button type="button" pButton pRipple icon="pi pi-pencil"
+                        (click)="editOrder = order; open(orderForm)" class="p-button-rounded p-button-secondary mx-2">
+                        <span class="visually-hidden">Edit Order</span>
                     </button>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-danger" (click)="deleteOrder(order.id)">
-                        Delete
+                    <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                        (click)="deleteOrder(order.id)">
+                        <span class="visually-hidden">Delete Order</span>
                     </button>
                 </td>
             </tr>
-        </tbody>
-    </table>
-</div>}
+        </ng-template>
+        <ng-template pTemplate="summary" class="z-1">
+            <div class="d-flex justify-content-center align-items-center gap-5">
+                <p>In total there are {{ orders.length }} orders.</p>
+                <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize"
+                    (pageChange)="loadPage($event)">
+                </ngb-pagination>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
+
+<!--  Modal for displaying and editing order details-->
+<ng-template #orderForm let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ editOrder.id ? 'Edit' : 'Add' }} Order</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="updateOrder()">
+            <div class="mb-3">
+                <label for="customer" class="form-label">Customer:</label>
+                <select id="customer" class="form-control" [(ngModel)]="editOrder.customer_id" name="customer_id">
+                    <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <select id="status" class="form-control" [(ngModel)]="editOrder.status" name="status">
+                    <option *ngFor="let status of statuses" [value]="status.value">{{ status.label }}</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="total" class="form-label">Total:</label>
+                <input type="number" id="total" class="form-control" [(ngModel)]="editOrder.total" name="total" />
+            </div>
+            <button type="submit" class="btn primary-bg-color">{{ editOrder.id ? 'Update' : 'Add' }}</button>
+        </form>
+    </div>
+</ng-template>

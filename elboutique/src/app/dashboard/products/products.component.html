@@ -1,10 +1,11 @@
-<p-toast></p-toast>
-
 @if (loading) {
-<p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
-    fill="var(--surface-ground)" animationDuration=".5s" />}@else {
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center">
+    <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="4" fill="var(--surface-ground)"
+        animationDuration=".5s"></p-progressSpinner>
+</div>
+}
+@else {
 <div class="card overflow-auto">
-
     <p-table #dt class="p-datatable" [value]="products" [rows]="pageSize" [paginator]="false"
         [globalFilterFields]="['name', 'categoryName', 'vendorName']" [tableStyle]="{'min-width': '75rem'}"
         [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
@@ -17,64 +18,146 @@
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" (input)="onFilter($event)" placeholder="Search..." />
                 </span>
-                <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-                    [routerLink]="['/dashboard/products/new']"><span class="visually-hidden">btn</span></button>
-
             </div>
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th style="width: 2rem" scope="col">
-                    #
-                </th>
-                <th pSortableColumn="name" style="min-width:15rem" scope="col">Name <p-sortIcon
+                <th style="width: 2rem" scope="col">#</th>
+                <th pSortableColumn="name" style="min-width: 15rem" scope="col">Name <p-sortIcon
                         field="name"></p-sortIcon></th>
                 <th pSortableColumn="image" scope="col">Image</th>
-                <th pSortableColumn="price" style="min-width:7rem" id="price">Price <p-sortIcon
+                <th pSortableColumn="price" style="min-width: 7rem" id="price">Price <p-sortIcon
                         field="price"></p-sortIcon></th>
-                <th pSortableColumn="categoryName" scope="col" style="min-width:10rem">Category <p-sortIcon
+                <th pSortableColumn="categoryName" scope="col" style="min-width: 10rem">Category <p-sortIcon
                         field="categoryName"></p-sortIcon></th>
-                <th pSortableColumn="vendorName" scope="col" style="min-width:10rem">Vendor <p-sortIcon
+                <th pSortableColumn="vendorName" scope="col" style="min-width: 10rem">Vendor <p-sortIcon
                         field="vendorName"></p-sortIcon></th>
-                <th pSortableColumn="stock" scope="col" style="min-width:7rem">Stock <p-sortIcon
+                <th pSortableColumn="stock" scope="col" style="min-width: 7rem">Stock <p-sortIcon
                         field="stock"></p-sortIcon></th>
-                <th scope="col" style="min-width:10rem">Actions</th>
+                <th scope="col" style="min-width: 10rem">Actions</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-product let-i="rowIndex">
             <tr>
+                <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                <td>{{ product.name }}</td>
                 <td>
-                    {{ (page - 1) * pageSize + i + 1 }}
+                    <img [src]="product.images.length === 0 ? '../../assets/images/not-found.svg' : 'http://localhost:8000/storage/' + product.images[0]?.image"
+                        [alt]="product.name" title="image" width="50" height="50" style="object-fit: contain;">
                 </td>
-                <td>{{product.name}}</td>
-                @if (product.images.length ==0) {<td><img [src]=" '../../assets/images/not-found.svg'"
-                        [alt]="product.name" title="image" width="50" height="50"></td>}@else {
-                <td><img [src]="'http://localhost:8000/storage/' + product.images[0]?.image " [alt]="product.name"
-                        title="image" width="50" height="50"></td>}
-                <td>{{product.price | currency:'USD'}}</td>
-                <td>{{product.categoryName}}</td>
-                <td>{{product.vendorName}}</td>
-                <td>{{product.stock}}</td>
+                <td>{{ product.price | currency:'USD' }}</td>
+                <td>{{ product.categoryName }}</td>
+                <td>{{ product.vendorName }}</td>
+                <td>{{ product.stock }}</td>
                 <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                        [routerLink]="['/dashboard/products/edit', product.id]"><span
-                            class="visually-hidden">btn</span></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                        (click)="deleteProduct(product.id)"><span class="visually-hidden">btn</span></button>
+                    <button type="button" pButton pRipple icon="pi pi-eye" (click)="showProductDialog(product)"
+                        class="p-button-rounded p-button-secondary mr-2">
+                        <span class="visually-hidden">View Product</span>
+                    </button>
+                    <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                        (click)="deleteProduct(product.id)">
+                        <span class="visually-hidden">Delete Product</span>
+                    </button>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
             <div class="d-flex justify-content-center align-items-center gap-5">
-                <p>In total there are {{totalItems }} products.</p>
+                <p>In total there are {{ totalItems }} products.</p>
                 <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize"
                     (pageChange)="loadPage($event)">
                 </ngb-pagination>
             </div>
         </ng-template>
     </p-table>
-    <!-- Pagination -->
-
 </div>
 
-}
+<!-- Modal for displaying product details -->
+<p-dialog header="Product Details" [(visible)]="displayDialog" [modal]="true">
+    <div class="p-grid">
+        <div class="p-col-12">
+            <table class="table table-bordered">
+                <th><strong>Details:</strong> </th>
+                <tbody>
+                    <tr>
+                        <td><strong>Name:</strong></td>
+                        <td>{{ selectedProduct?.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Description:</strong></td>
+                        <td>{{ selectedProduct?.description }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price:</strong></td>
+                        <td>{{ selectedProduct?.price | currency:'USD' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stock:</strong></td>
+                        <td>{{ selectedProduct?.stock }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Category:</strong></td>
+                        <td>{{getCategoryName(selectedProduct?.category_id) }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Vendor:</strong></td>
+                        <td>{{ selectedProduct?.vendor?.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Featured:</strong></td>
+                        <td>{{ selectedProduct?.is_featured ? 'Yes' : 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sale:</strong></td>
+                        <td>{{ selectedProduct?.sale ? 'Yes' : 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Created At:</strong></td>
+                        <td>{{ selectedProduct?.created_at | date }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Updated At:</strong></td>
+                        <td>{{ selectedProduct?.updated_at | date }}</td>
+                    </tr>
+                    <!-- Display attributes if available -->
+                    <ng-container *ngIf="selectedProduct?.attributes && selectedProduct.attributes.length > 0">
+                        <tr>
+                            <td colspan="2"><strong>Attributes:</strong></td>
+                        </tr>
+                        <tr *ngFor="let attribute of selectedProduct.attributes">
+                            <td>{{ attribute.name }}</td>
+                            <td>{{ attribute.value }}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- Display images if available -->
+                    <ng-container *ngIf="selectedProduct?.images && selectedProduct.images.length > 0">
+                        <tr>
+                            <td colspan="2"><strong>Images:</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div *ngFor="let image of selectedProduct.images">
+                                    <img [src]="image.image_url" [alt]="selectedProduct.name" title="image" width="200"
+                                        height="200">
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <!-- Display tags if available -->
+                    <ng-container *ngIf="selectedProduct?.tags && selectedProduct.tags.length > 0">
+                        <tr>
+                            <td colspan="2"><strong>Tags:</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul>
+                                    <li *ngFor="let tag of selectedProduct.tags">{{ tag }}</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</p-dialog>}
