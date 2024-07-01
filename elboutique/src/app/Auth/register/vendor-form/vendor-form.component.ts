@@ -1,5 +1,5 @@
 // vendor-form.component.ts
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../service/auth.service';
 import { Router } from '@angular/router';
 import { ToastComponent } from '../../../widgets/toast/toast.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-vendor-form',
@@ -19,7 +20,9 @@ import { ToastComponent } from '../../../widgets/toast/toast.component';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, ToastComponent],
 })
-export class VendorFormComponent {
+export class VendorFormComponent implements OnDestroy {
+  private vendorSubscriptions: Subscription[] = [];
+
   vendorForm: FormGroup;
   showToast = false;
   toastMessage = '';
@@ -79,18 +82,23 @@ export class VendorFormComponent {
   }
   onBlur(controler: string) {
     const query = { [controler]: this.vendorForm.get(controler)?.value };
-    this.authService.emailAndPasswordExisting(query).subscribe(
-      () => {},
-      (err) => {
-        if (err.status == 422) {
-          this.vendorForm.get(controler)?.setErrors({ existingAccount: true });
-          this.showToastMessage(
-            'Phones and emails cannot be linked to more than one account.',
-            'Validation Error'
-          );
+    const emailAndPasswordExisting = this.authService
+      .emailAndPasswordExisting(query)
+      .subscribe(
+        () => {},
+        (err) => {
+          if (err.status == 422) {
+            this.vendorForm
+              .get(controler)
+              ?.setErrors({ existingAccount: true });
+            this.showToastMessage(
+              'Phones and emails cannot be linked to more than one account.',
+              'Validation Error'
+            );
+          }
         }
-      }
-    );
+      );
+    this.vendorSubscriptions.push(emailAndPasswordExisting);
   }
   onSubmit() {
     this.markFormGroupTouched(this.vendorForm);
@@ -98,14 +106,15 @@ export class VendorFormComponent {
     if (this.vendorForm.valid) {
       const from = this.createForm();
 
-      this.authService.register('vendors', from).subscribe(
-        (res) => {
+      const register = this.authService.register('vendors', from).subscribe(
+        () => {
           this.handleSuccess();
         },
         (err) => {
           this.handleError(err);
         }
       );
+      this.vendorSubscriptions.push(register);
     }
   }
 
@@ -152,5 +161,8 @@ export class VendorFormComponent {
     setTimeout(() => {
       this.showToast = false;
     }, 5000);
+  }
+  ngOnDestroy() {
+    this.vendorSubscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
