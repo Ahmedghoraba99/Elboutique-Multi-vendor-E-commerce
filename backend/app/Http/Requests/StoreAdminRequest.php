@@ -23,7 +23,7 @@ class StoreAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-             
+
             'fname' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
             'lname' => 'required|string|max:255|min:4|regex:/^[a-zA-Z ,.\'-]+$/',
             'email' => [
@@ -35,7 +35,7 @@ class StoreAdminRequest extends FormRequest
                 Rule::unique('admins') ,
                 Rule::unique('customers') ,
                 Rule::unique('vendors'),
-                
+
             ],
             'password' => 'required|string|min:8|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/',
             'address' => 'sometimes|string|max:255|min:10',

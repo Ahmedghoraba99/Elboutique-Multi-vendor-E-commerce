@@ -20,7 +20,7 @@
                   <label class="form-check-label" for="catName">{{cat.name}}</label>
                 </div>
               }
-             
+            
             </div>
           </div>
         </div>
@@ -181,16 +181,16 @@
         </div>
           <div class="d-flex flex-column">
             <div class="big-deal-product-data p-3">
-              
+
               <div
               class="big-deal-product-big-tags d-flex flex-row align-items-end"
               [ngClass]="{'justify-content-between': product.is_featured, 'justify-content-end': !product.is_featured}"
             >
-              <div 
+              <div
               *ngIf="product.is_featured && product.sale"
               [ngClass]="{ 'd-none ': product.sale }"
               class="products-tag"
-            > 
+            >
                 <span class="text-capitalize">Featured</span>
               </div>
               <div class="my-2">
