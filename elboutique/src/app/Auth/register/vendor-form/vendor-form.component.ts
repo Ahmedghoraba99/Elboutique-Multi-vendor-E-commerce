@@ -27,6 +27,7 @@ export class VendorFormComponent implements OnDestroy {
   showToast = false;
   toastMessage = '';
   toastTitle = '';
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -102,6 +103,7 @@ export class VendorFormComponent implements OnDestroy {
   }
   onSubmit() {
     this.markFormGroupTouched(this.vendorForm);
+    this.loading = true;
 
     if (this.vendorForm.valid) {
       const from = this.createForm();
@@ -109,9 +111,11 @@ export class VendorFormComponent implements OnDestroy {
       const register = this.authService.register('vendors', from).subscribe(
         () => {
           this.handleSuccess();
+          this.loading = false;
         },
         (err) => {
           this.handleError(err);
+          this.loading = false;
         }
       );
       this.vendorSubscriptions.push(register);
