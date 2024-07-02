@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SelectDropComponent } from './select-drop/select-drop.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -12,6 +12,7 @@ import { AuthService } from '../../service/auth.service';
 import { NgIf } from '@angular/common';
 import { WishlistService } from '../../service/wishlist.service';
 import { CartService } from '../../service/cart.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -19,7 +20,8 @@ import { CartService } from '../../service/cart.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
+  private navBarSubscriptions: Subscription[] = [];
   selectedCategory: any = null;
   constructor(
     private router: Router,
@@ -37,24 +39,30 @@ export class NavbarComponent {
       console.log('authStatus', isAuth);
 
       if (isAuth) {
-        this.authService.getUserDataObservable().subscribe((data) => {
-          if (data) {
-            this.currentUser = data.data;
-          }
-        });
-        this.wislistService.getWishlistData().subscribe((data) => {
-          if (data) {
-            this.wishListItems = data.length;
-          }
-        });
+        const authService = this.authService
+          .getUserDataObservable()
+          .subscribe((data) => {
+            if (data) {
+              this.currentUser = data.data;
+            }
+          });
+        const wislistService = this.wislistService
+          .getWishlistData()
+          .subscribe((data) => {
+            if (data) {
+              this.wishListItems = data.length;
+            }
+          });
 
-        this.cartService.getCartData().subscribe((data) => {
+        const cartService = this.cartService.getCartData().subscribe((data) => {
           if (data) {
             this.cartItems = data.length;
           }
         });
+        this.navBarSubscriptions.push(authService, wislistService, cartService);
       }
     });
+
     this.cartService.cart.next(this.cartService.getCustomerCart());
     this.wislistService.wishlist.next(this.wislistService.getUserWishlist());
     this.authService.currentUser.next(this.authService.getCurrentUser());
@@ -88,5 +96,10 @@ export class NavbarComponent {
     this.currentUser = {};
     this.authService.logout();
     // this.router.navigate(['/login']);
+  }
+  ngOnDestroy(): void {
+    this.navBarSubscriptions.forEach((subscription) =>
+      subscription.unsubscribe()
+    );
   }
 }
