@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -10,7 +11,6 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './side-bar.component.css',
 })
 export class SideBarComponent {
-  @Input() user: any;
   @Input() navLinks: Array<{
     name: string;
     icon: string;
@@ -18,5 +18,8 @@ export class SideBarComponent {
     primary?: boolean;
   }> = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private logoutServise: AuthService) {}
+  logout() {
+    this.logoutServise.logout();
+  }
 }
