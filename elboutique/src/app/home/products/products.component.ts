@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './products.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ProductsComponent  implements OnDestroy ,OnInit{
+export class ProductsComponent implements OnDestroy, OnInit {
   private productsSubscriptions: Subscription[] = [];
   homeService: HomeService = inject(HomeService);
 
@@ -47,7 +47,7 @@ export class ProductsComponent  implements OnDestroy ,OnInit{
       .subscribe((data) => {
         if (data) {
           data.forEach((item: { id: any }) => {
-            this.userWishlist.push(item.id);
+            this.userWishlist.push(item?.id);
           });
         }
       });
@@ -57,7 +57,7 @@ export class ProductsComponent  implements OnDestroy ,OnInit{
       .subscribe((data) => {
         if (data) {
           data.forEach((item: { id: any }) => {
-            this.userCart.push(item.id);
+            this.userCart.push(item?.id);
           });
         }
       });
