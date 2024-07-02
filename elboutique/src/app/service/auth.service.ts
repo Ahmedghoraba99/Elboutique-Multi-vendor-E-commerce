@@ -39,14 +39,12 @@ export class AuthService {
   getCurrentUser() {
     const currentStorageUser = this.getStorageData();
     if (currentStorageUser) {
-      console.log('asassa');
       this.http
         .get(
           `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
         )
         .subscribe((userData) => {
           this.currentUser.next(userData);
-          console.log(userData);
         });
     }
   }

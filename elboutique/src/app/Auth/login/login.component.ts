@@ -118,11 +118,11 @@ export class LoginComponent implements OnDestroy {
 
     setTimeout(() => {
       if (response.role === 'admin') {
-        // this.router.navigateByUrl('/dashboard');
-        window.location.href = '/dashboard';
+        this.router.navigateByUrl('/dashboard');
+        // window.location.href = '/dashboard';
       } else if (response.role == 'vendor') {
-        window.location.href = '/v';
-        // this.router.navigateByUrl('/v');
+        // window.location.href = '/v';
+        this.router.navigateByUrl('/v');
       } else this.router.navigateByUrl('/');
       // else window.location.href = '/';
     }, 3000);
