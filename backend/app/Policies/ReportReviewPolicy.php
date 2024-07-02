@@ -28,11 +28,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can create models.
      */
-<<<<<<< HEAD
-    public function create(  $user)
-=======
     public function create( $user): bool
->>>>>>> 685643cde70532398185801ac27530d13d81d4a2
     {
        
          
