@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
 import { AuthService } from '../service/auth.service';
-import { PaypalComponent } from './paypal/paypal.component';
+// import { PaypalComponent } from './paypal/paypal.component';
 @Component({
   selector: 'app-checkout',
   standalone: true,
