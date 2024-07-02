@@ -311,3 +311,7 @@ a {
   color: #fff;
   text-shadow: none;
 }
+.filtering-section{
+  background-color: var(--accent-color-3);
+  
+}

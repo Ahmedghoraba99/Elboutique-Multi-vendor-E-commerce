@@ -30,12 +30,10 @@ export class CategoryComponent implements OnInit, OnDestroy {
   id: string | null;
   userWishlist: any[] = [];
   userCart: any[] = [];
-  //
   sub: Subscription | null = null;
   categories: any[] = [];
   vendors: any[] = [];
   tags: any[] = [];
-  //
   isAuthenticated = false;
 
   constructor(
@@ -99,10 +97,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
         // console.log(this.categories)
       });
     this.categoriySubscriptions.push(getAllCategoriesSubscribe);
-    // this.sub = this.VendorService.getVendors().subscribe(res=>{
-    //   this.vendors =  res;
-    //   console.log(res);
-    // })
+
     const getAllTagsSubscribe = this.TagesService.getAllTags().subscribe(
       (res) => {
         console.log(res);
