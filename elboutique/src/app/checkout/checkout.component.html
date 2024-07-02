@@ -163,7 +163,7 @@
                 <div class="totalshiping d-flex justify-content-between my-3">
                   <span>Shipping Fee</span>
                   <span class="price"
-                    >{{ getOrderTotalPrice() * 0.2 }} <sub>EGP</sub></span
+                    >{{ getShippingPrice() }} <sub>EGP</sub></span
                   >
                 </div>
                 <div class="tatla-price d-flex justify-content-between my-3">
@@ -175,7 +175,7 @@
                     <span class="price"
                       >{{
                         getOrderTotalPrice() +
-                          getOrderTotalPrice() * 0.2 -
+                          getShippingPrice() -
                           getDiscountedAmount()
                       }}
                       <sub>EGP</sub></span
