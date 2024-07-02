@@ -4,7 +4,9 @@
     <div class="wishList-section px-2 my-5 px-2" *ngIf="isAuthenticated">
       <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
         <h1>Cart Items</h1>
+        @if(customerCart){
         <span>( {{ customerCart.length }} Items)</span>
+        }
       </div>
       <div class="wishList-content p-4 d-flex">
         @if(customerCart.length > 0){
@@ -71,7 +73,8 @@
                                 >
                                   Only EGP
                                   {{
-                                    ((product.price * product.sale) / 100) *
+                                    (product.price -
+                                      (product.price * product.sale) / 100) *
                                       product.cart_table.quantity
                                   }}!
                                 </strong>
@@ -119,7 +122,7 @@
 
                           <button
                             class="btn btn-wishlist-delete"
-                            (click)="DeleteFromCart(product.id)"
+                            (click)="DeleteFromCart(product)"
                           >
                             <fa-icon
                               class="animated-heart"
@@ -160,8 +163,7 @@
                 <div class="totalshiping d-flex justify-content-between my-3">
                   <span>Shipping Fee</span>
                   <span class="price"
-                    >{{ getOrderTotalPrice() - getDiscountedAmount() }}
-                    <sub>EGP</sub></span
+                    >{{ getOrderTotalPrice() * 0.2 }} <sub>EGP</sub></span
                   >
                 </div>
                 <div class="tatla-price d-flex justify-content-between my-3">
@@ -171,12 +173,15 @@
                   </div>
                   <div class="total-price-order my-3">
                     <span class="price"
-                      >{{ getOrderTotalPrice() + getOrderTotalPrice() * 0.2 }}
+                      >{{
+                        getOrderTotalPrice() +
+                          getOrderTotalPrice() * 0.2 -
+                          getDiscountedAmount()
+                      }}
                       <sub>EGP</sub></span
                     >
                   </div>
                 </div>
-                <!-- <app-summary-order></app-summary-order> -->
                 <div class="checkout-btn text-center my-4">
                   <button class="btn" type="submit" (click)="CreateOrder()">
                     ckeckout
