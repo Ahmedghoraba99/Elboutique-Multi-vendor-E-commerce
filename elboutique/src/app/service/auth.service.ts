@@ -18,7 +18,7 @@ export class AuthService {
   private checkMailStatus!: string;
   private baseUrl = 'http://127.0.0.1:8000/api/';
   private loginUrl = `${this.baseUrl}login`;
-  private storageData = localStorage.getItem('user_info');
+  private storageData!: any;
   private customerRegisterUrl = `${this.baseUrl}/customer/register`;
   public authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
 
@@ -39,14 +39,25 @@ export class AuthService {
   getCurrentUser() {
     const currentStorageUser = this.getStorageData();
     if (currentStorageUser) {
+      console.log('asassa');
       this.http
         .get(
           `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
         )
         .subscribe((userData) => {
           this.currentUser.next(userData);
+          console.log(userData);
         });
     }
+  }
+  getCurrentUserRrq() {
+    const currentStorageUser = this.getStorageData();
+    if (currentStorageUser) {
+      return this.http.get(
+        `${this.baseUrl}${currentStorageUser.role}s/${currentStorageUser.id}`
+      );
+    }
+    return null;
   }
   getUserDataObservable(): Observable<any> {
     this.getCurrentUser();
@@ -58,7 +69,8 @@ export class AuthService {
   }
 
   getStorageData() {
-    return this.storageData !== null ? JSON.parse(this.storageData) : null;
+    this.storageData = localStorage.getItem('user_info');
+    return this.storageData != null ? JSON.parse(this.storageData) : null;
   }
 
   getToken() {

@@ -47,7 +47,12 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       { path: 'home', component: HomeComponent, data: { title: 'Home' } },
-      { path: 'login', component: LoginComponent, data: { title: 'Login' } },
+      {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [authGuard],
+        data: { title: 'Login' },
+      },
       {
         path: 'wishlist',
         loadChildren: () =>
@@ -103,10 +108,10 @@ export const routes: Routes = [
         data: { title: 'Change Password' },
       },
       {
-        path:'Aboutus',
-        component: AboutusComponent ,
+        path: 'Aboutus',
+        component: AboutusComponent,
         data: { title: 'About us' },
-      }
+      },
     ],
   },
   {
