@@ -294,7 +294,18 @@ class ProductController extends Controller
         if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
         }
-
+        if ($request->has('cats')) {
+            // Check if the category_id parameter is a string containing multiple IDs separated by commas
+            if (is_string($request->cats) && strpos($request->cats, ',') !== false) {
+                // Convert the string to an array of IDs
+                $categoryIds = explode(',', $request->cats);
+                // Use the whereIn method to get all products that have a category_id in the array of IDs
+                $query->whereIn('category_id', $categoryIds);
+            } else {
+                // If the category_id parameter is a single ID, use the where method as before
+                $query->where('category_id', $request->cats);
+            }
+        }
         // Min price
         if ($request->has('min_price')) {
             $query->where('price', '>=', $request->min_price);
@@ -332,6 +343,12 @@ class ProductController extends Controller
                 $q->whereIn('name', $tags);
             });
         }
+        // if ($request->has('cats')) {
+        //     $cats = explode(',', $request->tags);
+        //     $query->whereHas('tags', function ($q) use ($cats) {
+        //         $q->whereIn('name', $cats);
+        //     });
+        // }
 
         // Pagination
         $perPage = $request->input('per_page', 16); // Default to 16 if per_page is not provided
@@ -392,6 +409,4 @@ class ProductController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
-
-
 }
