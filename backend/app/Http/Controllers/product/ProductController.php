@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Attributes;
 use App\Models\Product;
 use App\Models\product_images;
+use App\Models\Vendor;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Request as DefalutRequest;
 use Illuminate\Support\Facades\Validator;
@@ -295,15 +296,20 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
         if ($request->has('cats')) {
-            // Check if the category_id parameter is a string containing multiple IDs separated by commas
             if (is_string($request->cats) && strpos($request->cats, ',') !== false) {
-                // Convert the string to an array of IDs
                 $categoryIds = explode(',', $request->cats);
-                // Use the whereIn method to get all products that have a category_id in the array of IDs
                 $query->whereIn('category_id', $categoryIds);
             } else {
-                // If the category_id parameter is a single ID, use the where method as before
                 $query->where('category_id', $request->cats);
+            }
+        }
+        // vendors
+        if ($request->has('vendors')) {
+            if (is_string($request->vendors) && strpos($request->vendors, ',') !== false) {
+                $vendorIds = explode(',', $request->vendors);
+                $query->whereIn('vendor_id', $vendorIds);
+            } else {
+                $query->where('vendor_id', $request->vendors);
             }
         }
         // Min price
@@ -408,5 +414,21 @@ class ProductController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
+    }
+
+    function getAllVendors()
+    {
+        // get all vendors and return id,name only 
+
+        $vendors = Vendor::select('id', 'name')->get();
+        return response()->json($vendors);
+    }
+
+    function getAllProducts()
+    {
+        // get all products and return id,name only 
+
+        $products = Product::select('id', 'name')->get();
+        return response()->json($products);
     }
 }
