@@ -47,10 +47,7 @@
                 <td>{{ order.total | currency:'USD' }}</td>
                 <td>{{ order.created_at | date }}</td>
                 <td>
-                    <button type="button" pButton pRipple icon="pi pi-pencil"
-                        (click)="editOrder = order; open(orderForm)" class="p-button-rounded p-button-secondary mx-2">
-                        <span class="visually-hidden">Edit Order</span>
-                    </button>
+
                     <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
                         (click)="deleteOrder(order.id)">
                         <span class="visually-hidden">Delete Order</span>

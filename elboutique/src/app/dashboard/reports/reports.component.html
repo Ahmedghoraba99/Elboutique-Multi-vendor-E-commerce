@@ -1,28 +1,74 @@
 @if (loading) {
 <p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
     fill="var(--surface-ground)" animationDuration=".5s" />}@else {
-<div class="card">
+<div class="card w-100" style="min-width: 70vw;">
     <h5 class="m-3">Manage Reports</h5>
     <p-tabView>
         <p-tabPanel header="Products">
             <ng-template pTemplate="content">
                 <p-fieldset>
                     <ng-template pTemplate="header">
-                        <div class="flex align-items-center gap-2 px-2">
-                            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                                shape="circle" />
-                            <span class="font-bold fs-6">Amy Elsner</span>
+                        @if (productsReports.length > 0) {
+                        @for (report of productsReports; track $index) {
+                        <div class="bg-white flex align-items-center gap-2 p-3 pb-0 my-3 border rounded-2 ">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <p-avatar image="{{report.customer.image_url}}" shape="circle" />
+                                    <span class="font-bold mx-2 fs-6">{{report.customer.name}}</span>
+                                </div>
+                                <span class="text-muted fw-light mx-2 fs-6">report: #{{report.id}}</span>
+                            </div>
+                            <p class="m-0 fs-6 text-danger">{{report.reason}}</p>
+
+                            <p class="m-0 fs-6 fw-light text-muted">{{report.created_at | date}}</p>
+
+                            <h6 class="my-3">Product Details</h6>
+                            <div class="card border-0 bg-transparent  pt-1 mb-3">
+                                <img src="{{report.product.image_url}}" class="card-img-top" width="150" height="150"
+                                    style="object-fit: contain;" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title fs-6">{{report.product.name}}</h5>
+                                    <p class="card-text m-0"><small class="text-muted">{{report.product.price}}</small>
+                                    </p>
+                                    <p class="card-text fs-6 fw-light">{{report.product.description}}</p>
+                                </div>
+                            </div>
                         </div>
+                        <div class="d-flex justify-content-center">
+                            <!-- <button type="button" (click)="banVendor(report.id)" class="btn btn-warning">Ban
+                                Vendor</button> -->
+                            <button (click)="deleteProduct(report.product.id)" type="button"
+                                class="btn btn-outline-danger mx-2">Delete Product</button>
+                            <button (click)="deleteProductReport(report.id)" type="button" class="btn btn-danger">Delete
+                                Report</button>
+                        </div>
+                        }
+                        }@else {
+                        <div class="d-flex justify-content-center">
+                            <h6 class="text-muted fw-light m-0">No reports found</h6>
+                        </div>
+                        }
                     </ng-template>
-                    <p class="m-0">
-                        Lorem ipsum dolor sit amet...
-                    </p>
+
                 </p-fieldset>
             </ng-template>
         </p-tabPanel>
-        <p-tabPanel header="Reviews">
-            <ng-template pTemplate="content"> Complex Content to Lazy Load </ng-template>
-        </p-tabPanel>
+        <!-- <p-tabPanel header="Reviews">
+            <ng-template pTemplate="content"> <p-fieldset>
+                    @for (report of reviewsReports; track $index) {
+                    <div class="flex align-items-center gap-2 px-2">
+                        <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                            shape="circle" />
+                        <span class="font-bold fs-6">{{report.customer_id.name}}</span>
+                    </div>}
+                    <ng-template pTemplate="header">
+                        <p class="m-0 fs-6">
+                            Reviews reports
+                        </p>
+                    </ng-template>
+
+                </p-fieldset></ng-template>
+        </p-tabPanel> -->
     </p-tabView>
 </div>
 }

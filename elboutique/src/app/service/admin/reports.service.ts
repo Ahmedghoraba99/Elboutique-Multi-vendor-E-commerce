@@ -18,4 +18,7 @@ export class ReportsService {
   getProductReports(): Observable<any> {
     return this.http.get(this.productUrl);
   }
+  deleteProductReport(id: number): Observable<any> {
+    return this.http.delete(`${this.productUrl}/${id}`);
+  }
 }
