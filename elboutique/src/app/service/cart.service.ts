@@ -7,11 +7,11 @@ import { Observable, BehaviorSubject, switchMap, tap, of } from 'rxjs';
 })
 export class CartService {
   private baseUrl = 'http://127.0.0.1:8000/api/customer';
-  private userInfo = localStorage.getItem('user_info');
-  private userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
+  private userInfo!: any; // = localStorage.getItem('user_info');
+  private userID!: any; // = this.userInfo ? JSON.parse(this.userInfo).id : null;
   private userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
 
-  private cart = new BehaviorSubject<any>(null);
+  public cart = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
     // Fetch initial cart data when service is instantiated
@@ -21,7 +21,10 @@ export class CartService {
   }
 
   getCustomerCart(): Observable<any> {
+    this.userInfo = localStorage.getItem('user_info');
+    this.userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
     if (!this.userID || this.userRole === 'vendor') {
+      console.log(this.userID, this.userRole);
       return of(null);
     }
     return this.http.get(`${this.baseUrl}/showCart/${this.userID}`);
@@ -38,6 +41,7 @@ export class CartService {
   fetchCustomerCart(): void {
     this.getCustomerCart().subscribe((cartData) => {
       this.cart.next(cartData);
+      console.log(cartData);
     });
   }
   getCartData(): Observable<any> {
