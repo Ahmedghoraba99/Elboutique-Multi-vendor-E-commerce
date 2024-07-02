@@ -19,4 +19,5 @@ export class FooterComponent {
       this.categories = data.data;
     });
   }
+  
 }
