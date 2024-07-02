@@ -21,6 +21,7 @@ export class ReportReviewComponent {
   reportForm: FormGroup;
   successMessage: string = '';
   errorMessage: string = '';
+  isAdd:boolean = false;
 
   constructor(private formBuilder: FormBuilder, private addReportService: AddReportService) {
     this.reportForm = this.formBuilder.group({
@@ -31,6 +32,7 @@ export class ReportReviewComponent {
 
   onSubmit() {
     if (this.reportForm.valid) {
+      this.isAdd = true;
       const review:AddReport = this.reportForm.value;
       review.customer_id = this.customerId;
       review.review_id = this.reviewId;
@@ -39,18 +41,18 @@ export class ReportReviewComponent {
         .subscribe(
           response => {
             this.successMessage = 'Review created successfully';
+            setTimeout(()=>{
+              this.successMessage ='';
+            },2000);
             this.errorMessage = '';
             this.reportForm.reset();
-            setTimeout(()=>{
-              this.successMessage = '';
-            },2000);
+            this.isAdd = false;
       },
       error => {
-        this.errorMessage = 'An error occurred while submitting the review';
-        this.successMessage = '';
         setTimeout(()=>{
           this.errorMessage = 'An error occurred while submitting the review';
         },2000);
+        this.errorMessage = '';
       }
     )
     }

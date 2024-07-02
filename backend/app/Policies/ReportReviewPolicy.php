@@ -12,7 +12,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(Customer $customer): bool
+    public function viewAny(Customer $customer)
     {
         //
     }
@@ -20,7 +20,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(Customer $customer, ReportReview $reportReview): bool
+    public function view(Customer $customer, ReportReview $reportReview)
     {
         //
     }
@@ -28,7 +28,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(  $user): bool
+    public function create(  $user)
     {
         $user  instanceof Admin || $user->banned =='false';
     }
@@ -36,7 +36,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update($user, ReportReview $reportReview): bool
+    public function update($user, ReportReview $reportReview)
     {
         return $user->id === $reportReview->customer_id|| $user  instanceof Admin;
     }
@@ -44,7 +44,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete($user, ReportReview $reportReview): bool
+    public function delete($user, ReportReview $reportReview)
     {
         return $user->id === $reportReview->customer_id|| $user  instanceof Admin;
     }
@@ -52,7 +52,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(Customer $customer, ReportReview $reportReview): bool
+    public function restore(Customer $customer, ReportReview $reportReview)
     {
         //
     }
@@ -60,7 +60,7 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(Customer $customer, ReportReview $reportReview): bool
+    public function forceDelete(Customer $customer, ReportReview $reportReview)
     {
         //
     }
