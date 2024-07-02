@@ -35,34 +35,43 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     private authService: AuthService
   ) {}
   ngOnDestroy(): void {
-    this.addToCartSub?.unsubscribe();
-    this.addToWishlistSub?.unsubscribe();
+    this.productInformationSubscriptions.forEach((sub) => sub.unsubscribe());
   }
   faCircleCheck = faCircleCheck;
   product: any = {};
-  addToWishlistSub: Subscription | null = null;
-  addToCartSub: Subscription | null = null;
+  productInformationSubscriptions: Subscription[] = [];
+
   currentWishlist: number[] = [];
   isAuthenticated = false;
 
   id: number = 0;
   ngOnInit(): void {
-    this.authService.isAuthObservable().subscribe((isAuth) => {
-      this.isAuthenticated = isAuth;
-    });
-    this.route.params.subscribe((params) => {
+    const isAuthObservableSubscription = this.authService
+      .isAuthObservable()
+      .subscribe((isAuth) => {
+        this.isAuthenticated = isAuth;
+      });
+    this.productInformationSubscriptions.push(isAuthObservableSubscription);
+    const idSubscription = this.route.params.subscribe((params) => {
       this.id = +params['id'];
-      this.productService.getProduct(this.id).subscribe((product) => {
-        this.product = product;
-      });
+      const getProductSubscription = this.productService
+        .getProduct(this.id)
+        .subscribe((product) => {
+          this.product = product;
+        });
+      this.productInformationSubscriptions.push(getProductSubscription);
     });
+    this.productInformationSubscriptions.push(idSubscription);
 
-    this.wishlistService.getWishlistData().subscribe((res: any) => {
-      console.log('this is wishlist data :', res);
-      res?.forEach((element: any) => {
-        this.currentWishlist.push(element.id);
+    const getWishlistDataSubscription = this.wishlistService
+      .getWishlistData()
+      .subscribe((res: any) => {
+        console.log('this is wishlist data :', res);
+        res?.forEach((element: any) => {
+          this.currentWishlist.push(element.id);
+        });
       });
-    });
+    this.productInformationSubscriptions.push(getWishlistDataSubscription);
   }
 
   getStock(stock: number): number[] {
@@ -73,7 +82,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    } else  {
+    } else {
       const selectedValue = String(select.value);
       const sentBody = {
         products: {
@@ -99,7 +108,7 @@ export class ProductInformationComponent implements OnInit, OnDestroy {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }  else {
+    } else {
       const sentBody: Object = {
         products: [this.product.id],
       };
