@@ -1,44 +1,26 @@
-<div class="container my-5">
-  <div class="row my-3">
+<div class="container-fluid my-5">
+  <div class="row my-3 ms-3">
     <h1 class="text-capitalize">{{ title }}</h1>
   </div>
   <div class="row">
-    <div class="col-2 mt-5 sticky-top">
-      <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="col-3 mt-5 sticky-top">
+      <h1 class="text-uppercase"> filtering </h1>
+      <div class="accordion accordion-flush filtering-section" id="accordionFlushExample">
         <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingOne">
-            <button
-              class="accordion-button collapsed fw-bold"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#flush-collapseOne"
-              aria-expanded="false"
-              aria-controls="flush-collapseOne"
-            >
+            <button  class="accordion-button collapsed fw-bold"  type="button"  data-bs-toggle="collapse"  data-bs-target="#flush-collapseOne"  aria-expanded="true"  aria-controls="flush-collapseOne" >
               Categories
             </button>
           </h2>
-          <div
-            id="flush-collapseOne"
-            class="accordion-collapse collapse"
-            aria-labelledby="flush-headingOne"
-            data-bs-parent="#accordionFlushExample"
-          >
+          <div   id="flush-collapseOne"   class="accordion-collapse collapse"   aria-labelledby="flush-headingOne"   data-bs-parent="#accordionFlushExample">
             <div class="accordion-body">
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="catName" />
-                <label class="form-check-label" for="catName"
-                  >Accessories</label
-                >
-              </div>
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="catName" />
-                <label class="form-check-label" for="catName">Perfume</label>
-              </div>
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="catName" />
-                <label class="form-check-label" for="catName">Watches</label>
-              </div>
+              @for (cat of categories ; track cat.id ){
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="catName" />
+                  <label class="form-check-label" for="catName">{{cat.name}}</label>
+                </div>
+              }
+             
             </div>
           </div>
         </div>
@@ -66,18 +48,11 @@
                 <input type="checkbox" class="form-check-input" id="catName" />
                 <label class="form-check-label" for="catName">Watches</label>
               </div>
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="catName" />
-                <label class="form-check-label" for="catName">Watches</label>
-              </div>
-              <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="catName" />
-                <label class="form-check-label" for="catName">Watches</label>
-              </div>
+
             </div>
           </div>
         </div>
-        <div class="accordion-item">
+        <!-- <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingThree">
             <button
               class="accordion-button collapsed fw-bold"
@@ -105,8 +80,8 @@
               id="customRange3"
             />
           </div>
-        </div>
-        <div class="accordion-item">
+        </div> -->
+        <!-- <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingFour">
             <button
               class="accordion-button collapsed fw-bold"
@@ -134,7 +109,7 @@
               <label class="form-check-label" for="catName">Out Of Stock</label>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingFour">
             <button
@@ -166,7 +141,7 @@
         </div>
       </div>
     </div>
-    <div class="col-10">
+    <div class="col-9">
       <div class="d-flex justify-content-end align-items-center">
         <div class="sort-by mx-4 d-flex gap-3 align-items-center">
           <span>Sort by</span>
@@ -211,8 +186,15 @@
               class="big-deal-product-big-tags d-flex flex-row align-items-end"
               [ngClass]="{'justify-content-between': product.is_featured, 'justify-content-end': !product.is_featured}"
             >
-              <div *ngIf="product.is_featured" class="products-tag">
+              <div 
+              *ngIf="product.is_featured && product.sale"
+              [ngClass]="{ 'd-none ': product.sale }"
+              class="products-tag"
+            > 
                 <span class="text-capitalize">Featured</span>
+              </div>
+              <div class="my-2">
+                <span class="opacity-0">space holder </span>
               </div>
                 <div class="products-wish">
                   <div class="con-like">
