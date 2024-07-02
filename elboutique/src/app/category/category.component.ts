@@ -91,9 +91,9 @@ export class CategoryComponent implements OnInit , OnDestroy {
     //   this.vendors =  res;
     //   console.log(res);
     // })
-    this.sub = this.TagesService.getAllTags().subscribe(res =>{
-      console.log(res);
-    })
+    // this.sub = this.TagesService.getAllTags().subscribe(res =>{
+    //   console.log(res);
+    // })
   
   }
 

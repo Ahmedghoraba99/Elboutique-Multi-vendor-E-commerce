@@ -1,0 +1,30 @@
+.box{
+    background-color: var(--accent-color-3);
+    text-transform: capitalize;
+    text-align: center;
+    border: 1px solid var(--accent-color-1);
+    border-radius: 0.5rem;
+    transition: ease-in-out 0.3s;
+    cursor: pointer;
+}
+.box fa-icon{
+    color: var(--accent-color-2);
+    font-size: 2rem;
+    transition: ease-in-out 0.3s;
+}
+.box:hover fa-icon{
+    color: var(--accent-color-3);
+}
+.box:hover{
+    background-color: var(--accent-color-2);
+    color: var(--accent-color-3);
+}
+.btn-vendor{
+    color: var(--accent-color-3);
+    background-color: var(--accent-color-2);
+
+}
+.vendor-section{
+    background-color: var(--accent-color-3);
+    border-radius: 0.5rem;
+}
