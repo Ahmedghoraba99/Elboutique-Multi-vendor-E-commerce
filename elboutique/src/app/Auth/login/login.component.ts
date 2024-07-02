@@ -96,7 +96,7 @@ export class LoginComponent implements OnDestroy {
   handleSuccess(response: any) {
     this.nextStep();
     // TODO: Link to service
-    this.authService.updateAuthStatus(true);
+    this.authService.getCurrentUser();
     this.cartService.fetchCustomerCart();
     this.wishlistService.fetchUserWishlist();
 

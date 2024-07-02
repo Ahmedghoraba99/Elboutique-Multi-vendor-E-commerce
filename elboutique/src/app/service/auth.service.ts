@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Subject, Observable, Subscription, BehaviorSubject, tap } from 'rxjs';
+import {
+  Subject,
+  Observable,
+  Subscription,
+  BehaviorSubject,
+  tap,
+  of,
+} from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -12,9 +19,8 @@ export class AuthService {
   private baseUrl = 'http://127.0.0.1:8000/api/';
   private loginUrl = `${this.baseUrl}login`;
   private storageData = localStorage.getItem('user_info');
-  private registerUrl = `${this.baseUrl}/ `;
   private customerRegisterUrl = `${this.baseUrl}/customer/register`;
-  private authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
+  public authStatus = new BehaviorSubject<boolean>(this.isAuthenticated());
 
   constructor(private http: HttpClient, private router: Router) {}
   login(email: string, password: string, role: string): Observable<any> {
@@ -28,9 +34,9 @@ export class AuthService {
       })
     );
   }
-  private currentUser = new BehaviorSubject<any>(null);
+  public currentUser = new BehaviorSubject<any>(null);
 
-  getCurrentUser(): void {
+  getCurrentUser() {
     const currentStorageUser = this.getStorageData();
     if (currentStorageUser) {
       this.http
@@ -40,6 +46,7 @@ export class AuthService {
         .subscribe((userData) => {
           // console.log('From Observable', userData);
           this.currentUser.next(userData);
+          return userData;
         });
     }
   }

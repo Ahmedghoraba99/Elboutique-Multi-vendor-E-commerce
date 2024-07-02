@@ -51,14 +51,13 @@ export class NavbarComponent {
         this.cartService.getCartData().subscribe((data) => {
           if (data) {
             this.cartItems = data.length;
-            console.log(data);
           }
         });
       }
     });
     this.cartService.cart.next(this.cartService.getCustomerCart());
-
     this.wislistService.wishlist.next(this.wislistService.getUserWishlist());
+    this.authService.currentUser.next(this.authService.getCurrentUser());
   }
 
   onCategorySelected(category: any) {
