@@ -89,8 +89,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       this.isAuthenticated = isAuth;
     });
     this.getCartSub = this.cartService.getCartData().subscribe((cart) => {
-      this.customerCart = cart;
       if (cart) {
+        this.customerCart = cart;
         this.customerCart.forEach((product: any) => {
           this.cartPriceAndQuantity.push({
             [`${product.name}`]: {
@@ -103,16 +103,15 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
   getOrderTotalPrice() {
-    return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
-      const key = Object.keys(product)[0];
-      return total + product[key].price * product[key].quantity;
+    return this.customerCart.reduce((total: any, product: any) => {
+      return total + product.price * product.cart_table.quantity;
     }, 0);
   }
   getDiscountedAmount() {
     let afterDiscount = 0;
     this.customerCart.forEach((cartItem: any) => {
       if (cartItem.sale) {
-        let dicPercent = (100 - cartItem.sale) / 100;
+        let dicPercent = cartItem.sale / 100;
         afterDiscount +=
           cartItem.price * dicPercent * cartItem.cart_table.quantity;
       }
@@ -121,9 +120,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   getOrderTotalQuantities() {
-    return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
-      const key = Object.keys(product)[0];
-      return total + product[key].quantity;
+    return this.customerCart.reduce((total: any, product: any) => {
+      return total + product.cart_table.quantity;
     }, 0);
   }
   getstock(stock: number) {
@@ -135,10 +133,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         [`${product.id}`]: quantity,
       },
     };
-    this.cartPriceAndQuantity.map((toChangeProduct: any) => {
-      const key = Object.keys(toChangeProduct)[0];
-      if (key === product.name) {
-        toChangeProduct[key].quantity = quantity;
+    this.customerCart.forEach((toChangeProduct: any) => {
+      if (toChangeProduct.name === product.name) {
+        toChangeProduct.cart_table.quantity = quantity;
       }
     });
     this.cartService.addItemToCart(sentBody);
@@ -158,7 +155,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     };
     this.wishlistService.addItemToWishlist(sentBody);
   }
-  DeleteFromCart(id: number) {
+  DeleteFromCart(sentProduct: any) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this product from your wishlist !',
@@ -170,35 +167,53 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         const sentBody = {
-          products: id,
+          products: sentProduct.id,
         };
-        const orderProductBody: any = {
-          products: {},
-        };
-        this.customerCart.forEach((product: any) => {
-          orderProductBody.products[`${product.id}`] =
-            product.cart_table.quantity;
+        this.cartService.deleteItemFromCart(sentBody).subscribe(() => {
+          this.customerCart = this.customerCart.filter(
+            (product: any) => product.id != sentProduct.id
+          );
         });
-        this.cartService.deleteItemFromCart(sentBody);
       }
     });
   }
   CreateOrder() {
     const sentBody = {
-      status: 'midway',
-      total: this.getOrderTotalPrice() - this.getDiscountedAmount() + 50, //value of shipping
+      total:
+        this.getOrderTotalPrice() +
+        this.getOrderTotalPrice() * 0.2 -
+        this.getDiscountedAmount(),
     };
-
-    this.addOrderSub = this.orderService
-      .createOrder(sentBody)
-      .subscribe((res) => {
-        // console.log(res);
-        const { id } = res.order;
-        this.successOrderCreatedAlert();
-        this.addProducts(id);
-        this.clearCart();
-        this.customerCart = [];
-      });
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to Make this Order !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#270949',
+      cancelButtonColor: '#f95b3d',
+      confirmButtonText: 'Yes, Make it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+          next: (res: any) => {
+            const { id } = res.order;
+            this.successOrderCreatedAlert();
+            this.addProducts(id);
+            this.clearCart();
+            this.customerCart = [];
+          },
+          error: (error) => {
+            console.error('Error making order:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error making the order.',
+              'error'
+            );
+          },
+        });
+      }
+    });
   }
   addProducts(id: number) {
     const orderProductBody: any = {

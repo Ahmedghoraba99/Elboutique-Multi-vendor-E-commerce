@@ -52,13 +52,11 @@ export class CartService {
       .subscribe();
   }
 
-  deleteItemFromCart(body: Object): void {
-    this.deleteFromCustomerCart(body)
-      .pipe(
-        switchMap(() => this.getCustomerCart()),
-        tap((cartData) => this.cart.next(cartData))
-      )
-      .subscribe();
+  deleteItemFromCart(body: Object): Observable<any> {
+    return this.deleteFromCustomerCart(body).pipe(
+      switchMap(() => this.getCustomerCart()),
+      tap((cartData) => this.cart.next(cartData))
+    );
   }
   clearCart(): void {
     this.clearCustomerCart()
