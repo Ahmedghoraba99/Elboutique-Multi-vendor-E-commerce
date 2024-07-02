@@ -12,6 +12,10 @@ export class ProductCategoryService {
     return this.httpClient.get<any>('http://localhost:8000/api/products');
   }
 
+  getAllVendors(): Observable<any> {
+    return this.httpClient.get<any>('http://localhost:8000/api/Vendors');
+  }
+
   loadMoreProductsAll(page: number): Observable<any> {
     return this.httpClient
       .get<any>(`http://localhost:8000/api/products?page=${page}`)

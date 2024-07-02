@@ -315,3 +315,17 @@ a {
   background-color: var(--accent-color-3);
   
 }
+.no-outline:focus ,.accordion-button:not(.collapsed) {
+  outline: none;
+  box-shadow: none;
+  background-color: var(--accent-color-2);
+  color: var(--accent-color-3);
+}
+.accordion-item{
+  margin: 2rem 0rem;
+}
+
+::placeholder{
+  color: #1a18184f;
+  
+}

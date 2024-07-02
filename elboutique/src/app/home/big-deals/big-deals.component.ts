@@ -30,6 +30,7 @@ export class BigDealsComponent {
     });
     this.homeService.getOnSaleProducts().subscribe((data) => {
       this.products = data;
+      console.log(data);
     });
     this.wishlisteService.getWishlistData().subscribe((data) => {
       if (data) {
