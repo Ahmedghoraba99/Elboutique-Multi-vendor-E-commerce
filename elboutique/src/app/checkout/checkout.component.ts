@@ -47,6 +47,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addOrderSub: Subscription | null = null;
   addProductsToOrderSub: Subscription | null = null;
   clearCartSub: Subscription | null = null;
+  isAuthObservableSub!: Subscription;
   paymentForm: FormGroup;
   isAuthenticated: boolean = false;
 
@@ -83,11 +84,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.addOrderSub?.unsubscribe();
     this.addProductsToOrderSub?.unsubscribe();
     this.clearCartSub?.unsubscribe();
+    this.isAuthObservableSub?.unsubscribe();
   }
   ngOnInit(): void {
-    this.authService.isAuthObservable().subscribe((isAuth) => {
-      this.isAuthenticated = isAuth;
-    });
+    this.isAuthObservableSub = this.authService
+      .isAuthObservable()
+      .subscribe((isAuth) => {
+        this.isAuthenticated = isAuth;
+      });
     this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
       if (cart) {
         this.customerCart = cart;
