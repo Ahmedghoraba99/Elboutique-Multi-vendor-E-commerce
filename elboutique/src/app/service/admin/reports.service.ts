@@ -21,4 +21,7 @@ export class ReportsService {
   deleteProductReport(id: number): Observable<any> {
     return this.http.delete(`${this.productUrl}/${id}`);
   }
+  deleteReviewReport(id: number): Observable<any> {
+    return this.http.delete(`${this.reviewUrl}/${id}`);
+  }
 }

@@ -1,5 +1,7 @@
 import { ReportsService } from '../../service/admin/reports.service';
 import { ProductService } from '../../service/admin/product.service';
+import { VendorService } from '../../service/admin/vendor.service';
+import { ReviewService } from '../../service/review.service';
 import { Subscription } from 'rxjs';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -33,7 +35,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   reviewsReports: any[] = [];
   constructor(
     private reportsService: ReportsService,
-    private productService: ProductService
+    private productService: ProductService,
+    private vendorService: VendorService,
+    private reviewService: ReviewService
   ) {}
   loading = true;
 
@@ -63,8 +67,6 @@ export class ReportsComponent implements OnInit, OnDestroy {
       this.reportsService.getProductReports().subscribe({
         next: (response) => {
           this.productsReports = response.data;
-
-          console.log('getProducts', this.productsReports);
           this.loading = false;
         },
         error: (error) => {
@@ -75,9 +77,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     );
   }
 
-  // banVendor(id: number) {}
-
-  deleteProduct(id: number) {
+  banVendor(id: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -88,23 +88,19 @@ export class ReportsComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        // this.reportsSubscriptions.push(
-        this.productService.deleteProduct(id).subscribe({
-          next: (response) => {
-            console.log(response);
-            this.getProducts();
-          },
-          error: (error) => {
-            console.log(error);
-          },
-        });
-        // );
+        this.reportsSubscriptions.push(
+          this.vendorService.banVendor(id, true).subscribe({
+            next: (response) => {
+              this.getProducts();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          })
+        );
       }
     });
   }
-
-  // deleteReviewReport(id: number) {}
-
   deleteProductReport(id: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -118,8 +114,74 @@ export class ReportsComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.reportsSubscriptions.push(
           this.reportsService.deleteProductReport(id).subscribe((response) => {
-            console.log(response);
             this.getProducts();
+          })
+        );
+      }
+    });
+  }
+
+  deleteProduct(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reportsSubscriptions.push(
+          this.productService.deleteProduct(id).subscribe({
+            next: (response) => {
+              console.log(response);
+              this.getProducts();
+            },
+            error: (error) => {
+              console.log(error);
+            },
+          })
+        );
+      }
+    });
+  }
+
+  deleteReviewReport(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reportsSubscriptions.push(
+          this.reportsService.deleteReviewReport(id).subscribe((response) => {
+            console.log(response);
+            this.getReviews();
+          })
+        );
+      }
+    });
+  }
+  deleteReview(id: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.reportsSubscriptions.push(
+          this.reviewService.deleteReview(id).subscribe((response) => {
+            console.log(response);
+            this.getReviews();
           })
         );
       }
