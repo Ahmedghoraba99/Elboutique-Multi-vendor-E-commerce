@@ -22,7 +22,10 @@ class ProductController extends Controller
     public function index()
     {
         // get all products with images and tags
-        $products = Product::with(['images', 'tags'])->paginate(16);
+        $products = Product::with(['images', 'tags', 'vendor' => function ($query) {
+            $query->select('id', 'name');
+        }])->paginate(16);
+
         return response()->json($products);
     }
 
