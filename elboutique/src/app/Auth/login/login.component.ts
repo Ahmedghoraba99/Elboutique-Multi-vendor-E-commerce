@@ -12,6 +12,7 @@ import { NavComponent } from '../nav/nav.component';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart.service';
+import { WishlistService } from '../../service/wishlist.service';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,8 @@ export class LoginComponent implements OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private wishlistService: WishlistService
   ) {
     this.loginForm = this.fb.group({
       userType: ['', Validators.required],
@@ -96,6 +98,7 @@ export class LoginComponent implements OnDestroy {
     // TODO: Link to service
     this.authService.updateAuthStatus(true);
     this.cartService.fetchCustomerCart();
+    this.wishlistService.fetchUserWishlist();
 
     if (response.role === 'admin') {
       this.showToastMessage(

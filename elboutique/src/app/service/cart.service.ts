@@ -9,22 +9,26 @@ export class CartService {
   private baseUrl = 'http://127.0.0.1:8000/api/customer';
   private userInfo!: any; // = localStorage.getItem('user_info');
   private userID!: any; // = this.userInfo ? JSON.parse(this.userInfo).id : null;
-  private userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
+  private userRole!: any; // = this.userInfo ? JSON.parse(this.userInfo).role : null;
 
   public cart = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {
+    this.getStorageData();
     // Fetch initial cart data when service is instantiated
     if (this.userID) {
       this.fetchCustomerCart();
     }
   }
 
-  getCustomerCart(): Observable<any> {
+  getStorageData() {
     this.userInfo = localStorage.getItem('user_info');
     this.userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
+    this.userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
+  }
+  getCustomerCart(): Observable<any> {
+    this.getStorageData();
     if (!this.userID || this.userRole === 'vendor') {
-      console.log(this.userID, this.userRole);
       return of(null);
     }
     return this.http.get(`${this.baseUrl}/showCart/${this.userID}`);
@@ -41,7 +45,6 @@ export class CartService {
   fetchCustomerCart(): void {
     this.getCustomerCart().subscribe((cartData) => {
       this.cart.next(cartData);
-      console.log(cartData);
     });
   }
   getCartData(): Observable<any> {

@@ -30,7 +30,6 @@ import { PaypalComponent } from './paypal/paypal.component';
     CommonModule,
     NgIf,
     RouterLink,
-    PaypalComponent,
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
