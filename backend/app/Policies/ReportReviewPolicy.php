@@ -28,9 +28,12 @@ class ReportReviewPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(  $user): bool
+    public function create( $user): bool
     {
-        $user  instanceof Admin || $user->banned =='false';
+       
+         
+ return $user instanceof Admin || (!$user->banned && !$user->reviews->where('customer_id', $user->id)->exists());
+      
     }
 
     /**

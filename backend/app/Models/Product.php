@@ -71,9 +71,6 @@ class Product extends Model
         return $this->hasMany(ReportProduct::class);
     }
 
-    public function reportReviews()
-    {
-        return $this->hasMany(ReportReview::class);
-    }
+   
     use HasFactory;
 }

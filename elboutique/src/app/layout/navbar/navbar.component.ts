@@ -55,6 +55,9 @@ export class NavbarComponent {
         });
       }
     });
+    this.cartService.cart.next(this.cartService.getCustomerCart());
+    console.log(this.cartItems);
+    
   }
 
   onCategorySelected(category: any) {
