@@ -25,7 +25,6 @@ export class VendorComponent {
       path: 'products',
       icon: '<i class="fa-solid fa-boxes-stacked"></i>',
       name: 'My Products',
-    }
+    },
   ];
 }
-

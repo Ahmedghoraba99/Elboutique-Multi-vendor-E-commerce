@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HomeService } from '../../service/home.service';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './shop-now.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ShopNowComponent implements OnInit {
+export class ShopNowComponent implements OnInit, OnDestroy {
   categories: any[] = [];
   sub: Subscription | null = null;
   constructor(private HomeService: HomeService) {}
@@ -21,5 +21,10 @@ export class ShopNowComponent implements OnInit {
     this.sub = this.HomeService.getAllCategories().subscribe((items) => {
       this.categories = items.data;
     });
+  }
+  ngOnDestroy(): void {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 }

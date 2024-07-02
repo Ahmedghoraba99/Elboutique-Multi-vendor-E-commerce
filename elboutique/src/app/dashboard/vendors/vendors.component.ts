@@ -98,14 +98,18 @@ export class VendorsComponent {
   }
 
   activateVendor(vendor: any): void {
-    console.log(vendor);
-
     this.vendorService.activateVendor(vendor.id).subscribe({
       next: (response) => {
-        vendor.active = !vendor.active;
+        if (vendor.active == 'true') {
+          vendor.active = 'false';
+        } else {
+          vendor.active = 'true';
+        }
         Swal.fire(
           'Success!',
-          `Vendor has been ${vendor.active ? 'activated' : 'deactivated'}.`,
+          `Vendor has been ${
+            vendor.active == 'true' ? 'activated' : 'deactivated'
+          }.`,
           'success'
         );
       },
@@ -124,10 +128,15 @@ export class VendorsComponent {
   banVendor(vendor: any): void {
     this.vendorService.banVendor(vendor.id, !vendor.banned).subscribe({
       next: () => {
-        vendor.banned = !vendor.banned;
+        if (vendor.banned == 'true') {
+          vendor.banned = 'false';
+        } else {
+          vendor.banned = 'true';
+        }
+
         Swal.fire(
           'Success!',
-          `Vendor has been ${vendor.banned ? 'banned' : 'unbanned'}.`,
+          `Vendor has been ${vendor.banned == 'true' ? 'banned' : 'unbanned'}.`,
           'success'
         );
       },
