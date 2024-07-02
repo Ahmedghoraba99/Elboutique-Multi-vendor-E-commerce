@@ -34,14 +34,14 @@ export class BigDealsComponent {
     this.wishlisteService.getWishlistData().subscribe((data) => {
       if (data) {
         data.forEach((item: { id: any }) => {
-          this.userWishlist.push(item.id);
+          this.userWishlist.push(item?.id);
         });
       }
     });
     this.cartService.getCartData().subscribe((data) => {
       if (data) {
         data.forEach((item: { id: any }) => {
-          this.userCart.push(item.id);
+          this.userCart.push(item?.id);
         });
       }
     });
