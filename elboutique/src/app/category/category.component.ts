@@ -30,12 +30,10 @@ export class CategoryComponent implements OnInit, OnDestroy {
   id: string | null;
   userWishlist: any[] = [];
   userCart: any[] = [];
-  //
   sub: Subscription | null = null;
   categories: any[] = [];
   vendors: any[] = [];
   tags: any[] = [];
-  //
   isAuthenticated = false;
 
   constructor(
