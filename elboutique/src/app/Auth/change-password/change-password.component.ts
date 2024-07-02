@@ -10,6 +10,7 @@ import { AuthService } from '../../service/auth.service';
 import { Router } from '@angular/router';
 import { passwordMatchValidator } from '../validators';
 import { Subscription } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-change-password',
@@ -86,17 +87,22 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   }
   handleSuccess() {
     sessionStorage.removeItem('needReset');
-    alert(
-      'Your password has been changed successfully. Please login with your new password'
-    );
-
-    this.router.navigateByUrl('/login');
+    Swal.fire({
+      icon: 'success',
+      title: 'Password Changed',
+      text: 'Your password has been changed successfully. Please login with your new password',
+    }).then(() => {
+      this.router.navigateByUrl('/login');
+    });
   }
   handleError(err: any) {
-    if (err.status) alert('This password reset token is invalid.');
-    setTimeout(() => {
+    if (err.status)  Swal.fire({
+      icon: 'error',
+      title: 'Sorry!',
+      text: 'This password reset token is invalid.',
+    }).then(() => {
       this.router.navigateByUrl('/login');
-    }, 2000);
+    });
   }
   getParams(param: string) {
     const searchBarParams = new URLSearchParams(window.location.search);
