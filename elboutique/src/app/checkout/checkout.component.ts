@@ -19,6 +19,7 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
 import { AuthService } from '../service/auth.service';
+import { PaypalComponent } from './paypal/paypal.component';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -39,7 +40,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   faTrashCan = faTrashCan;
   faShoppingBasket = faShoppingBasket;
   customerCart: any[] = [];
-  cartPriceAndQuantity: any = [];
   addtoWishlistSub: Subscription | null = null;
   getCartSub: Subscription | null = null;
   updateInCart: Subscription | null = null;
@@ -88,17 +88,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.authService.isAuthObservable().subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
     });
-    this.getCartSub = this.cartService.getCartData().subscribe((cart) => {
+    this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
       if (cart) {
         this.customerCart = cart;
-        this.customerCart.forEach((product: any) => {
-          this.cartPriceAndQuantity.push({
-            [`${product.name}`]: {
-              price: product.price,
-              quantity: product.cart_table.quantity,
-            },
-          });
-        });
       }
     });
   }
@@ -169,11 +161,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const sentBody = {
           products: sentProduct.id,
         };
-        this.cartService.deleteItemFromCart(sentBody).subscribe(() => {
-          this.customerCart = this.customerCart.filter(
-            (product: any) => product.id != sentProduct.id
-          );
-        });
+        this.removeFromCartSub = this.cartService
+          .deleteItemFromCart(sentBody)
+          .subscribe(() => {
+            this.customerCart = this.customerCart.filter(
+              (product: any) => product.id != sentProduct.id
+            );
+          });
       }
     });
   }
