@@ -16,9 +16,8 @@ class ReportReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'customer' => $this->customer,
+            'customer_id' => $this->customer,
             'review_id' => $this->review,
-            'theProduct'=>$this->review->product,
             'reason' => $this->reason,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
