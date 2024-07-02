@@ -86,7 +86,11 @@ export const routes: Routes = [
       },
       {
         path: 'login/forget-password',
-        loadComponent: () => ForgotPasswordComponent,
+        // loadComponent: () => ForgotPasswordComponent,
+        loadChildren: () =>
+          import('./Auth/forget-password/forget-password.module').then(
+            (m) => m.ForgetPasswordModule
+          ),
         data: { title: 'Forget Password' },
       },
       {
