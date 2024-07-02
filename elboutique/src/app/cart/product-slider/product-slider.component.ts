@@ -1,10 +1,11 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductDetailsService } from '../../service/product-details.service';
 import { NgFor } from '@angular/common';
 import Swiper from 'swiper';
 import { Navigation, Pagination, Thumbs } from 'swiper/modules';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-product-slider',
@@ -14,13 +15,14 @@ import { Navigation, Pagination, Thumbs } from 'swiper/modules';
   styleUrls: ['./product-slider.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ProductSliderComponent implements AfterViewInit {
+export class ProductSliderComponent implements AfterViewInit,OnInit,OnDestroy {
   @ViewChild('mainSwiper') mainSwiperRef: ElementRef | undefined;
   @ViewChild('thumbsSwiper') thumbsSwiperRef: ElementRef | undefined;
   productImages: any[] = [];
   id: number = 0;
   mainSwiper: Swiper | undefined;
   thumbsSwiper: Swiper | undefined;
+  productSliderSubscriptions: Subscription[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -28,16 +30,20 @@ export class ProductSliderComponent implements AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    const idSubscription = this.route.params.subscribe((params) => {
       this.id = +params['id'];
-      this.productService.getProduct(this.id).subscribe((product) => {
-        this.productImages = product.images.map(
-          (image: { image: string }) =>
-            'http://localhost:8000/storage/' + image.image
-        );
-        this.initSwipers();
-      });
+      const getProductSubscription = this.productService
+        .getProduct(this.id)
+        .subscribe((product) => {
+          this.productImages = product.images.map(
+            (image: { image: string }) =>
+              'http://localhost:8000/storage/' + image.image
+          );
+          this.initSwipers();
+        });
+      this.productSliderSubscriptions.push(getProductSubscription);
     });
+    this.productSliderSubscriptions.push(idSubscription);
   }
 
   ngAfterViewInit(): void {
@@ -75,5 +81,10 @@ export class ProductSliderComponent implements AfterViewInit {
 
   trackByImage(index: number, image: string): string {
     return image;
+  }
+  ngOnDestroy(): void {
+    this.productSliderSubscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 }
