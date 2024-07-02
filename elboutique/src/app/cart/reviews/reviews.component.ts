@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
   styleUrl: './reviews.component.css',
 })
 export class ReviewsComponent implements OnInit, OnDestroy {
-  productDetailsSubscriptions: Subscription[] = [];
+  reviewSubscriptions: Subscription[] = [];
   reviews: Review[] = [];
   averageRating: number = 0;
   totalRating: number = 0;
@@ -36,7 +36,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
       const productId = +params['id'];
       this.loadReviews(productId);
     });
-    this.productDetailsSubscriptions.push(idSubscription);
+    this.reviewSubscriptions.push(idSubscription);
   }
 
   faStar = faStar;
@@ -60,7 +60,7 @@ export class ReviewsComponent implements OnInit, OnDestroy {
         this.reviews = response.data;
         this.calculateAverageRating();
       });
-    this.productDetailsSubscriptions.push(getReviewsSubscription);
+    this.reviewSubscriptions.push(getReviewsSubscription);
   }
 
   calculateAverageRating(): void {
@@ -90,6 +90,6 @@ export class ReviewsComponent implements OnInit, OnDestroy {
     console.log(this.reviewId);
   }
   ngOnDestroy(): void {
-    this.productDetailsSubscriptions.forEach((sub) => sub.unsubscribe());
+    this.reviewSubscriptions.forEach((sub) => sub.unsubscribe());
   }
 }
