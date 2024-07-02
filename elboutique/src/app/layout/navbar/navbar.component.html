@@ -56,7 +56,7 @@
               [class]="!isAuthenticated ? 'd-none' : ''"
             >
               <a
-                [routerLink]="currentUser.active ? '/v/overview' : '/u/account'"
+                [routerLink]="currentUser?.active ? '/v/overview' : '/u/account'"
                 class="user-profile"
               >
                 <img

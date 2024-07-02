@@ -44,6 +44,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           .subscribe((data) => {
             if (data) {
               this.currentUser = data.data;
+              console.log(data);
             }
           });
         const wislistService = this.wislistService
@@ -65,7 +66,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.cartService.cart.next(this.cartService.getCustomerCart());
     this.wislistService.wishlist.next(this.wislistService.getUserWishlist());
-    this.authService.currentUser.next(this.authService.getCurrentUser());
+    this.authService.currentUser.next(this.authService.getCurrentUserRrq());
   }
 
   onCategorySelected(category: any) {
