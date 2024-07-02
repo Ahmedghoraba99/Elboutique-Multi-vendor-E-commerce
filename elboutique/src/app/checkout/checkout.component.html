@@ -1,5 +1,5 @@
 <div class="container text-capitalize">
-  <h1 class="my-4 py-5">My Cart</h1>
+  <h1 class="mt-4 pt-5">My Cart</h1>
   <div class="row">
     <div class="wishList-section px-2 my-5 px-2" *ngIf="isAuthenticated">
       <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
@@ -183,8 +183,20 @@
                   </div>
                 </div>
                 <div class="checkout-btn text-center my-4">
-                  <button class="btn" type="submit" (click)="CreateOrder()">
+                  <button
+                    #checkout
+                    class="btn"
+                    type="submit"
+                    (click)="CreateOrder(checkout)"
+                  >
                     ckeckout
+                  </button>
+                  <button
+                    #paypal
+                    class="btn paypal mt-3"
+                    (click)="CreateOrder(paypal)"
+                  >
+                    Pay By PayPal
                   </button>
                 </div>
               </div>

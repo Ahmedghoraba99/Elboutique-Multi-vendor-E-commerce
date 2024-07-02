@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { SummaryOrderComponent } from './summary-order/summary-order.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { CommonModule, NgIf } from '@angular/common';
@@ -19,13 +18,12 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
 import { AuthService } from '../service/auth.service';
-import { PaypalComponent } from './paypal/paypal.component';
+import { PaymentService } from '../service/payment.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    SummaryOrderComponent,
     FontAwesomeModule,
     CommonModule,
     NgIf,
@@ -47,6 +45,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addOrderSub: Subscription | null = null;
   addProductsToOrderSub: Subscription | null = null;
   clearCartSub: Subscription | null = null;
+  paybalSub: Subscription | null = null;
   paymentForm: FormGroup;
   isAuthenticated: boolean = false;
 
@@ -56,7 +55,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private wishlistService: WishlistService,
     private orderService: OrderService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private paymentService: PaymentService
   ) {
     this.paymentForm = this.fb.group({
       cardNumber: [
@@ -83,6 +83,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.addOrderSub?.unsubscribe();
     this.addProductsToOrderSub?.unsubscribe();
     this.clearCartSub?.unsubscribe();
+    this.paybalSub?.unsubscribe();
   }
   ngOnInit(): void {
     this.authService.isAuthObservable().subscribe((isAuth) => {
@@ -171,43 +172,60 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       }
     });
   }
-  CreateOrder() {
+  CreateOrder(paymentType: HTMLButtonElement) {
     const sentBody = {
       total:
         this.getOrderTotalPrice() +
         this.getOrderTotalPrice() * 0.2 -
         this.getDiscountedAmount(),
     };
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to Make this Order !',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#270949',
-      cancelButtonColor: '#f95b3d',
-      confirmButtonText: 'Yes, Make it!',
-      cancelButtonText: 'No, cancel!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
-          next: (res: any) => {
-            const { id } = res.order;
-            this.successOrderCreatedAlert();
-            this.addProducts(id);
-            this.clearCart();
-            this.customerCart = [];
-          },
-          error: (error) => {
-            console.error('Error making order:', error);
-            Swal.fire(
-              'Error!',
-              'There was an error making the order.',
-              'error'
-            );
-          },
-        });
-      }
-    });
+
+    if (paymentType.innerText === 'CKECKOUT') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to Make this Order !',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#270949',
+        cancelButtonColor: '#f95b3d',
+        confirmButtonText: 'Yes, Make it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+            next: (res: any) => {
+              const { id } = res.order;
+              this.addProducts(id);
+              this.clearCart();
+              this.successOrderCreatedAlert();
+              this.customerCart = [];
+            },
+            error: (error) => {
+              console.error('Error making order:', error);
+              Swal.fire(
+                'Error!',
+                'There was an error making the order.',
+                'error'
+              );
+            },
+          });
+        }
+      });
+    } else if (paymentType.innerText === 'PAY BY PAYPAL') {
+      this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+        next: (res) => {
+          const { id } = res.order;
+          this.addProducts(id);
+          this.clearCart();
+          this.paypalPayment(id, sentBody.total);
+          // this.customerCart = [];
+        },
+        error: (err) => {
+          console.error('Error making order:', err);
+          Swal.fire('Error!', 'There was an error making the order.', 'error');
+        },
+      });
+    }
   }
   addProducts(id: number) {
     const orderProductBody: any = {
@@ -233,5 +251,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       text: 'Your Order is Made Successfully',
       icon: 'success',
     });
+  }
+  paypalPayment(order_id: number, total: number) {
+    this.paybalSub = this.paymentService
+      .payByPayPal({ total, order_id })
+      .subscribe((res) => {
+        window.location.href = res.paypal_link;
+      });
   }
 }
