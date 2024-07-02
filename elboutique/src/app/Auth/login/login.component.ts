@@ -11,6 +11,8 @@ import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
 import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CartService } from '../../service/cart.service';
+import { WishlistService } from '../../service/wishlist.service';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +38,9 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cartService: CartService,
+    private wishlistService: WishlistService
   ) {
     this.loginForm = this.fb.group({
       userType: ['', Validators.required],
@@ -92,7 +96,9 @@ export class LoginComponent implements OnDestroy {
   handleSuccess(response: any) {
     this.nextStep();
     // TODO: Link to service
-    this.authService.updateAuthStatus(true);
+    this.authService.getCurrentUser();
+    this.cartService.fetchCustomerCart();
+    this.wishlistService.fetchUserWishlist();
 
     if (response.role === 'admin') {
       this.showToastMessage(
@@ -116,9 +122,8 @@ export class LoginComponent implements OnDestroy {
       } else if (response.role == 'vendor') {
         window.location.href = '/v';
         // this.router.navigateByUrl('/v');
-      }
-      // else this.router.navigateByUrl('/');
-      else window.location.href = '/';
+      } else this.router.navigateByUrl('/');
+      // else window.location.href = '/';
     }, 3000);
   }
   handleError(error: any) {

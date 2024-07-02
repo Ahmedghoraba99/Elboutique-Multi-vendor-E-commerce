@@ -1,7 +1,8 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductDetailsService } from '../../service/product-details.service';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-details',
@@ -10,7 +11,8 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './details.component.html',
   styleUrl: './details.component.css',
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnInit, OnDestroy {
+  productDetailsSubscriptions: Subscription[] = [];
   constructor(
     private productService: ProductDetailsService,
     private route: ActivatedRoute
@@ -18,11 +20,20 @@ export class DetailsComponent {
   product: any = {};
   id = 0;
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    const idSubscription = this.route.params.subscribe((params) => {
       this.id = +params['id'];
-      this.productService.getProduct(this.id).subscribe((product) => {
-        this.product = product;
-      });
+      const getProductSubscription = this.productService
+        .getProduct(this.id)
+        .subscribe((product) => {
+          this.product = product;
+        });
+      this.productDetailsSubscriptions.push(getProductSubscription);
     });
+    this.productDetailsSubscriptions.push(idSubscription);
+  }
+  ngOnDestroy(): void {
+    this.productDetailsSubscriptions.forEach((subscription) =>
+      subscription.unsubscribe()
+    );
   }
 }

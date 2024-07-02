@@ -7,15 +7,18 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 })
 export class WishlistService {
   private baseUrl = 'http://127.0.0.1:8000/api/customer';
-  private userInfo = localStorage.getItem('user_info');
-  private userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
-  private userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
+  private userInfo!: any; // = localStorage.getItem('user_info');
+  private userID!: any; // = this.userInfo ? JSON.parse(this.userInfo).id : null;
+  private userRole!: any; // = this.userInfo ? JSON.parse(this.userInfo).role : null;
 
-  private wishlist = new BehaviorSubject<any>(null);
+  public wishlist = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {}
 
   getUserWishlist(): Observable<any> {
+    this.userInfo = localStorage.getItem('user_info');
+    this.userID = this.userInfo ? JSON.parse(this.userInfo).id : null;
+    this.userRole = this.userInfo ? JSON.parse(this.userInfo).role : null;
     if (!this.userID || this.userRole === 'vendor') {
       return of(null);
     }

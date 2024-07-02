@@ -15,7 +15,8 @@ import { TagesService } from '../service/tages.service';
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
 })
-export class CategoryComponent implements OnInit , OnDestroy {
+export class CategoryComponent implements OnInit, OnDestroy {
+  private categoriySubscriptions: Subscription[] = [];
   faChevronRight = faChevronRight;
   productsPerPage = 10;
   products: any[] = [];
@@ -29,12 +30,10 @@ export class CategoryComponent implements OnInit , OnDestroy {
   id: string | null;
   userWishlist: any[] = [];
   userCart: any[] = [];
-  // 
-  sub:Subscription |null = null ;
-  categories :any [] = []  ;
-  vendors :any [] = [];
-  tags: any [] = [] ;
-// 
+  sub: Subscription | null = null;
+  categories: any[] = [];
+  vendors: any[] = [];
+  tags: any[] = [];
   isAuthenticated = false;
 
   constructor(
@@ -45,71 +44,86 @@ export class CategoryComponent implements OnInit , OnDestroy {
     private wishlistService: WishlistService,
     private authService: AuthService,
     private toaster: ToastrService,
-    private HomeService :HomeService ,
-    private VendorService:VendorService ,
-    private TagesService:TagesService
-
+    private HomeService: HomeService,
+    private VendorService: VendorService,
+    private TagesService: TagesService
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
 
   ngOnDestroy(): void {
-      this.sub?.unsubscribe;
+    this.sub?.unsubscribe;
+    this.categoriySubscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe((queryParams) => {
-      const name = queryParams.get('name');
-      if (name) {
-        const paramObject = { name };
-        if (this.id != 'all') {
-          this.categoryService
-            .searchForProducts(paramObject)
-            .subscribe((data) => {
-              this.resetProducts();
-              this.setPageParameters(data);
-            });
+    const queryParamMapSubscribe = this.route.queryParamMap.subscribe(
+      (queryParams) => {
+        const name = queryParams.get('name');
+        if (name) {
+          const paramObject = { name };
+          if (this.id != 'all') {
+            const searchForProductSubscribe = this.categoryService
+              .searchForProducts(paramObject)
+              .subscribe((data) => {
+                this.resetProducts();
+                this.setPageParameters(data);
+              });
+            this.categoriySubscriptions.push(searchForProductSubscribe);
+          }
+        } else {
+          this.handleCategoryLoading();
         }
-      } else {
-        this.handleCategoryLoading();
       }
-    });
-    this.wishlistService.getWishlistData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userWishlist.push(item.id);
+    );
+    const getWishlistDataSubscribe = this.wishlistService
+      .getWishlistData()
+      .subscribe((data) => {
+        data.forEach((item: { id: any }) => {
+          this.userWishlist.push(item.id);
+        });
       });
-    });
-    this.cartService.getCartData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userCart.push(item.id);
+    this.categoriySubscriptions.push(getWishlistDataSubscribe);
+    const getCartDataSubscribe = this.cartService
+      .getCartData()
+      .subscribe((data) => {
+        data.forEach((item: { id: any }) => {
+          this.userCart.push(item.id);
+        });
       });
-    });
-    this.sub = this.HomeService.getAllCategories().subscribe(res=>{
-        this.categories = res.data ;
+    this.categoriySubscriptions.push(getCartDataSubscribe);
+    const getAllCategoriesSubscribe =
+      this.HomeService.getAllCategories().subscribe((res) => {
+        this.categories = res.data;
         // console.log(this.categories)
-    })
-    // this.sub = this.VendorService.getVendors().subscribe(res=>{
-    //   this.vendors =  res;
-    //   console.log(res);
-    // })
-    this.sub = this.TagesService.getAllTags().subscribe(res =>{
-      console.log(res);
-    })
-  
+      });
+    this.categoriySubscriptions.push(getAllCategoriesSubscribe);
+
+    const getAllTagsSubscribe = this.TagesService.getAllTags().subscribe(
+      (res) => {
+        console.log(res);
+      }
+    );
+    this.categoriySubscriptions.push(getAllTagsSubscribe);
+    this.categoriySubscriptions.push(queryParamMapSubscribe);
   }
 
   private handleCategoryLoading(): void {
     if (this.id === 'all') {
-      this.categoryService.getAllProductsInAll().subscribe((data) => {
-        this.setPageParameters(data);
-        this.title = 'All Products';
-      });
+      const getAllProductsInAllSubscribe = this.categoryService
+        .getAllProductsInAll()
+        .subscribe((data) => {
+          this.setPageParameters(data);
+          this.title = 'All Products';
+        });
+      this.categoriySubscriptions.push(getAllProductsInAllSubscribe);
     } else if (parseInt(this.id as string)) {
-      this.categoryService
+      const productsPerCategorySubscribe = this.categoryService
         .productsPerCategory(parseInt(this.id as string))
         .subscribe((data) => {
           this.title = data.data[0]?.category?.name || 'Whoops!';
           this.setPageParameters(data);
         });
+      this.categoriySubscriptions.push(productsPerCategorySubscribe);
     } else {
       this.toast.error('Invalid category ID', 'Error');
     }
@@ -136,10 +150,13 @@ export class CategoryComponent implements OnInit , OnDestroy {
   }
 
   private loadMoreProducts(loadMoreFn: (page: number) => any): void {
-    loadMoreFn(this.currentPage + 1).subscribe((data: any) => {
+    const updatePaginationSubscribe = loadMoreFn(
+      this.currentPage + 1
+    ).subscribe((data: any) => {
       this.productsGroup.push(data.data);
       this.updatePagination(data);
     });
+    this.categoriySubscriptions.push(updatePaginationSubscribe);
   }
 
   private updatePagination(data: any): void {
