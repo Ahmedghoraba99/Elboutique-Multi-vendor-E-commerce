@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { CategoryService } from '../../service/admin/category.service';
 import {
@@ -9,7 +9,15 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { Table, TableModule } from 'primeng/table';
 @Component({
   selector: 'app-category',
   standalone: true,
@@ -18,11 +26,22 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     FormsModule,
     NgbPaginationModule,
     ProgressSpinnerModule,
+    FileUploadModule,
+    TableModule,
+    ToastModule,
+    ToolbarModule,
+    DialogModule,
+    DropdownModule,
+    ConfirmDialogModule,
+    InputTextModule,
   ],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
 })
 export class CategoryComponent {
+  @ViewChild('dt') dt: Table | undefined;
+
   categories: any[] = [];
   page = 1;
   pageSize = 10;
@@ -39,7 +58,10 @@ export class CategoryComponent {
   ngOnInit(): void {
     this.getCategories();
   }
-
+  onFilter(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.dt?.filterGlobal(inputElement.value, 'contains');
+  }
   getCategories(): void {
     this.categoryService.getCategories(this.page, this.pageSize).subscribe({
       next: (response) => {
@@ -105,15 +127,27 @@ export class CategoryComponent {
 
   saveCategory(): void {
     if (this.selectedCategory.id) {
-      this.categoryService.editCategory(this.selectedCategory).subscribe({
-        next: () => {
-          this.getCategories();
-          this.modalService.dismissAll();
-        },
-        error: (error) => {
-          console.error('Error editing category:', error);
-        },
-      });
+      const formData = new FormData();
+      formData.append('name', this.selectedCategory.name);
+      formData.append('description', this.selectedCategory.description);
+
+      if (this.selectedCategory.image) {
+        formData.append('image', this.selectedCategory.image);
+      }
+      formData.append('_method', 'PUT');
+
+      this.categoryService
+        .editCategory(this.selectedCategory.id, formData)
+        .subscribe({
+          next: () => {
+            this.getCategories();
+            this.modalService.dismissAll();
+          },
+          error: (error) => {
+            console.error('Error editing category:', error);
+            // Handle error feedback to the user, e.g., using a toast or alert
+          },
+        });
     } else {
       this.categoryService.addCategory(this.selectedCategory).subscribe({
         next: () => {
@@ -122,6 +156,7 @@ export class CategoryComponent {
         },
         error: (error) => {
           console.error('Error adding category:', error);
+          // Handle error feedback to the user, e.g., using a toast or alert
         },
       });
     }

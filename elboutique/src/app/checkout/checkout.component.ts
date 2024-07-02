@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { SummaryOrderComponent } from './summary-order/summary-order.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { CommonModule, NgIf } from '@angular/common';
@@ -19,12 +18,12 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../service/order.service';
 import { AuthService } from '../service/auth.service';
+import { PaymentService } from '../service/payment.service';
 @Component({
   selector: 'app-checkout',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    SummaryOrderComponent,
     FontAwesomeModule,
     CommonModule,
     NgIf,
@@ -39,7 +38,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   faTrashCan = faTrashCan;
   faShoppingBasket = faShoppingBasket;
   customerCart: any[] = [];
-  cartPriceAndQuantity: any = [];
   addtoWishlistSub: Subscription | null = null;
   getCartSub: Subscription | null = null;
   updateInCart: Subscription | null = null;
@@ -47,6 +45,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addOrderSub: Subscription | null = null;
   addProductsToOrderSub: Subscription | null = null;
   clearCartSub: Subscription | null = null;
+  paybalSub: Subscription | null = null;
+  isAuthObservableSub!: Subscription;
   paymentForm: FormGroup;
   isAuthenticated: boolean = false;
 
@@ -56,7 +56,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private wishlistService: WishlistService,
     private orderService: OrderService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private paymentService: PaymentService
   ) {
     this.paymentForm = this.fb.group({
       cardNumber: [
@@ -83,36 +84,31 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.addOrderSub?.unsubscribe();
     this.addProductsToOrderSub?.unsubscribe();
     this.clearCartSub?.unsubscribe();
+    this.paybalSub?.unsubscribe();
+    this.isAuthObservableSub?.unsubscribe();
   }
   ngOnInit(): void {
-    this.authService.isAuthObservable().subscribe((isAuth) => {
-      this.isAuthenticated = isAuth;
-    });
-    this.getCartSub = this.cartService.getCartData().subscribe((cart) => {
-      this.customerCart = cart;
+    this.isAuthObservableSub = this.authService
+      .isAuthObservable()
+      .subscribe((isAuth) => {
+        this.isAuthenticated = isAuth;
+      });
+    this.getCartSub = this.cartService.getCustomerCart().subscribe((cart) => {
       if (cart) {
-        this.customerCart.forEach((product: any) => {
-          this.cartPriceAndQuantity.push({
-            [`${product.name}`]: {
-              price: product.price,
-              quantity: product.cart_table.quantity,
-            },
-          });
-        });
+        this.customerCart = cart;
       }
     });
   }
   getOrderTotalPrice() {
-    return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
-      const key = Object.keys(product)[0];
-      return total + product[key].price * product[key].quantity;
+    return this.customerCart.reduce((total: any, product: any) => {
+      return total + product.price * product.cart_table.quantity;
     }, 0);
   }
   getDiscountedAmount() {
     let afterDiscount = 0;
     this.customerCart.forEach((cartItem: any) => {
       if (cartItem.sale) {
-        let dicPercent = (100 - cartItem.sale) / 100;
+        let dicPercent = cartItem.sale / 100;
         afterDiscount +=
           cartItem.price * dicPercent * cartItem.cart_table.quantity;
       }
@@ -121,9 +117,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   getOrderTotalQuantities() {
-    return this.cartPriceAndQuantity.reduce((total: any, product: any) => {
-      const key = Object.keys(product)[0];
-      return total + product[key].quantity;
+    return this.customerCart.reduce((total: any, product: any) => {
+      return total + product.cart_table.quantity;
     }, 0);
   }
   getstock(stock: number) {
@@ -135,10 +130,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         [`${product.id}`]: quantity,
       },
     };
-    this.cartPriceAndQuantity.map((toChangeProduct: any) => {
-      const key = Object.keys(toChangeProduct)[0];
-      if (key === product.name) {
-        toChangeProduct[key].quantity = quantity;
+    this.customerCart.forEach((toChangeProduct: any) => {
+      if (toChangeProduct.name === product.name) {
+        toChangeProduct.cart_table.quantity = quantity;
       }
     });
     this.cartService.addItemToCart(sentBody);
@@ -158,7 +152,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     };
     this.wishlistService.addItemToWishlist(sentBody);
   }
-  DeleteFromCart(id: number) {
+  DeleteFromCart(sentProduct: any) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you really want to delete this product from your wishlist !',
@@ -170,28 +164,72 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         const sentBody = {
-          products: id,
+          products: sentProduct.id,
         };
-        this.cartService.deleteItemFromCart(sentBody);
+        this.removeFromCartSub = this.cartService
+          .deleteItemFromCart(sentBody)
+          .subscribe(() => {
+            this.customerCart = this.customerCart.filter(
+              (product: any) => product.id != sentProduct.id
+            );
+          });
       }
     });
   }
-  CreateOrder() {
+  CreateOrder(paymentType: HTMLButtonElement) {
     const sentBody = {
-      status: 'midway',
-      total: this.getOrderTotalPrice() - this.getDiscountedAmount() + 50, //value of shipping
+      total:
+        this.getOrderTotalPrice() +
+        this.getOrderTotalPrice() * 0.2 -
+        this.getDiscountedAmount(),
     };
 
-    this.addOrderSub = this.orderService
-      .createOrder(sentBody)
-      .subscribe((res) => {
-        // console.log(res);
-        const { id } = res.order;
-        this.successOrderCreatedAlert();
-        this.addProducts(id);
-        this.clearCart();
-        this.customerCart = [];
+    if (paymentType.innerText === 'CKECKOUT') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to Make this Order !',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#270949',
+        cancelButtonColor: '#f95b3d',
+        confirmButtonText: 'Yes, Make it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+            next: (res: any) => {
+              const { id } = res.order;
+              this.addProducts(id);
+              this.clearCart();
+              this.successOrderCreatedAlert();
+              this.customerCart = [];
+            },
+            error: (error) => {
+              console.error('Error making order:', error);
+              Swal.fire(
+                'Error!',
+                'There was an error making the order.',
+                'error'
+              );
+            },
+          });
+        }
       });
+    } else if (paymentType.innerText === 'PAY BY PAYPAL') {
+      this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+        next: (res) => {
+          const { id } = res.order;
+          this.addProducts(id);
+          this.clearCart();
+          this.paypalPayment(id, sentBody.total);
+          // this.customerCart = [];
+        },
+        error: (err) => {
+          console.error('Error making order:', err);
+          Swal.fire('Error!', 'There was an error making the order.', 'error');
+        },
+      });
+    }
   }
   addProducts(id: number) {
     const orderProductBody: any = {
@@ -200,7 +238,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.customerCart.forEach((product: any) => {
       orderProductBody.products[`${product.id}`] = product.cart_table.quantity;
     });
-    console.log('Order Product Body', orderProductBody);
+    // console.log('Order Product Body', orderProductBody);
 
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)
@@ -217,5 +255,12 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       text: 'Your Order is Made Successfully',
       icon: 'success',
     });
+  }
+  paypalPayment(order_id: number, total: number) {
+    this.paybalSub = this.paymentService
+      .payByPayPal({ total, order_id })
+      .subscribe((res) => {
+        window.location.href = res.paypal_link;
+      });
   }
 }

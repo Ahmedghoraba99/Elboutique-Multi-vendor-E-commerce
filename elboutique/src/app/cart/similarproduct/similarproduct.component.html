@@ -32,8 +32,15 @@
           class="big-deal-product-big-tags d-flex flex-row align-items-end"
           [ngClass]="{'justify-content-between': product.is_featured, 'justify-content-end': !product.is_featured}"
         >
-          <div *ngIf="product.is_featured" class="products-tag">
+          <div 
+          *ngIf="product.is_featured && product.sale"
+          [ngClass]="{ 'd-none ': product.sale }"
+          class="products-tag"
+        >
             <span class="text-capitalize">Featured</span>
+          </div>
+          <div class="my-2">
+            <span class="opacity-0">space holder</span>
           </div>
           <div class="products-wish">
             <div class="con-like">

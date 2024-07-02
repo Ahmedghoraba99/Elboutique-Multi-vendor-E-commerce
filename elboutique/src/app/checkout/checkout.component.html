@@ -1,10 +1,12 @@
 <div class="container text-capitalize">
-  <h1 class="my-4 py-5">My Cart</h1>
+  <h1 class="mt-4 pt-5">My Cart</h1>
   <div class="row">
     <div class="wishList-section px-2 my-5 px-2" *ngIf="isAuthenticated">
       <div class="wishList-header d-flex flex-row align-items-center gap-2 p-4">
         <h1>Cart Items</h1>
+        @if(customerCart){
         <span>( {{ customerCart.length }} Items)</span>
+        }
       </div>
       <div class="wishList-content p-4 d-flex">
         @if(customerCart.length > 0){
@@ -55,10 +57,27 @@
                             <div class="product-info-price">
                               <div class="big-deal-price">
                                 <span class="me-2">EGP</span>
-                                <strong class="fs-4">{{
-                                  product.price
-                                }}</strong>
-                                <strong> </strong>
+                                <strong
+                                  class="fs-4"
+                                  [ngClass]="{
+                                    'text-decoration-line-through': product.sale
+                                  }"
+                                  >{{
+                                    product.price * product.cart_table.quantity
+                                  }}
+                                </strong>
+
+                                <strong
+                                  *ngIf="product.sale"
+                                  class="ms-2 text-danger fs-5"
+                                >
+                                  Only EGP
+                                  {{
+                                    (product.price -
+                                      (product.price * product.sale) / 100) *
+                                      product.cart_table.quantity
+                                  }}!
+                                </strong>
                               </div>
                             </div>
                           </div>
@@ -69,9 +88,11 @@
                               <span class="me-2">Quantity:</span>
                               <select
                                 #select
-                                class="form-select w-25" (change)="update(product, + select.value)"     >
-                                @for(item of getstock(product.stock).slice(0, 5) ; track
-                                $index){ @if(item ==
+                                class="form-select w-25"
+                                (change)="update(product, +select.value)"
+                              >
+                                @for(item of getstock(product.stock).slice(0, 5)
+                                ; track $index){ @if(item ==
                                 product.cart_table.quantity){
                                 <option selected value="{{ item }}">
                                   {{ item }}
@@ -101,7 +122,7 @@
 
                           <button
                             class="btn btn-wishlist-delete"
-                            (click)="DeleteFromCart(product.id)"
+                            (click)="DeleteFromCart(product)"
                           >
                             <fa-icon
                               class="animated-heart"
@@ -123,7 +144,7 @@
             <div class="container">
               <div class="row order-section">
                 <div class="order-summery">
-                  <h1>order summery</h1>
+                  <h1>Order summery</h1>
                 </div>
                 <div class="total-details d-flex justify-content-between my-3">
                   <span
@@ -142,8 +163,7 @@
                 <div class="totalshiping d-flex justify-content-between my-3">
                   <span>Shipping Fee</span>
                   <span class="price"
-                    >{{ getOrderTotalPrice() - getDiscountedAmount() }}
-                    <sub>EGP</sub></span
+                    >{{ getOrderTotalPrice() * 0.2 }} <sub>EGP</sub></span
                   >
                 </div>
                 <div class="tatla-price d-flex justify-content-between my-3">
@@ -153,15 +173,30 @@
                   </div>
                   <div class="total-price-order my-3">
                     <span class="price"
-                      >{{ getOrderTotalPrice() + getOrderTotalPrice() * 0.2 }}
+                      >{{
+                        getOrderTotalPrice() +
+                          getOrderTotalPrice() * 0.2 -
+                          getDiscountedAmount()
+                      }}
                       <sub>EGP</sub></span
                     >
                   </div>
                 </div>
-                <!-- <app-summary-order></app-summary-order> -->
                 <div class="checkout-btn text-center my-4">
-                  <button class="btn" type="submit" (click)="CreateOrder()">
+                  <button
+                    #checkout
+                    class="btn"
+                    type="submit"
+                    (click)="CreateOrder(checkout)"
+                  >
                     ckeckout
+                  </button>
+                  <button
+                    #paypal
+                    class="btn paypal mt-3"
+                    (click)="CreateOrder(paypal)"
+                  >
+                    Pay By PayPal
                   </button>
                 </div>
               </div>

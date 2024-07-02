@@ -22,6 +22,8 @@ class ReportProductResource extends JsonResource
             'reason' => $this->reason,
             'product' => [
                 'id' => $this->product->id,
+                'vendor_id' => $this->product->vendor_id,
+                'vendor_status' => $this->product->vendor->banned,
                 'name' => $this->product->name,
                 'description' => $this->product->description,
                 'price' => $this->product->price,

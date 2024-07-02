@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +12,7 @@ import { WishlistService } from '../../service/wishlist.service';
 import { CartService } from '../../service/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-similarproduct',
@@ -21,7 +22,8 @@ import { AuthService } from '../../service/auth.service';
   styleUrl: './similarproduct.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class SimilarproductComponent {
+export class SimilarproductComponent implements OnInit, OnDestroy {
+  similarProductSubscriptions: Subscription[] = [];
   homeService: HomeService = inject(HomeService);
 
   products: any[] = [];
@@ -45,23 +47,36 @@ export class SimilarproductComponent {
         })
       )
       .subscribe((product) => {
-        console.log('The product from subscription', product.data);
         this.products = product.data;
         this;
       });
-      this.wishlisteService.getWishlistData().subscribe((data) => {
-        data.forEach((item: { id: any }) => {
-          this.userWishlist.push(item.id);
-        });
+
+    const getWishlistDataSubscription = this.wishlisteService
+      .getWishlistData()
+      .subscribe((data) => {
+        if (data) {
+          data.forEach((item: { id: any }) => {
+            this.userWishlist.push(item.id);
+          });
+        }
       });
-      this.cartService.getCartData().subscribe((data) => {
-        data.forEach((item: { id: any }) => {
-          this.userCart.push(item.id);
-        });
+    this.similarProductSubscriptions.push(getWishlistDataSubscription);
+    const getCartDataSubscription = this.cartService
+      .getCartData()
+      .subscribe((data) => {
+        if (data) {
+          data.forEach((item: { id: any }) => {
+            this.userCart.push(item.id);
+          });
+        }
       });
-      this.authService.isAuthObservable().subscribe((isAuth) => {
+    this.similarProductSubscriptions.push(getCartDataSubscription);
+    const isAuthObservableSubscription = this.authService
+      .isAuthObservable()
+      .subscribe((isAuth) => {
         this.isAuthenticated = isAuth;
       });
+    this.similarProductSubscriptions.push(isAuthObservableSubscription);
   }
 
   constructor(
@@ -71,23 +86,21 @@ export class SimilarproductComponent {
     private cartService: CartService,
     private wishlisteService: WishlistService,
     private authService: AuthService,
-    private toaster: ToastrService,
-
+    private toaster: ToastrService
   ) {}
 
   faHeart = faHeart;
-  
+
   toggleCart(event: Event, id: number): void {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       if ((event.target as HTMLInputElement).checked) {
         this.addToCart(id);
       } else {
         this.removeFromCart(id);
       }
-    
     }
   }
 
@@ -95,18 +108,16 @@ export class SimilarproductComponent {
     if (!this.isAuthenticated) {
       this.toaster.warning('Please login first', 'Not Authenticated');
       return;
-    }else{
+    } else {
       if ((event.target as HTMLInputElement).checked) {
         this.addToWishlist(id);
       } else {
         this.removeFromWishlist(id);
       }
-
     }
   }
 
   isInWishlist(id: number): boolean {
-
     return this.userWishlist.includes(id);
   }
 
@@ -142,5 +153,10 @@ export class SimilarproductComponent {
       products: id,
     });
     this.toast.error('Product removed from wishlist', 'Removed');
+  }
+  ngOnDestroy(): void {
+    this.similarProductSubscriptions.forEach((subscription) =>
+      subscription.unsubscribe()
+    );
   }
 }

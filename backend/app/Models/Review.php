@@ -26,5 +26,10 @@ class Review extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function reportReviews()
+    {
+        return $this->hasMany(ReportReview::class);
+    }
+
     // Add other relationships as needed
 }

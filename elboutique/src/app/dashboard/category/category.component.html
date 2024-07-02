@@ -1,103 +1,127 @@
-@if (loading) {
-<p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
-    fill="var(--surface-ground)" animationDuration=".5s" />}@else {
-<div class="h6 text-uppercase">Categories</div>
-<hr class="hr">
-<button type="button" class="mb-3 btn primary-bg-color" (click)="open(addCategoryModal)">Add Category</button>
+<p-toast></p-toast>
 
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
+<div *ngIf="loading" class="d-flex justify-content-center align-items-center">
+    <p-progressSpinner styleClass="w-2rem h-2rem" strokeWidth="4" fill="var(--surface-ground)"
+        animationDuration=".5s"></p-progressSpinner>
+</div>
+
+<div *ngIf="!loading" class="card overflow-auto">
+
+    <div class="d-flex flex-column justify-content-between gap-2 m-3">
+        <div class="d-flex">
+            <h5 class="my-2">Manage Categories</h5>
+
+            <button pButton pRipple label="New" icon="pi pi-plus" class="btn primary-bg-color mx-2"
+                (click)="open(addCategoryModal)">
+                <span class="visually-hidden">btn</span>
+            </button>
+        </div>
+        <span class="p-input-icon-left col-12 col-lg-4">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="onFilter($event)" placeholder="Search... name" class="form-control">
+        </span>
+    </div>
+
+    <p-table #dt class="p-datatable" [value]="categories" [rows]="pageSize" [paginator]="false"
+        [globalFilterFields]="['name', 'description']" [tableStyle]="{'min-width': '60rem'}">
+        <ng-template pTemplate="header">
             <tr>
-                <th>#</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th colspan="2">Actions</th>
+                <th scope="col">#</th>
+                <th pSortableColumn="name" style="min-width:15rem" scope="col">Name <p-sortIcon
+                        field="name"></p-sortIcon></th>
+                <th pSortableColumn="image" scope="col">Image</th>
+                <th pSortableColumn="description" scope="col" style="min-width:15rem">Description <p-sortIcon
+                        field="description"></p-sortIcon></th>
+                <th colspan="2" scope="col">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            @for (category of categories; track $index) {
-            @if (category) {
+        </ng-template>
+
+        <ng-template pTemplate="body" let-category let-i="rowIndex">
             <tr>
-                <td>{{ $index + 1 }}</td>
-                @if (category.image==null || category.image=='') {<td><img [src]=" '../../assets/images/not-found.svg'"
-                        [alt]="category.name" title="image" width="50" height="50"></td>}@else {
-                <td><img src="{{'http://localhost:8000/storage/'+ category.image  }}" width="50" height="50"
-                        alt="Category Image" class="category-image"></td>}
+                <td>{{ (page - 1) * pageSize + i + 1 }}</td>
                 <td>{{ category.name }}</td>
+                <td>
+                    <img *ngIf="category.image" [src]="'http://localhost:8000/storage/' + category.image" width="50"
+                        height="50" alt="Category Image" class="category-image">
+                    <img *ngIf="!category.image" src="../../assets/images/not-found.svg" [alt]="category.name"
+                        title="image" width="50" height="50">
+                </td>
                 <td>{{ category.description }}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm" (click)="open(editCategoryModal, category)">Edit</button>
-
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mx-2"
+                        (click)="open(editCategoryModal, category)">
+                        <span class="visually-hidden">btn</span>
+                    </button>
                 </td>
-                <td><button class="btn btn-danger btn-sm" (click)="deleteCategory(category.id)">Delete</button></td>
-            </tr>}@else {
-            <tr>
-                <td colspan="5">No categories found.</td>
+                <td>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                        (click)="deleteCategory(category.id)">
+                        <span class="visually-hidden">btn</span>
+                    </button>
+                </td>
+
             </tr>
-            }
-            }
+        </ng-template>
 
-        </tbody>
-    </table>
+        <ng-template pTemplate="summary">
+            <div class="d-flex justify-content-center align-items-center gap-5">
+                <p>In total there are {{totalItems}} categories.</p>
+                <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize"
+                    (pageChange)="loadPage($event)"></ngb-pagination>
+            </div>
+        </ng-template>
+    </p-table>
+</div>
 
-    <!-- Pagination -->
-    <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="pageSize" (pageChange)="loadPage($event)"
-        [maxSize]="5" [rotate]="true" [ellipses]="true" [boundaryLinks]="true"></ngb-pagination>
+<ng-template #addCategoryModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Category</h4>
+        <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveCategory()">
+            <div class="form-group">
+                <label for="newName">Name</label>
+                <input type="text" class="form-control" id="newName" name="newName" [(ngModel)]="selectedCategory.name">
+            </div>
+            <div class="form-group">
+                <label for="newDescription">Description</label>
+                <textarea class="form-control" id="newDescription" name="newDescription"
+                    [(ngModel)]="selectedCategory.description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="newImage">Image</label>
+                <input type="file" class="form-control" id="newImage" name="newImage"
+                    (change)="handleFileInput($event)">
+            </div>
+            <button type="submit" class="btn primary-bg-color my-3">Add</button>
+        </form>
+    </div>
+</ng-template>
 
-    <ng-template #editCategoryModal let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Edit Category</h4>
-            <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            </button>
-        </div>
-        <div class="modal-body">
-            <form (ngSubmit)="saveCategory()">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" [(ngModel)]="selectedCategory.name">
-                </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea class="form-control" id="description" name="description"
-                        [(ngModel)]="selectedCategory.description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="image">Image</label>
-                    <input type="file" class="form-control" id="image" name="image" (change)="handleFileInput($event)">
-                </div>
-                <button type="submit" class="btn primary-bg-color my-3">Save</button>
-            </form>
-        </div>
-    </ng-template>
-
-
-    <ng-template #addCategoryModal let-modal>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Add Category</h4>
-            <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            </button>
-        </div>
-        <div class="modal-body">
-            <form (ngSubmit)="saveCategory()">
-                <div class="form-group">
-                    <label for="newName">Name</label>
-                    <input type="text" class="form-control" id="newName" name="newName"
-                        [(ngModel)]="selectedCategory.name">
-                </div>
-                <div class="form-group">
-                    <label for="newDescription">Description</label>
-                    <textarea class="form-control" id="newDescription" name="newDescription"
-                        [(ngModel)]="selectedCategory.description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="newImage">Image</label>
-                    <input type="file" class="form-control" id="newImage" name="newImage"
-                        (change)="handleFileInput($event)">
-                </div>
-                <button type="submit" class="btn  primary-bg-color my-3">Add</button>
-            </form>
-        </div>
-    </ng-template>
-</div>}
+<ng-template #editCategoryModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Edit Category</h4>
+        <button type="button" class="btn btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form (ngSubmit)="saveCategory()">
+            <div class="form-group">
+                <label for="editName">Name</label>
+                <input type="text" class="form-control" id="editName" name="editName"
+                    [(ngModel)]="selectedCategory.name">
+            </div>
+            <div class="form-group">
+                <label for="editDescription">Description</label>
+                <textarea class="form-control" id="editDescription" name="editDescription"
+                    [(ngModel)]="selectedCategory.description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editImage">Image</label>
+                <input type="file" class="form-control" id="editImage" name="editImage"
+                    (change)="handleFileInput($event)">
+            </div>
+            <button type="submit" class="btn primary-bg-color my-3">Save</button>
+        </form>
+    </div>
+</ng-template>

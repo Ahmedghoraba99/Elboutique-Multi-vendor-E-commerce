@@ -37,10 +37,9 @@ import { LayoutComponent } from './layout/layout.component';
 import { authGuardGuard } from './_guards/auth.guard';
 import { AddProductComponent } from './profile/vendor/products/add-product/add-product.component';
 import { UpdateProductComponent } from './profile/vendor/products/update-product/update-product.component';
-import { WelcomeComponent } from './dashboard/products/welcome/welcome.component';
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
 import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
-
+import { AboutusComponent } from './aboutus/aboutus.component';
 export const routes: Routes = [
   {
     path: '',
@@ -48,7 +47,12 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'home' },
       { path: 'home', component: HomeComponent, data: { title: 'Home' } },
-      { path: 'login', component: LoginComponent, data: { title: 'Login' } },
+      {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [authGuard],
+        data: { title: 'Login' },
+      },
       {
         path: 'wishlist',
         loadChildren: () =>
@@ -73,8 +77,12 @@ export const routes: Routes = [
       },
       {
         path: 'vendor/:id',
-        component: VendorProfileComponent,
         data: { title: 'Vendor Profile' },
+        // component: VendorProfileComponent,
+        loadChildren: () =>
+          import('./vendor-profile/vendor-profile.module').then(
+            (m) => m.VendorProfileModule
+          ),
       },
       {
         path: 'login/forget-password',
@@ -98,6 +106,11 @@ export const routes: Routes = [
         path: 'password/reset',
         component: UserChangePasswordComponent,
         data: { title: 'Change Password' },
+      },
+      {
+        path: 'Aboutus',
+        component: AboutusComponent,
+        data: { title: 'About us' },
       },
     ],
   },
@@ -125,31 +138,7 @@ export const routes: Routes = [
       {
         path: 'products',
         title: 'Products',
-        component: WelcomeComponent,
-
-        children: [
-          {
-            path: '',
-            redirectTo: 'products',
-            pathMatch: 'full',
-          },
-          {
-            path: '',
-            title: 'Products',
-            component: ProductsComponent,
-          },
-
-          {
-            path: 'new',
-            title: 'New Product',
-            component: AddProductComponent,
-          },
-          {
-            path: 'edit/:id',
-            title: 'Update Product',
-            component: UpdateProductComponent,
-          },
-        ],
+        component: ProductsComponent,
       },
       {
         path: 'orders',
@@ -186,6 +175,8 @@ export const routes: Routes = [
     path: 'register',
     title: 'Register',
     component: RegisterComponent,
+    // loadChildren: () =>
+    //   import('./Auth/register/register.module').then((m) => m.RegisterModule),
     canActivate: [authGuard],
   },
   {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { shareReplay, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
@@ -9,6 +9,7 @@ import { Observable, of } from 'rxjs';
 export class HomeService {
   httpClient = inject(HttpClient);
   private baseUrl = 'http://localhost:8000/api';
+  private categories$!: Observable<any>;
 
   getFeaturedProducts(): Observable<any> {
     return this.httpClient
@@ -35,16 +36,16 @@ export class HomeService {
   }
 
   getAllCategories(): Observable<any> {
-    try {
-      const res = this.httpClient
-        .get<any>(`${this.baseUrl}/categories`)
-        .pipe(tap((data) => data));
-      return res;
-    } catch (error) {
-      console.log(error);
-      return of(null);
+    if (!this.categories$) {
+      this.fetchCategories();
     }
+    return this.categories$;
   }
 
+  fetchCategories(): void {
+    this.categories$ = this.httpClient
+      .get<any>(`${this.baseUrl}/categories`)
+      .pipe(shareReplay(1));
+  }
   constructor() {}
 }

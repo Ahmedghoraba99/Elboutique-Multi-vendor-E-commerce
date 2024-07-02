@@ -1,35 +1,47 @@
 @if (loading) {
 <p-progressSpinner styleClass="w-2rem h-2rem d-flex justify-content-center align-items-center" strokeWidth="4"
     fill="var(--surface-ground)" animationDuration=".5s" />}@else {
-<div class="h6 text-uppercase">Customers</div>
-<hr class="hr">
-<div class="table-responsive">
-    <table class="table">
-        <thead>
+<div class="card overflow-auto">
+    <p-table #dt class="p-datatable" [value]="customers" [rows]="pageSize" [paginator]="false"
+        [globalFilterFields]="['name', 'email', 'phone', 'addresses']" [tableStyle]="{'min-width': '75rem'}"
+        [(selection)]="selectedCustomers" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+        [totalRecords]="totalItems">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="my-2">Manage Customers</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onFilter($event)" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
             <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Actions</th>
+                <th style="width: 2rem" scope="col">#</th>
+                <th pSortableColumn="name" style="min-width:15rem" scope="col">Name <p-sortIcon
+                        field="name"></p-sortIcon></th>
+                <th pSortableColumn="email" scope="col">Email <p-sortIcon field="email"></p-sortIcon></th>
+                <th pSortableColumn="phone" style="min-width:7rem" id="phone">Phone <p-sortIcon
+                        field="phone"></p-sortIcon></th>
+                <th pSortableColumn="addresses" scope="col" style="min-width:10rem">Address <p-sortIcon
+                        field="addresses"></p-sortIcon></th>
+                <th scope="col" style="min-width:10rem">Actions</th>
             </tr>
-        </thead>
-        <tbody>
-            @for (customer of customers; track $index) {
+        </ng-template>
+        <ng-template pTemplate="body" let-customer let-i="rowIndex">
             <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ customer.name }}</td>
-                <td>{{ customer.email }}</td>
-                <td>{{ customer.phone || '-' }}</td>
-                <td>{{ customer.addresses || '-' }}</td>
+                <td>{{ (page - 1) * pageSize + i + 1 }}</td>
+                <td>{{customer.name}}</td>
+                <td>{{customer.email}}</td>
+                <td>{{customer.phone || '-'}}</td>
+                <td>{{customer.addresses || '-'}}</td>
                 <td>
-                    <button (click)="deleteCustomer(customer.id)" class="btn btn-danger"><i
-                            class="fa-solid fa-trash"></i> <span class="visually-hidden">Delete</span></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                        (click)="deleteCustomer(customer.id)"><span class="visually-hidden">btn</span></button>
                 </td>
             </tr>
-            }
-
-        </tbody>
-    </table>
-</div>}
+        </ng-template>
+    </p-table>
+</div>
+}

@@ -1,12 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from '../../service/admin/order.service';
 import { CustomerService } from '../../service/admin/customer.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
+import { TableModule } from 'primeng/table';
+import { ToolbarModule } from 'primeng/toolbar';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -17,17 +22,33 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     FormsModule,
     ReactiveFormsModule,
     ProgressSpinnerModule,
+    TableModule,
+    DropdownModule,
+    ConfirmDialogModule,
+    InputTextModule,
+    DialogModule,
+    ToolbarModule,
+    NgbPaginationModule,
   ],
 })
 export class OrdersComponent implements OnInit {
   @ViewChild('orderForm') orderForm!: any;
-
+  @ViewChild('dt') dt!: any;
+  selectedOrders = [];
   orders: any[] = [];
   customers: any[] = [];
-  newOrder: any = { customer_id: '', status: 'midway', total: '' };
-  editOrder: any = { id: null, customer_id: '', status: 'midway', total: '' };
+  statuses: any[] = [
+    { label: 'Midway', value: 'midway' },
+    { label: 'Arrived', value: 'arrived' },
+    { label: 'Returned', value: 'returned' },
+  ];
+  editOrder: any = { id: null, customer_id: '', status: '', total: '' };
   validationErrors: any = {};
   loading = true;
+  totalItems = 0;
+  page = 1;
+  pageSize = 10;
+
   constructor(
     private orderService: OrderService,
     private customerService: CustomerService,
@@ -35,14 +56,18 @@ export class OrdersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadOrders();
     this.loadCustomers();
+    this.loadOrders();
   }
 
   loadOrders(): void {
     this.orderService.getOrders().subscribe({
       next: (response: any) => {
-        this.orders = response.data;
+        this.orders = response.data.map((order: any) => {
+          order.customer_name = this.getCustomerName(order.customer_id);
+          return order;
+        });
+        this.totalItems = response.total;
         this.loading = false;
       },
       error: (error: any) => console.error('Error loading orders', error),
@@ -54,46 +79,22 @@ export class OrdersComponent implements OnInit {
       next: (response: any) => {
         this.customers = response;
         this.loading = false;
+        this.customers = response.map((customer: any) => {
+          return { name: customer.name, id: customer.id };
+        });
       },
       error: (error: any) => console.error('Error loading customers', error),
     });
   }
 
   getCustomerName(customerId: number): string {
-    const customer = this.customers.find((c) => c.id === customerId);
+    const customer = this.customers.find((c) => c.id == customerId);
     return customer ? customer.name : 'Unknown';
-  }
-
-  addOrder(): void {
-    console.log(this.newOrder); // Check if the data is correctly filled here
-
-    this.orderService.addOrder(this.newOrder).subscribe({
-      next: (response: any) => {
-        console.log('Order added', response);
-        this.loadOrders();
-        this.showMessage('Success', 'Order added successfully', 'success');
-        this.closeModal();
-      },
-      error: (error: any) => {
-        console.error('Error adding order', error);
-        if (error.error.errors) {
-          this.validationErrors = error.error.errors;
-          this.showValidationErrors();
-        } else {
-          this.showMessage('Error', 'Failed to add order', 'error');
-        }
-      },
-      complete: () => {
-        console.log(this.newOrder); // Check again after completion
-        this.newOrder = { customer_id: '', status: 'midway', total: '' };
-      },
-    });
   }
 
   updateOrder(): void {
     this.orderService.updateOrder(this.editOrder.id, this.editOrder).subscribe({
       next: (response: any) => {
-        console.log('Order updated', response);
         this.loadOrders();
         this.showMessage('Success', 'Order updated successfully', 'success');
         this.closeModal();
@@ -107,13 +108,22 @@ export class OrdersComponent implements OnInit {
           this.showMessage('Error', 'Failed to update order', 'error');
         }
       },
-      complete: () => {
-        this.editOrder = {
-          id: null,
-          customer_id: '',
-          status: 'midway',
-          total: '',
-        };
+    });
+  }
+
+  updateStatus(orderId: number, status: string): void {
+    this.orderService.updateStatus(orderId, status).subscribe({
+      next: (response: any) => {
+        this.loadOrders();
+        this.showMessage(
+          'Success',
+          'Order status updated successfully',
+          'success'
+        );
+      },
+      error: (error: any) => {
+        console.error('Error updating status', error);
+        this.showMessage('Error', 'Failed to update status', 'error');
       },
     });
   }
@@ -136,7 +146,6 @@ export class OrdersComponent implements OnInit {
       if (result.isConfirmed) {
         this.orderService.deleteOrder(id).subscribe({
           next: (response: any) => {
-            console.log('Order deleted', response);
             this.loadOrders();
             this.showMessage(
               'Deleted',
@@ -190,5 +199,15 @@ export class OrdersComponent implements OnInit {
       },
       buttonsStyling: false,
     });
+  }
+
+  onFilter(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.dt?.filterGlobal(inputElement.value, 'contains');
+  }
+
+  loadPage(page: number): void {
+    this.page = page;
+    this.loadOrders();
   }
 }
