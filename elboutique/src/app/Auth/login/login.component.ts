@@ -28,7 +28,7 @@ import { WishlistService } from '../../service/wishlist.service';
   ],
 })
 export class LoginComponent implements OnDestroy, OnInit {
-  private loginSubscriptions!: Subscription;
+  private loginSubscriptions!: Subscription[];
   currentStep = 0;
   loginForm: FormGroup;
   showToast = false;
@@ -53,7 +53,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     this.getSocialAuthParams();
   }
   getSocialAuthParams() {
-    this.route.queryParams.subscribe((params) => {
+    const paramsSubscription = this.route.queryParams.subscribe((params) => {
       const { token, role, id } = params;
 
       if (this.isValidParams(token, role, id)) {
@@ -62,6 +62,7 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.navigateToRoot();
       }
     });
+    this.loginSubscriptions.push(paramsSubscription);
   }
 
   private isValidParams(token: string, role: string, id: string): boolean {
@@ -106,12 +107,13 @@ export class LoginComponent implements OnDestroy, OnInit {
   onSubmit() {
     if (this.loginForm.valid) {
       const { userType, email, password } = this.loginForm.value;
-      this.loginSubscriptions = this.authService
+      const loginSubscription = this.authService
         .login(email, password, userType)
         .subscribe({
           next: (response: any) => this.handleSuccess(response),
           error: (error: any) => this.handleError(error),
         });
+      this.loginSubscriptions.push(loginSubscription);
     } else {
       this.showToastMessage(
         'Please fill out the form correctly',
@@ -120,30 +122,23 @@ export class LoginComponent implements OnDestroy, OnInit {
     }
   }
   loginWithGoogle() {
-    this.authService.loginWithGoogle().subscribe((response) => {
-      window.location.href = response.url;
-    });
+    const loginWithGoogleSubscription = this.authService
+      .loginWithGoogle()
+      .subscribe((response) => {
+        window.location.href = response.url;
+      });
+    this.loginSubscriptions.push(loginWithGoogleSubscription);
   }
 
   loginWithFacebook() {
-    this.authService.loginWithFacebook().subscribe((response) => {
-      window.location.href = response.url;
-    });
+    const loginWithFacebookSubscription = this.authService
+      .loginWithFacebook()
+      .subscribe((response) => {
+        window.location.href = response.url;
+      });
+    this.loginSubscriptions.push(loginWithFacebookSubscription);
   }
 
-  handleGoogleCallback(code: string) {
-    this.authService.handleGoogleCallback(code).subscribe((response) => {
-      localStorage.setItem('token', response.token);
-      this.router.navigate(['/dashboard']);
-    });
-  }
-
-  handleFacebookCallback(code: string) {
-    this.authService.handleFacebookCallback(code).subscribe((response) => {
-      localStorage.setItem('token', response.token);
-      this.router.navigate(['/dashboard']);
-    });
-  }
   notfayNavBar() {
     this.authService.getCurrentUser();
     this.authService.updateAuthStatus(true);
@@ -172,12 +167,9 @@ export class LoginComponent implements OnDestroy, OnInit {
     setTimeout(() => {
       if (response.role === 'admin') {
         this.router.navigateByUrl('/dashboard');
-        // window.location.href = '/dashboard';
       } else if (response.role == 'vendor') {
-        // window.location.href = '/v';
         this.router.navigateByUrl('/v');
       } else this.navigateToRoot();
-      // else window.location.href = '/';
     }, 3000);
   }
   handleError(error: any) {
@@ -195,7 +187,10 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
   ngOnDestroy() {
     if (this.loginSubscriptions) {
-      this.loginSubscriptions.unsubscribe();
+      this.loginSubscriptions.forEach((subscription) =>
+        subscription.unsubscribe()
+      );
+      this.loginSubscriptions = [];
     }
   }
 }

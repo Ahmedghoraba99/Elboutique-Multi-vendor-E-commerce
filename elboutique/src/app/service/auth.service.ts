@@ -133,16 +133,4 @@ export class AuthService {
   loginWithFacebook(): Observable<any> {
     return this.http.get(`${this.baseUrl}auth/facebook`);
   }
-
-  handleGoogleCallback(code: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}auth/google/callback`, {
-      params: { code },
-    });
-  }
-
-  handleFacebookCallback(code: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}auth/facebook/callback`, {
-      params: { code },
-    });
-  }
 }
