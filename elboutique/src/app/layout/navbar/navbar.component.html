@@ -56,11 +56,13 @@
               [class]="!isAuthenticated ? 'd-none' : ''"
             >
               <a
-                [routerLink]="currentUser?.active ? '/v/overview' : '/u/account'"
+                [routerLink]="
+                  currentUser?.active ? '/v/overview' : '/u/account'
+                "
                 class="user-profile"
               >
                 <img
-                  src="{{ currentUser.image_url }}"
+                  src="{{ currentUser?.image_url }}"
                   class="user-profile-img img-fluid"
                 />
               </a>

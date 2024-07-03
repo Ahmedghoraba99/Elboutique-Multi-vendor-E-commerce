@@ -60,12 +60,12 @@ export const routes: Routes = [
       },
       {
         path: 'products/:id',
-        component: CartComponent,
+        loadComponent: () => CartComponent,
         data: { title: 'Details' },
       },
       {
         path: 'checkout',
-        component: CheckoutComponent,
+        loadComponent: () => CheckoutComponent,
         data: { title: 'Checkout' },
       },
       {
@@ -86,38 +86,61 @@ export const routes: Routes = [
       },
       {
         path: 'login/forget-password',
-        component: ForgotPasswordComponent,
+        // loadComponent: () => ForgotPasswordComponent,
+        loadChildren: () =>
+          import('./Auth/forget-password/forget-password.module').then(
+            (m) => m.ForgetPasswordModule
+          ),
         data: { title: 'Forget Password' },
       },
       {
         path: 'register',
-        component: RegisterComponent,
+        loadComponent: () => RegisterComponent,
         canActivate: [authGuard],
         data: { title: 'Register' },
       },
       {
         path: 'checkmail',
-        component: CheckMailComponent,
         canActivate: [checkMailGuard],
         data: { title: 'Check Mail' },
+        // loadComponent: () => CheckMailComponent,
+        loadComponent: () =>
+          import('./Auth/check-mail/check-mail.component').then(
+            (m) => m.CheckMailComponent
+          ),
       },
-      { path: 'congs', component: CongsComponent, data: { title: 'Congs' } },
+      {
+        path: 'congs',
+        loadComponent: () =>
+          import('./Auth/congs/congs.component').then((m) => m.CongsComponent),
+        data: { title: 'Congs' },
+      },
       {
         path: 'password/reset',
-        component: UserChangePasswordComponent,
         data: { title: 'Change Password' },
+        // component: UserChangePasswordComponent,
+        loadChildren: () =>
+          import('./Auth/change-password/change-password.module').then(
+            (m) => m.ChangePasswordModule
+          ),
       },
       {
         path: 'Aboutus',
-        component: AboutusComponent,
         data: { title: 'About us' },
+        // component: AboutusComponent,
+        loadComponent: () =>
+          import('./aboutus/aboutus.component').then((m) => m.AboutusComponent),
       },
     ],
   },
   {
     path: 'dashboard',
     title: 'Dashboard',
-    component: DashboardComponent,
+    // component: DashboardComponent,
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
     canActivate: [adminGuard],
     children: [
       {
@@ -128,39 +151,49 @@ export const routes: Routes = [
       {
         path: 'users',
         title: 'Users',
-        component: UsersComponent,
+        // component: UsersComponent,
+        loadComponent: () =>
+          import('./dashboard/users/users.component').then(
+            (m) => m.UsersComponent
+          ),
       },
       {
         path: 'vendors',
         title: 'Vendors',
-        component: VendorsComponent,
+        loadComponent: () => VendorsComponent,
       },
       {
         path: 'products',
         title: 'Products',
-        component: ProductsComponent,
+        // component: ProductsComponent,
+        loadComponent: () =>
+          import('./dashboard/products/products.component').then(
+            (m) => m.ProductsComponent
+          ),
       },
       {
         path: 'orders',
         title: 'Orders',
-        component: OrdersComponent,
+        // component: OrdersComponent,
+        loadComponent: () => OrdersComponent,
       },
       {
         path: 'categories',
+        loadComponent: () => VendorCategoryComponent,
         title: 'Categories',
-        component: VendorCategoryComponent,
+        // component: VendorCategoryComponent,
       },
       {
         path: 'reports',
         title: 'Reports',
-        component: ReviewReportsComponent,
+        loadComponent: () => ReviewReportsComponent,
       },
     ],
   },
   {
     path: 'login',
     title: 'Login',
-    component: LoginComponent,
+    loadComponent: () => LoginComponent,
     canActivate: [authGuard],
   },
   {
@@ -174,7 +207,7 @@ export const routes: Routes = [
   {
     path: 'register',
     title: 'Register',
-    component: RegisterComponent,
+    loadComponent: () => RegisterComponent,
     // loadChildren: () =>
     //   import('./Auth/register/register.module').then((m) => m.RegisterModule),
     canActivate: [authGuard],
@@ -182,24 +215,24 @@ export const routes: Routes = [
   {
     path: 'checkmail',
     title: 'checkmail',
-    component: CheckMailComponent,
+    loadComponent: () => CheckMailComponent,
     canActivate: [checkMailGuard],
   },
   {
     path: 'congs',
     title: 'congs',
-    component: CongsComponent,
+    loadComponent: () => CongsComponent,
   },
   {
     path: 'password/reset',
     title: 'Change Password',
-    component: UserChangePasswordComponent,
+    loadComponent: () => UserChangePasswordComponent,
   },
 
   {
     path: 'u',
     title: 'Users',
-    component: UserComponent,
+    loadComponent: () => UserComponent,
     canActivate: [authGuardGuard],
 
     children: [
@@ -211,81 +244,83 @@ export const routes: Routes = [
       {
         path: 'account',
         title: 'Account',
-        component: AccountComponent,
+        loadComponent: () => AccountComponent,
       },
       {
         path: 'orders',
         title: 'Orders',
-        component: UserOrdersComponent,
+        loadComponent: () => UserOrdersComponent,
       },
       {
         path: 'report-products',
         title: 'WishList',
-        component: ReportListComponent,
+        loadComponent: () => ReportListComponent,
       },
       {
         path: 'payment',
         title: 'Payment',
-        component: PaymentComponent,
+        loadComponent: () => PaymentComponent,
       },
       {
         path: 'reviews',
         title: 'Reviews',
-        component: UserReviewsComponent,
+        loadComponent: () => UserReviewsComponent,
       },
     ],
   },
   {
     path: 'v',
     title: 'Vendor',
-    component: VendorComponent,
+    loadComponent: () => VendorComponent,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       {
         path: 'overview',
         title: 'Overview',
-        component: VendorOverviewComponent,
+        loadComponent: () => VendorOverviewComponent,
       },
       {
         path: 'products',
         title: 'Products',
-        component: VendorProductsComponent,
+        loadComponent: () => VendorProductsComponent,
       },
       {
         path: 'products/add',
         title: 'Add Product',
-        component: AddProductComponent,
+        loadComponent: () => AddProductComponent,
       },
       {
         path: 'products/edit/:id',
         title: 'Edit Product',
-        component: UpdateProductComponent,
+        loadComponent: () => UpdateProductComponent,
       },
       {
         path: 'products/show/:id',
         title: 'Show Product',
-        component: ShowProductComponent,
+        loadComponent: () => ShowProductComponent,
       },
       {
         path: 'account',
         title: 'Account',
-        component: VendorAccountComponent,
+        loadComponent: () => VendorAccountComponent,
       },
       {
         path: 'account/change-password',
         title: 'Change Password',
-        component: VendorChangePasswordComponent,
+        loadComponent: () => VendorChangePasswordComponent,
       },
     ],
   },
   {
     path: 'not-authorized',
     title: 'Not Authorized',
-    component: NotAuthComponent,
+    // component: NotAuthComponent,
+    loadChildren: () =>
+      import('./not-auth/not-auth.module').then((m) => m.NotAuthModule),
   },
   {
     path: '**',
     title: 'Page not found',
-    component: PageNotFoundComponent,
+    loadComponent: () => PageNotFoundComponent,
   },
 ];

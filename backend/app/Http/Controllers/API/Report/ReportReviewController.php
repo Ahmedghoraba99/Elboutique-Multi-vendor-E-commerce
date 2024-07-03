@@ -20,7 +20,7 @@ class ReportReviewController extends Controller
 
     public function store(StoreReportReviewRequest $request)
     {
-        $this->authorize('create',ReportReview::class);
+        // $this->authorize('create',ReportReview::class);
         $validated = $request->validated();
         $review = ReportReview::create($validated);
         // Return custom response

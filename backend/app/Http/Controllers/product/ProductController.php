@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Attributes;
 use App\Models\Product;
 use App\Models\product_images;
+use App\Models\Vendor;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\Request as DefalutRequest;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,10 @@ class ProductController extends Controller
     public function index()
     {
         // get all products with images and tags
-        $products = Product::with(['images', 'tags'])->paginate(16);
+        $products = Product::with(['images', 'tags', 'vendor' => function ($query) {
+            $query->select('id', 'name');
+        }])->paginate(16);
+
         return response()->json($products);
     }
 
@@ -294,7 +298,23 @@ class ProductController extends Controller
         if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
         }
-
+        if ($request->has('cats')) {
+            if (is_string($request->cats) && strpos($request->cats, ',') !== false) {
+                $categoryIds = explode(',', $request->cats);
+                $query->whereIn('category_id', $categoryIds);
+            } else {
+                $query->where('category_id', $request->cats);
+            }
+        }
+        // vendors
+        if ($request->has('vendors')) {
+            if (is_string($request->vendors) && strpos($request->vendors, ',') !== false) {
+                $vendorIds = explode(',', $request->vendors);
+                $query->whereIn('vendor_id', $vendorIds);
+            } else {
+                $query->where('vendor_id', $request->vendors);
+            }
+        }
         // Min price
         if ($request->has('min_price')) {
             $query->where('price', '>=', $request->min_price);
@@ -332,6 +352,12 @@ class ProductController extends Controller
                 $q->whereIn('name', $tags);
             });
         }
+        // if ($request->has('cats')) {
+        //     $cats = explode(',', $request->tags);
+        //     $query->whereHas('tags', function ($q) use ($cats) {
+        //         $q->whereIn('name', $cats);
+        //     });
+        // }
 
         // Pagination
         $perPage = $request->input('per_page', 16); // Default to 16 if per_page is not provided
@@ -393,5 +419,19 @@ class ProductController extends Controller
         }
     }
 
+    function getAllVendors()
+    {
+        // get all vendors and return id,name only 
 
+        $vendors = Vendor::select('id', 'name')->get();
+        return response()->json($vendors);
+    }
+
+    function getAllProducts()
+    {
+        // get all products and return id,name only 
+
+        $products = Product::select('id', 'name')->get();
+        return response()->json($products);
+    }
 }

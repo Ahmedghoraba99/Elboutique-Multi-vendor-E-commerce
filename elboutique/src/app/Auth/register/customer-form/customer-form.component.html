@@ -217,6 +217,20 @@
     </div>
   </div>
   <button type="submit" class="btn primary-bg-color">Register</button>
+  <div
+    class="d-flex justify-content-center align-items-center my-2"
+    *ngIf="loading"
+  >
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 </form>
 @if (showToast) {
 <app-toast [message]="toastMessage" [title]="toastTitle"></app-toast>

@@ -1,0 +1,10 @@
+.dashboard {
+  width: 100%;
+  max-width: calc(100vw - 268px);
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard {
+    max-width: calc(100vw - 40px);
+  }
+}

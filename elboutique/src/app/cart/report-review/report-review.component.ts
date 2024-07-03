@@ -28,6 +28,7 @@ export class ReportReviewComponent implements OnDestroy {
   reportForm: FormGroup;
   successMessage: string = '';
   errorMessage: string = '';
+  isAdd:boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,6 +51,9 @@ export class ReportReviewComponent implements OnDestroy {
         .subscribe(
           (response) => {
             this.successMessage = 'Review created successfully';
+            setTimeout(()=>{
+              this.successMessage ='';
+            },2000);
             this.errorMessage = '';
             this.reportForm.reset();
             setTimeout(() => {

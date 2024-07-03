@@ -4,14 +4,14 @@
   id="AddReport"
   tabindex="-1"
   role="dialog"
-  aria-labelledby="modalTitleId"
+  aria-labelledby="report-review"
   aria-hidden="true"
 >
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modalTitleId">
+          <h5 class="modal-title" id="report-review">
             <!-- <input type="text" [(ngModel)]="reviewId">
             <input type="text" [(ngModel)]="customerId"> -->
             Report Review
@@ -34,7 +34,7 @@
                   <div *ngIf="reportForm.get('reason')?.errors?.['minlength']" class="text-danger">Reason must be at least 3 characters long.</div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary" [disabled]="reportForm.invalid">Submit</button>
+              <button type="submit" class="btn btn-primary" [disabled]="reportForm.invalid || isAdd">Submit</button>
             </form>
             <div *ngIf="successMessage" class="alert alert-success mt-3">{{ successMessage }}</div>
             <div *ngIf="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>

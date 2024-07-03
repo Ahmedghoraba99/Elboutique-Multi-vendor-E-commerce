@@ -12,12 +12,17 @@ import { RouterLink } from '@angular/router';
 export class FooterComponent {
   categories: any[] = [];
   homeService: HomeService = inject(HomeService);
+  categorySubscription: any;
 
   constructor() {}
   ngOnInit(): void {
-    this.homeService.getAllCategories().subscribe((data) => {
-      this.categories = data.data;
-    });
+    this.categorySubscription = this.homeService
+      .getAllCategories()
+      .subscribe((data) => {
+        this.categories = data.data;
+      });
   }
-  
+  ngOnDestroy(): void {
+    this.categorySubscription.unsubscribe();
+  }
 }
