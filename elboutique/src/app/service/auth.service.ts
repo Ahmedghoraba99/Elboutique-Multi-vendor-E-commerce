@@ -95,10 +95,8 @@ export class AuthService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(verificationLink, { headers });
   }
-  logout(): void {
-    localStorage.removeItem('user_info');
-    this.updateAuthStatus(false);
-    this.router.navigate(['/login']);
+  logout() {
+    return this.http.get(`${this.baseUrl}logout`);
   }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);

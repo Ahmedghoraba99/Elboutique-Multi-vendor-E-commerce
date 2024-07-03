@@ -114,6 +114,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 
 
@@ -161,7 +164,7 @@ Route::get('/product/vendor/{id}', [ProductController::class, "getVendorProducts
 
 //Login & logout register endpoints
 Route::post('/login',  [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+
 Route::post('/registerFormValdation', [AuthController::class, 'registerFormValdation']);
 Route::post('vendors', [VendorController::class, 'store']);
 Route::post('customers', [CustomerController::class, 'store']);
@@ -193,4 +196,4 @@ Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback
 Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook']);
 Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
 
-https://2107-197-162-33-46.ngrok-free.app/api/auth/facebook/callback
+ 
