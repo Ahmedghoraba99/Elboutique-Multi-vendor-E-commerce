@@ -50,23 +50,31 @@ export class LoginComponent implements OnDestroy, OnInit {
     });
   }
   ngOnInit(): void {
+    this.getSocialAuthParams();
+  }
+  getSocialAuthParams() {
     this.route.queryParams.subscribe((params) => {
-      const token: string = params['token'];
-      const role: string = params['role'];
-      const id: string = params['id'];
+      const { token, role, id } = params;
 
-      if (token && role && id) {
-        const user_info = {
-          token,
-          role,
-          id,
-        };
-        localStorage.setItem('user_info', JSON.stringify(user_info));
+      if (this.isValidParams(token, role, id)) {
+        this.storeUserInfo(token, role, id);
         this.notfayNavBar();
-
-        this.router.navigate(['/']);
+        this.navigateToRoot();
       }
     });
+  }
+
+  private isValidParams(token: string, role: string, id: string): boolean {
+    return !!token && !!role && !!id;
+  }
+
+  private storeUserInfo(token: string, role: string, id: string): void {
+    const userInfo = { token, role, id };
+    localStorage.setItem('user_info', JSON.stringify(userInfo));
+  }
+
+  private navigateToRoot(): void {
+    this.router.navigate(['/']);
   }
   nextStep() {
     if (this.currentStep === 0 && !this.loginForm.controls['userType'].valid) {
@@ -168,7 +176,7 @@ export class LoginComponent implements OnDestroy, OnInit {
       } else if (response.role == 'vendor') {
         // window.location.href = '/v';
         this.router.navigateByUrl('/v');
-      } else this.router.navigateByUrl('/');
+      } else this.navigateToRoot();
       // else window.location.href = '/';
     }, 3000);
   }
