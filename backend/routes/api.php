@@ -184,3 +184,7 @@ Route::get('/checkout/response', function (Request $request) {
     return $request->all() ;
 });
 Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
+
+
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
