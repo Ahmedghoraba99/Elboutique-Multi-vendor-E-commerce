@@ -72,55 +72,28 @@ class AuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
-
-            
             $authUser = $this->findOrCreateUser($googleUser);
-
-           
+    
             $token = $authUser->createToken('Personal Access Token')->plainTextToken;
-
-            return response()->json(['token' => $token], 200);
+            $modelName = strtolower(class_basename(get_class($authUser)));
+    
+            return response()->json([
+                'token' => $token,
+                'id' => $authUser->id,
+                'role' => $modelName,
+            ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            $errorMessage = 'Unauthorized';
+            if (config('app.debug')) {
+                $errorMessage .= ': ' . $e->getMessage();
+            }
+            return response()->json(['error' => $errorMessage], 401);
         }
     }
 
-
-
-// public function findOrCreateUser($googleUser)
-// {
-//     $authUser = Customer::where('google_id', $googleUser->id or 'email',$googleUser->email )->first() ||
-//         Vendor::where('google_id', $googleUser->id)->first() ||
-//         Admin::where('google_id', $googleUser->id)->first();
-
-//     if ($authUser) {
-//         return $authUser;
-//     }
-
-//     return Customer::create([
-//         'name' => $googleUser->name,
-//         'email' => $googleUser->email,
-//         'google_id' => $googleUser->id,
-//         'image' => $googleUser->avatar,
-//         'password' => bcrypt(Str::random(16)),
-//     ]);
-    public function findOrCreateUser($googleUser)
+public function findOrCreateUser($googleUser)
 {
-    $authUser = Customer::where('google_id', $googleUser->id)
-                         ->orWhere('email', $googleUser->email)
-                         ->first();
-
-    if (!$authUser) {
-        $authUser = Vendor::where('google_id', $googleUser->id)
-                    ->orWhere('email', $googleUser->email)
-                     ->first();
-    }
-
-    if (!$authUser) {
-        $authUser = Admin::where('google_id', $googleUser->id)
-        ->orWhere('email', $googleUser->email)
-        ->first();
-    }
+    $authUser = $this->findUserByEmail($googleUser->email);
 
     if ($authUser) {
         return $authUser;
@@ -133,6 +106,20 @@ class AuthController extends Controller
         'image' => $googleUser->avatar,
         'password' => bcrypt(Str::random(16)),
     ]);
+}
+
+private function findUserByEmail($email)
+{
+    $models = [Customer::class, Vendor::class, Admin::class];
+
+    foreach ($models as $model) {
+        $user = $model::where('email', $email)->first();
+        if ($user) {
+            return $user;
+        }
+    }
+
+    return null;
 }
 }
     
