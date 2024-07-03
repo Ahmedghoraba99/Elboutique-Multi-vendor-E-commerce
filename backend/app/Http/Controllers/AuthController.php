@@ -72,7 +72,7 @@ class AuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
-            $authUser = $this->findOrCreateUser($googleUser);
+            $authUser = $this->findOrCreateUser($googleUser,'google_id');
     
             $token = $authUser->createToken('Personal Access Token')->plainTextToken;
             $modelName = strtolower(class_basename(get_class($authUser)));
@@ -91,22 +91,22 @@ class AuthController extends Controller
         }
     }
 
-public function findOrCreateUser($googleUser)
-{
-    $authUser = $this->findUserByEmail($googleUser->email);
+// public function findOrCreateUser($googleUser)
+// {
+//     $authUser = $this->findUserByEmail($googleUser->email);
 
-    if ($authUser) {
-        return $authUser;
-    }
+//     if ($authUser) {
+//         return $authUser;
+//     }
 
-    return Customer::create([
-        'name' => $googleUser->name,
-        'email' => $googleUser->email,
-        'google_id' => $googleUser->id,
-        'image' => $googleUser->avatar,
-        'password' => bcrypt(Str::random(16)),
-    ]);
-}
+//     return Customer::create([
+//         'name' => $googleUser->name,
+//         'email' => $googleUser->email,
+//         'google_id' => $googleUser->id,
+//         'image' => $googleUser->avatar,
+//         'password' => bcrypt(Str::random(16)),
+//     ]);
+// }
 
 private function findUserByEmail($email)
 {
@@ -121,6 +121,53 @@ private function findUserByEmail($email)
 
     return null;
 }
+
+public function redirectToFacebook()
+{
+    $url = Socialite::driver('facebook')->stateless()->redirect()->getTargetUrl();
+    return response()->json(['url' => $url]);
+}
+
+public function handleFacebookCallback()
+{
+    try {
+        $facebookUser = Socialite::driver('facebook')->stateless()->user();
+        $authUser = $this->findOrCreateUser($facebookUser );
+
+        $token = $authUser->createToken('Personal Access Token')->plainTextToken;
+        $role = strtolower(class_basename($authUser));
+
+        return response()->json([
+            'token' => $token,
+            'id' => $authUser->id,
+            'role' => $role,
+        ], 200);
+    } catch (\Exception $e) {
+        $errorMessage = 'Unauthorized';
+        if (config('app.debug')) {
+            $errorMessage .= ': ' . $e->getMessage();
+        }
+        return response()->json(['error' => $errorMessage], 401);
+    }
+}
+
+private function findOrCreateUser($socialUser )
+{
+    $authUser = $this->findUserByEmail($socialUser->email);
+
+    if ($authUser) {
+        return $authUser;
+    }
+
+    return Customer::create([
+        'name' => $socialUser->name,
+        'email' => $socialUser->email,
+        'image' => $socialUser->avatar,
+        'password' => bcrypt(Str::random(16)),
+    ]);
+}
+
+ 
 }
     
  

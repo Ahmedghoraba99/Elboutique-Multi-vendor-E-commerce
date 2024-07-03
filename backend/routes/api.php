@@ -189,3 +189,8 @@ Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
 Route::get('auth/google', [AuthController::class, 'redirectToGoogle']);
 
 Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook']);
+Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
+
+https://2107-197-162-33-46.ngrok-free.app/api/auth/facebook/callback
