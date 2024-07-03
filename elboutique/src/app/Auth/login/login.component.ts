@@ -28,7 +28,7 @@ import { WishlistService } from '../../service/wishlist.service';
   ],
 })
 export class LoginComponent implements OnDestroy, OnInit {
-  private loginSubscriptions!: Subscription[];
+  private loginSubscriptions: Subscription[]=[];
   currentStep = 0;
   loginForm: FormGroup;
   showToast = false;
