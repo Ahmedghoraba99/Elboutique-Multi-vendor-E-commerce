@@ -125,4 +125,24 @@ export class AuthService {
   isAuthObservable(): Observable<boolean> {
     return this.authStatus.asObservable();
   }
+
+  loginWithGoogle(): Observable<any> {
+    return this.http.get(`${this.baseUrl}auth/google`);
+  }
+
+  loginWithFacebook(): Observable<any> {
+    return this.http.get(`${this.baseUrl}auth/facebook`);
+  }
+
+  handleGoogleCallback(code: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}auth/google/callback`, {
+      params: { code },
+    });
+  }
+
+  handleFacebookCallback(code: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}auth/facebook/callback`, {
+      params: { code },
+    });
+  }
 }

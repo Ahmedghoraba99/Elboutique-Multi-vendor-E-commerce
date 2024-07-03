@@ -15,6 +15,12 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 class AuthController extends Controller
 {
+    private static $frontendUrl;
+    public function __construct()
+    {
+        self::$frontendUrl = config('app.frontend_url');
+    }
+
     public function login(LoginRequest $request) {
 
         $user = $this->getUserByRole($request->role, $request->email);
@@ -72,7 +78,7 @@ class AuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
-            $authUser = $this->findOrCreateUser($googleUser,'google_id');
+            $authUser = $this->findOrCreateUser($googleUser);
     
             $token = $authUser->createToken('Personal Access Token')->plainTextToken;
             $modelName = strtolower(class_basename(get_class($authUser)));
@@ -91,22 +97,7 @@ class AuthController extends Controller
         }
     }
 
-// public function findOrCreateUser($googleUser)
-// {
-//     $authUser = $this->findUserByEmail($googleUser->email);
-
-//     if ($authUser) {
-//         return $authUser;
-//     }
-
-//     return Customer::create([
-//         'name' => $googleUser->name,
-//         'email' => $googleUser->email,
-//         'google_id' => $googleUser->id,
-//         'image' => $googleUser->avatar,
-//         'password' => bcrypt(Str::random(16)),
-//     ]);
-// }
+ 
 
 private function findUserByEmail($email)
 {
@@ -136,12 +127,9 @@ public function handleFacebookCallback()
 
         $token = $authUser->createToken('Personal Access Token')->plainTextToken;
         $role = strtolower(class_basename($authUser));
-
-        return response()->json([
-            'token' => $token,
-            'id' => $authUser->id,
-            'role' => $role,
-        ], 200);
+        
+        return redirect()->to(self::$frontendUrl."/login?token={$token}&role={$role}&id={$authUser->id}");
+       
     } catch (\Exception $e) {
         $errorMessage = 'Unauthorized';
         if (config('app.debug')) {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,7 +9,7 @@ import { AuthService } from '../../service/auth.service';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart.service';
 import { WishlistService } from '../../service/wishlist.service';
@@ -27,7 +27,7 @@ import { WishlistService } from '../../service/wishlist.service';
     RouterLink,
   ],
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnDestroy, OnInit {
   private loginSubscriptions!: Subscription;
   currentStep = 0;
   loginForm: FormGroup;
@@ -37,6 +37,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
     private cartService: CartService,
@@ -48,7 +49,25 @@ export class LoginComponent implements OnDestroy {
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      const token: string = params['token'];
+      const role: string = params['role'];
+      const id: string = params['id'];
 
+      if (token && role && id) {
+        const user_info = {
+          token,
+          role,
+          id,
+        };
+        localStorage.setItem('user_info', JSON.stringify(user_info));
+        this.notfayNavBar();
+
+        this.router.navigate(['/']);
+      }
+    });
+  }
   nextStep() {
     if (this.currentStep === 0 && !this.loginForm.controls['userType'].valid) {
       this.showToastMessage('Please select a user type', 'Validation Error');
@@ -92,14 +111,40 @@ export class LoginComponent implements OnDestroy {
       );
     }
   }
+  loginWithGoogle() {
+    this.authService.loginWithGoogle().subscribe((response) => {
+      window.location.href = response.url;
+    });
+  }
 
-  handleSuccess(response: any) {
-    this.nextStep();
+  loginWithFacebook() {
+    this.authService.loginWithFacebook().subscribe((response) => {
+      window.location.href = response.url;
+    });
+  }
 
-    // TODO: Link to service
+  handleGoogleCallback(code: string) {
+    this.authService.handleGoogleCallback(code).subscribe((response) => {
+      localStorage.setItem('token', response.token);
+      this.router.navigate(['/dashboard']);
+    });
+  }
+
+  handleFacebookCallback(code: string) {
+    this.authService.handleFacebookCallback(code).subscribe((response) => {
+      localStorage.setItem('token', response.token);
+      this.router.navigate(['/dashboard']);
+    });
+  }
+  notfayNavBar() {
     this.authService.getCurrentUser();
+    this.authService.updateAuthStatus(true);
     this.cartService.fetchCustomerCart();
     this.wishlistService.fetchUserWishlist();
+  }
+  handleSuccess(response: any) {
+    this.nextStep();
+    this.notfayNavBar();
 
     if (response.role === 'admin') {
       this.showToastMessage(
