@@ -25,8 +25,7 @@ use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Payment\GetwayCheckoutController;
-
-
+use App\Http\Controllers\Payment\PayMobController;
 
 require_once __DIR__ . '/ReviewRoutes/reviewRoutes.php';
 require_once __DIR__ . '/ReportRoutes/reportProductRoutes.php';
@@ -179,9 +178,9 @@ Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment
 
 
 
-Route::post('/getway-checkout/processed',[PaymentController::class, 'checkout_processed']);
+Route::post('getway-checkout/processed',[PayMobController::class, 'checkout_processed']);
 Route::get('/checkout/response', function (Request $request) {
-    redirect(config('frontend_url') . '/checkout'.'?success=true');
+    // redirect(config('frontend_url') . '/checkout'.'?success=true');
     return $request->all() ;
 });
 Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
