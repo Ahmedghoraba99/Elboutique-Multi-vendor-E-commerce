@@ -86,6 +86,7 @@ public function redirectToGoogle()
 }
  
 
+
     private function handleOAuthCallback($driver)
 {
     try {
@@ -104,16 +105,7 @@ public function redirectToGoogle()
     
 }
 
-public function handleGoogleCallback()
-{
-    return $this->handleOAuthCallback('google');
-}
 
-public function handleFacebookCallback()
-{
-    return $this->handleOAuthCallback('facebook');
-}
- 
 
 private function findUserByEmail($email)
 {
@@ -146,7 +138,15 @@ private function findOrCreateUser($socialUser )
         'password' => bcrypt(Str::random(16)),
     ]);
 }
+public function handleGoogleCallback()
+{
+    return $this->handleOAuthCallback('google');
+}
 
+public function handleFacebookCallback()
+{
+    return $this->handleOAuthCallback('facebook');
+}
  
 }
     
