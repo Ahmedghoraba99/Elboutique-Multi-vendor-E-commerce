@@ -43,7 +43,7 @@
                       <span class="m-0">{{ review.comment }}</span>
                     </div>
                     <div class="d-flex align-items-center">
-                      <button class="btn" (click)="updateReview(review.id)" data-bs-toggle="modal" data-bs-target="#AddReport" >
+                      <button class="btn" (click)="updateReview(review.id)" data-bs-toggle="modal" data-bs-target="#AddReport" [disabled]="!customerID" style="border: none;">
                         <i class="fa-solid fa-flag text-danger mt-2 p-1"></i>
                         <span class="ms-2 text-muted">Report</span>
                       </button>
