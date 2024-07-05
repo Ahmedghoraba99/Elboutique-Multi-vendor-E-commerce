@@ -28,6 +28,7 @@ export class WishListContentComponent implements OnInit, OnDestroy {
 
   getWishlistSub: Subscription | null = null;
   deleteFromWishlistSub: Subscription | null = null;
+  wishlistSubSub: Subscription[] = [];
   userWishlist: any = [];
   userCartId: any[] = [];
   userCart: any = [];
@@ -43,25 +44,29 @@ export class WishListContentComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.getWishlistSub?.unsubscribe();
     this.deleteFromWishlistSub?.unsubscribe();
+    this.wishlistSubSub.forEach((sub) => sub.unsubscribe());
   }
 
   ngOnInit(): void {
-    this.authService.isAuthObservable().subscribe((isAuth) => {
+    const authSub = this.authService.isAuthObservable().subscribe((isAuth) => {
       this.isAuthenticated = isAuth;
     });
+    this.wishlistSubSub.push(authSub);
     this.getWishlistSub = this.wishlistService
       .getUserWishlist()
       .subscribe((wishlist) => {
         this.userWishlist = wishlist;
       });
-
-    this.cartService.getCartData().subscribe((cart) => {
-      if (cart) {
-        cart.forEach((element: { id: any }) => {
-          this.userCartId.push(element.id);
-        });
-      }
-    });
+    if (this.isAuthenticated) {
+      const cartSub = this.cartService.getCartData().subscribe((cart) => {
+        if (cart) {
+          cart.forEach((element: { id: any }) => {
+            this.userCartId.push(element.id);
+          });
+        }
+      });
+      this.wishlistSubSub.push(cartSub);
+    }
   }
 
   removeProductFromWishlist(id: number) {

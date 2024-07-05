@@ -94,8 +94,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.cartItems = 0;
     this.wishListItems = 0;
     this.currentUser = {};
-    this.authService.logout();
-    // this.router.navigate(['/login']);
+   const logoutSubscription=  this.authService.logout().subscribe(() => {
+      localStorage.removeItem('user_info');
+      this.authService.updateAuthStatus(false);
+      this.router.navigate(['/login']);
+    });
+    this.navBarSubscriptions.push(logoutSubscription);
   }
   ngOnDestroy(): void {
     this.navBarSubscriptions.forEach((subscription) =>

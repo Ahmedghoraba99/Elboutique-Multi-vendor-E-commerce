@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute } from '@angular/router';
 import { ProductCategoryService } from '../service/product-category.service';
@@ -35,7 +36,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   vendors: any[] = [];
   tags: any[] = [];
   isAuthenticated = false;
-
+  filters: any = {};
   constructor(
     private route: ActivatedRoute,
     private categoryService: ProductCategoryService,
@@ -46,7 +47,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
     private toaster: ToastrService,
     private HomeService: HomeService,
     private VendorService: VendorService,
-    private TagesService: TagesService
+    private TagesService: TagesService,
+    private fb: FormBuilder
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
@@ -56,6 +58,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     this.categoriySubscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
+
     const queryParamMapSubscribe = this.route.queryParamMap.subscribe(
       (queryParams) => {
         const name = queryParams.get('name');
@@ -94,19 +97,62 @@ export class CategoryComponent implements OnInit, OnDestroy {
     const getAllCategoriesSubscribe =
       this.HomeService.getAllCategories().subscribe((res) => {
         this.categories = res.data;
-        // console.log(this.categories)
       });
     this.categoriySubscriptions.push(getAllCategoriesSubscribe);
 
     const getAllTagsSubscribe = this.TagesService.getAllTags().subscribe(
       (res) => {
-        console.log(res);
+        this.tags = res.data;
       }
     );
+   
     this.categoriySubscriptions.push(getAllTagsSubscribe);
     this.categoriySubscriptions.push(queryParamMapSubscribe);
   }
 
+ 
+  // serch for products 
+  applyFilters(): void {
+    this.filters.cats = this.categories.filter(cat => cat.selected).map(cat => cat.id).join(',');
+    if(this.filters.cats === "") delete this.filters.cats;
+    this.filters.tags = this.tags.filter(tag => tag.selected).map(tag => tag.name);
+    this.filters.max_price ; 
+    this.filters.min_price;
+    if (this.filters.max_price === null || this.filters.min_price === null) {
+      delete this.filters.max_price;
+      delete this.filters.min_price;
+    }
+    this.filters.vendor_id =this.tags.filter(vendor => vendor.selected).map(vendor => vendor.id)
+        this.searchProducts();
+  }
+
+  preventNegativeValue(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    if (parseFloat(inputElement.value) < 0) {
+      inputElement.value = '0';
+    }
+  }
+  getVendors(): void {
+    const uniqueVendors = new Map<number, any>();
+    this.products.forEach((product) => {
+      if (product.vendor && !uniqueVendors.has(product.vendor.id)) {
+        uniqueVendors.set(product.vendor.id, product.vendor);
+      }
+    });
+    this.vendors = Array.from(uniqueVendors.values());
+    console.log(this.products);
+    console.log(this.vendors);
+  }
+
+  private searchProducts(): void {
+    // console.log(this.filters);
+
+    this.categoryService.searchForProducts(this.filters).subscribe((data) => {
+      this.resetProducts();
+      this.setPageParameters(data);
+    });
+  }
+  
   private handleCategoryLoading(): void {
     if (this.id === 'all') {
       const getAllProductsInAllSubscribe = this.categoryService
@@ -114,6 +160,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
         .subscribe((data) => {
           this.setPageParameters(data);
           this.title = 'All Products';
+          console.log(data);
+          this.getVendors();
         });
       this.categoriySubscriptions.push(getAllProductsInAllSubscribe);
     } else if (parseInt(this.id as string)) {

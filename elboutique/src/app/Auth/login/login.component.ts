@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,7 +9,7 @@ import { AuthService } from '../../service/auth.service';
 import { CommonModule } from '@angular/common';
 import { ToastComponent } from '../../widgets/toast/toast.component';
 import { NavComponent } from '../nav/nav.component';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart.service';
 import { WishlistService } from '../../service/wishlist.service';
@@ -27,8 +27,8 @@ import { WishlistService } from '../../service/wishlist.service';
     RouterLink,
   ],
 })
-export class LoginComponent implements OnDestroy {
-  private loginSubscriptions!: Subscription;
+export class LoginComponent implements OnDestroy, OnInit {
+  private loginSubscriptions: Subscription[]=[];
   currentStep = 0;
   loginForm: FormGroup;
   showToast = false;
@@ -37,6 +37,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
     private fb: FormBuilder,
+    private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
     private cartService: CartService,
@@ -48,7 +49,34 @@ export class LoginComponent implements OnDestroy {
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
+  ngOnInit(): void {
+    this.getSocialAuthParams();
+  }
+  getSocialAuthParams() {
+    const paramsSubscription = this.route.queryParams.subscribe((params) => {
+      const { token, role, id } = params;
 
+      if (this.isValidParams(token, role, id)) {
+        this.storeUserInfo(token, role, id);
+        this.notfayNavBar();
+        this.navigateToRoot();
+      }
+    });
+    this.loginSubscriptions.push(paramsSubscription);
+  }
+
+  private isValidParams(token: string, role: string, id: string): boolean {
+    return !!token && !!role && !!id;
+  }
+
+  private storeUserInfo(token: string, role: string, id: string): void {
+    const userInfo = { token, role, id };
+    localStorage.setItem('user_info', JSON.stringify(userInfo));
+  }
+
+  private navigateToRoot(): void {
+    this.router.navigate(['/']);
+  }
   nextStep() {
     if (this.currentStep === 0 && !this.loginForm.controls['userType'].valid) {
       this.showToastMessage('Please select a user type', 'Validation Error');
@@ -79,12 +107,13 @@ export class LoginComponent implements OnDestroy {
   onSubmit() {
     if (this.loginForm.valid) {
       const { userType, email, password } = this.loginForm.value;
-      this.loginSubscriptions = this.authService
+      const loginSubscription = this.authService
         .login(email, password, userType)
         .subscribe({
           next: (response: any) => this.handleSuccess(response),
           error: (error: any) => this.handleError(error),
         });
+      this.loginSubscriptions.push(loginSubscription);
     } else {
       this.showToastMessage(
         'Please fill out the form correctly',
@@ -92,14 +121,33 @@ export class LoginComponent implements OnDestroy {
       );
     }
   }
+  loginWithGoogle() {
+    const loginWithGoogleSubscription = this.authService
+      .loginWithGoogle()
+      .subscribe((response) => {
+        window.location.href = response.url;
+      });
+    this.loginSubscriptions.push(loginWithGoogleSubscription);
+  }
 
-  handleSuccess(response: any) {
-    this.nextStep();
+  loginWithFacebook() {
+    const loginWithFacebookSubscription = this.authService
+      .loginWithFacebook()
+      .subscribe((response) => {
+        window.location.href = response.url;
+      });
+    this.loginSubscriptions.push(loginWithFacebookSubscription);
+  }
 
-    // TODO: Link to service
+  notfayNavBar() {
     this.authService.getCurrentUser();
+    this.authService.updateAuthStatus(true);
     this.cartService.fetchCustomerCart();
     this.wishlistService.fetchUserWishlist();
+  }
+  handleSuccess(response: any) {
+    this.nextStep();
+    this.notfayNavBar();
 
     if (response.role === 'admin') {
       this.showToastMessage(
@@ -119,12 +167,9 @@ export class LoginComponent implements OnDestroy {
     setTimeout(() => {
       if (response.role === 'admin') {
         this.router.navigateByUrl('/dashboard');
-        // window.location.href = '/dashboard';
       } else if (response.role == 'vendor') {
-        // window.location.href = '/v';
         this.router.navigateByUrl('/v');
-      } else this.router.navigateByUrl('/');
-      // else window.location.href = '/';
+      } else this.navigateToRoot();
     }, 3000);
   }
   handleError(error: any) {
@@ -142,7 +187,10 @@ export class LoginComponent implements OnDestroy {
   }
   ngOnDestroy() {
     if (this.loginSubscriptions) {
-      this.loginSubscriptions.unsubscribe();
+      this.loginSubscriptions.forEach((subscription) =>
+        subscription.unsubscribe()
+      );
+      this.loginSubscriptions = [];
     }
   }
 }

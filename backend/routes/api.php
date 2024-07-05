@@ -25,8 +25,7 @@ use App\Http\Controllers\wishlist\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Payment\GetwayCheckoutController;
-
-
+use App\Http\Controllers\Payment\PayMobController;
 
 require_once __DIR__ . '/ReviewRoutes/reviewRoutes.php';
 require_once __DIR__ . '/ReportRoutes/reportProductRoutes.php';
@@ -115,6 +114,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/email/send', [VerificationController::class, 'sendVerificationEmail']);
     Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 
 
@@ -162,7 +164,7 @@ Route::get('/product/vendor/{id}', [ProductController::class, "getVendorProducts
 
 //Login & logout register endpoints
 Route::post('/login',  [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+
 Route::post('/registerFormValdation', [AuthController::class, 'registerFormValdation']);
 Route::post('vendors', [VendorController::class, 'store']);
 Route::post('customers', [CustomerController::class, 'store']);
@@ -179,9 +181,19 @@ Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment
 
 
 
-Route::post('/getway-checkout/processed',[PaymentController::class, 'checkout_processed']);
+Route::post('getway-checkout/processed',[PayMobController::class, 'checkout_processed']);
 Route::get('/checkout/response', function (Request $request) {
-    redirect(config('frontend_url') . '/checkout'.'?success=true');
+    // redirect(config('frontend_url') . '/checkout'.'?success=true');
     return $request->all() ;
 });
 Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
+
+
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle']);
+
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook']);
+Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
+
+ 

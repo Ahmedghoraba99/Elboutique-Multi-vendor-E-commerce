@@ -11,9 +11,16 @@ use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 class AuthController extends Controller
 {
+    private static $frontendUrl;
+    public function __construct()
+    {
+        self::$frontendUrl = config('app.frontend_url');
+    }
+
     public function login(LoginRequest $request) {
 
         $user = $this->getUserByRole($request->role, $request->email);
@@ -39,6 +46,7 @@ class AuthController extends Controller
 
 
     public function logout(Request $request) {
+ 
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -60,5 +68,86 @@ class AuthController extends Controller
                 return null;
         }
     }
+
+    private function redirectToOAuth($driver)
+{
+    $url = Socialite::driver($driver)->stateless()->redirect()->getTargetUrl();
+    return response()->json(['url' => $url]);
+}
+
+public function redirectToFacebook()
+{
+    return $this->redirectToOAuth('facebook');
+}
+
+public function redirectToGoogle()
+{
+    return $this->redirectToOAuth('google');
+}
+ 
+
+
+    private function handleOAuthCallback($driver)
+{
+    try {
+        $user = Socialite::driver($driver)->stateless()->user();
+        $authUser = $this->findOrCreateUser($user);
+        $token = $authUser->createToken('Personal Access Token')->plainTextToken;
+        $role = strtolower(class_basename($authUser));
+        return redirect()->to(self::$frontendUrl."/login?token={$token}&role={$role}&id={$authUser->id}");
+    } catch (\Exception $e) {
+        $errorMessage = 'Unauthorized';
+        if (config('app.debug')) {
+            $errorMessage.= ': '. $e->getMessage();
+        }
+        return response()->json(['error' => $errorMessage], 401);
+    }
     
 }
+
+
+
+private function findUserByEmail($email)
+{
+    $models = [Customer::class, Vendor::class, Admin::class];
+
+    foreach ($models as $model) {
+        $user = $model::where('email', $email)->first();
+        if ($user) {
+            return $user;
+        }
+    }
+
+    return null;
+}
+
+ 
+
+private function findOrCreateUser($socialUser )
+{
+    $authUser = $this->findUserByEmail($socialUser->email);
+
+    if ($authUser) {
+        return $authUser;
+    }
+
+    return Customer::create([
+        'name' => $socialUser->name,
+        'email' => $socialUser->email,
+        'image' => $socialUser->avatar,
+        'password' => bcrypt(Str::random(16)),
+    ]);
+}
+public function handleGoogleCallback()
+{
+    return $this->handleOAuthCallback('google');
+}
+
+public function handleFacebookCallback()
+{
+    return $this->handleOAuthCallback('facebook');
+}
+ 
+}
+    
+ 

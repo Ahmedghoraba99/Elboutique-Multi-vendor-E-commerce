@@ -177,10 +177,10 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
   CreateOrder(paymentType: HTMLButtonElement) {
-    const sentBody = {
+    const sentBody: any = {
       total:
         this.getOrderTotalPrice() +
-        this.getOrderTotalPrice() * 0.2 -
+        this.getShippingPrice() -
         this.getDiscountedAmount(),
     };
 
@@ -262,5 +262,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         window.location.href = res.paypal_link;
       });
+  }
+  getShippingPrice() {
+    return Math.floor(this.getOrderTotalPrice() * 0.2);
   }
 }

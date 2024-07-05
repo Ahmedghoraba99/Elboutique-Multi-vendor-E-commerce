@@ -4,11 +4,12 @@
   </div>
   <div class="row">
     <div class="col-3 mt-5 sticky-top filtering-section p-3">
-      <h4 class="text-uppercase text-center"> filtering </h4>
+     <div class="filtering">
+      <h4 class="text-uppercase text-center my-4"> filtering </h4>
       <div class="accordion accordion-flush filtering-section" id="accordionFlushExample">
         <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingOne">
-            <button  class="accordion-button collapsed fw-bold"  type="button"  data-bs-toggle="collapse"  data-bs-target="#flush-collapseOne"  aria-expanded="true"  aria-controls="flush-collapseOne" >
+            <button  class="accordion-button collapsed fw-bold no-outline"  type="button"  data-bs-toggle="collapse"  data-bs-target="#flush-collapseOne" aria-expanded="true" aria-controls="flush-collapseOne" >
               Categories
             </button>
           </h2>
@@ -16,7 +17,7 @@
             <div class="accordion-body">
               @for (cat of categories ; track cat.id ){
                 <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="catName" />
+                  <input type="checkbox" class="form-check-input" [id]="'cat-' + cat.id"  [(ngModel)]="cat.selected" (change)="applyFilters()" />
                   <label class="form-check-label" for="catName">{{cat.name}}</label>
                 </div>
               }
@@ -26,11 +27,11 @@
         <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingTwo">
             <button
-              class="accordion-button collapsed fw-bold"
+              class="accordion-button collapsed fw-bold no-outline"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#flush-collapseTwo"
-              aria-expanded="false"
+              aria-expanded="true"
               aria-controls="flush-collapseTwo"
             >
               Tags
@@ -38,22 +39,41 @@
           </h2>
           <div
             id="flush-collapseTwo"
-            class="accordion-collapse collapse"
+            class="accordion-collapse collapse no-outline"
             aria-labelledby="flush-headingTwo"
-            data-bs-parent="#accordionFlushExample">
+            data-bs-parent="#accordionFlushExample"
+          >
+          @for(tag of tags ; track tag.name){
             <div class="accordion-body">
               <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="catName" />
-                <label class="form-check-label" for="catName">Watches</label>
+                <input type="checkbox" class="form-check-input"  [id]="'tag-' + tag.id"  [(ngModel)]="tag.selected" (change)="applyFilters()" />
+                <label class="form-check-label" for="tagName">{{tag.name}}</label>
               </div>
+            </div>
+
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingThree">
+            <button class="accordion-button collapsed fw-bold no-outline" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+              Price Range
+            </button>
+          </h2>
+          <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+            <div class="p-2 my-2">
+              <label for="minPriceInput" class="form-label">Min Price</label>
+              <input type="number" class="form-control" id="minPriceInput" name="min" aria-label="min" data-qa="filter-min-input"  (input)="preventNegativeValue($event)" [(ngModel)]="filters.min_price" (ngModelChange)="applyFilters()" min="0" max="1000" step="10" placeholder="MinPrice.." />
+            </div>
+            <div class="p-2 my-2">
+              <label for="maxPriceInput" class="form-label">Max Price</label>
+              <input type="number" class="form-control" id="maxPriceInput" name="max" aria-label="max" data-qa="filter-max-input"   (input)="preventNegativeValue($event)" [(ngModel)]="filters.max_price" (ngModelChange)="applyFilters()" min="0" max="1000" step="10"  placeholder="MaxPrice.."/>
             </div>
           </div>
         </div>
-
-        <div class="accordion-item">
+        <!-- vendor -->
+      <div class="accordion-item">
           <h2 class="accordion-header" id="flush-headingFour">
             <button
-              class="accordion-button collapsed fw-bold"
+              class="accordion-button collapsed fw-bold no-outline"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#flush-collapseFour"
@@ -62,23 +82,27 @@
               Vendors
             </button>
           </h2>
-          <div
+          @for(vendor of vendors ; track vendor.id){
+            <div
             id="flush-collapseFour"
             class="accordion-collapse collapse"
             aria-labelledby="flush-headingFour"
             data-bs-parent="#accordionFlushExample"
           >
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="catName" />
-              <label class="form-check-label" for="catName">In stock</label>
-            </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="catName" />
-              <label class="form-check-label" for="catName">Out Of Stock</label>
-            </div>
+        <div class="accordion-body" >
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input"[id]="'vendor-' + vendor.id"  [(ngModel)]="vendor.selected" (change)="applyFilters()" />
+            <label class="form-check-label" for="catName" >{{vendor.name}}</label>
           </div>
+
+        </div>
+
+          </div>
+          }
         </div>
       </div>
+     </div>
+
     </div>
 
     <div class="col-9">

@@ -24,6 +24,7 @@ export class CustomerFormComponent implements OnDestroy {
 
   customerForm: FormGroup;
   showToast = false;
+  loading = false;
   toastMessage = '';
   toastTitle = '';
 
@@ -101,41 +102,44 @@ export class CustomerFormComponent implements OnDestroy {
   onBlur(controler: string) {
     const query = { [controler]: this.customerForm.get(controler)?.value };
 
-   const emailAndPasswordExisting=  this.authService.emailAndPasswordExisting(query).subscribe(
-      () => {},
-      (err) => {
-        if (err.status == 422) {
-          this.customerForm
-            .get(controler)
-            ?.setErrors({ existingAccount: true });
-          this.showToastMessage(
-            'Phones and emails cannot be linked to more than one account.',
-            'Validation Error'
-          );
+    const emailAndPasswordExisting = this.authService
+      .emailAndPasswordExisting(query)
+      .subscribe(
+        () => {},
+        (err) => {
+          if (err.status == 422) {
+            this.customerForm
+              .get(controler)
+              ?.setErrors({ existingAccount: true });
+            this.showToastMessage(
+              'Phones and emails cannot be linked to more than one account.',
+              'Validation Error'
+            );
+          }
         }
-      }
-    );
+      );
     this.customerSubscriptions.push(emailAndPasswordExisting);
-
   }
   onSubmit() {
     this.markFormGroupTouched(this.customerForm);
+    this.loading = true;
 
     if (this.customerForm.valid) {
       const from = this.createForm();
-    const register=   this.authService.register('customers', from).subscribe(
+      const register = this.authService.register('customers', from).subscribe(
         (res) => {
           console.log('Vendor Form Data:', res);
+          this.loading = false;
 
           this.handleSuccess();
         },
         (err) => {
+          this.loading = false;
           this.handleError(err);
         }
       );
       this.customerSubscriptions.push(register);
     }
-    
   }
 
   handleSuccess() {
