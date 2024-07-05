@@ -76,6 +76,11 @@ export class AuthService {
     return user ? user.token : null;
   }
 
+  getUserRole() {
+    const user = this.getStorageData();
+    return user ? user.role : null;
+  }
+
   forgotPassword(email: string) {
     return this.http.post(`${this.baseUrl}forgot-password`, { email });
   }
