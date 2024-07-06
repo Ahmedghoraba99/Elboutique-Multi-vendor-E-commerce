@@ -113,7 +113,9 @@
                         product.price
                       }}</strong>
                       <strong class="fs-4 text-danger" *ngIf="product.sale"
-                        >{{ product.price }} Only!</strong
+                        >{{
+                          product.price * (1 - product.sale / 100)
+                        }}</strong
                       >
                     </div>
                     <div class="products-wish">

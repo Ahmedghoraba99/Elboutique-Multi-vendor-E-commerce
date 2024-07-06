@@ -116,7 +116,14 @@
                         >
                           <div class="big-deal-price-span">
                             <span class="ms-2">EGP</span>
-                            <strong class="fs-4">{{ product.price }}</strong>
+                            <strong class="fs-4" *ngIf="!product.sale">{{
+                              product.price
+                            }}</strong>
+                            <strong class="fs-4 text-danger" *ngIf="product.sale"
+                              >{{
+                                product.price * (1 - product.sale / 100)
+                              }}</strong
+                            >
                           </div>
                           <div class="products-wish">
                             <div class="con-like-cart mt-1">
