@@ -4,7 +4,7 @@
 </div>
 <div *ngIf="!loading" class="card overflow-auto">
     <p-table #dt [value]="orders" [paginator]="false" [rows]="pageSize"
-        [globalFilterFields]="['id', 'customer_name', 'status']" [tableStyle]="{'min-width': '6rem'}"
+        [globalFilterFields]="['id', 'customer_name', 'status','payment_status']" [tableStyle]="{'min-width': '6rem'}"
         [(selection)]="selectedOrders" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
         [totalRecords]="totalItems">
@@ -31,6 +31,8 @@
                         field="total"></p-sortIcon></th>
                 <th pSortableColumn="created_at" scope="col" style="min-width: 10rem">Date <p-sortIcon
                         field="created_at"></p-sortIcon></th>
+                <th pSortableColumn="payment_status" scope="col" style="min-width: 10rem">Payment Status <p-sortIcon
+                        field="created_at"></p-sortIcon></th>
                 <th scope="col" style="min-width: 10rem">Actions</th>
             </tr>
         </ng-template>
@@ -46,6 +48,7 @@
                 </td>
                 <td>{{ order.total | currency:'USD' }}</td>
                 <td>{{ order.created_at | date }}</td>
+                <td>{{ order.payment_status }}</td>
                 <td>
 
                     <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"

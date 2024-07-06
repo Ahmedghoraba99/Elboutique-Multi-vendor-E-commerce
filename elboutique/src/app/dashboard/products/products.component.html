@@ -7,8 +7,8 @@
 @else {
 <div class="card overflow-auto">
     <p-table #dt class="p-datatable" [value]="products" [rows]="pageSize" [paginator]="false"
-        [globalFilterFields]="['id', 'name', 'categoryName', 'vendorName']" [tableStyle]="{'min-width': '75rem'}"
-        [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
+        [globalFilterFields]="['id', 'name', 'categoryName', 'vendorName','is_featured']"
+        [tableStyle]="{'min-width': '75rem'}" [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
         [totalRecords]="totalItems">
         <ng-template pTemplate="caption">
@@ -34,6 +34,8 @@
                         field="vendorName"></p-sortIcon></th>
                 <th pSortableColumn="stock" scope="col" style="min-width: 7rem">Stock <p-sortIcon
                         field="stock"></p-sortIcon></th>
+                <th pSortableColumn="is_featured" scope="col" style="min-width: 10rem">Featured<p-sortIcon
+                        field="stock"></p-sortIcon></th>
                 <th scope="col" style="min-width: 10rem">Actions</th>
             </tr>
         </ng-template>
@@ -49,12 +51,13 @@
                 <td>{{ product.categoryName }}</td>
                 <td>{{ product.vendorName }}</td>
                 <td>{{ product.stock }}</td>
-                <td>
-                    <button type="button" (click)="toggleFeaturedStatus(product)" pButton pRipple
+                <td> <button type="button" (click)="toggleFeaturedStatus(product)" pButton pRipple
                         [icon]="product.is_featured ? 'pi pi-star-fill' : 'pi pi-star'"
                         class=" p-button-rounded p-button-primary mr-2">
                         <span class="visually-hidden">Featured</span>
-                    </button>
+                    </button></td>
+                <td>
+
                     <button type="button" pButton pRipple icon="pi pi-eye" (click)="showProductDialog(product)"
                         class="p-button-rounded p-button-secondary mr-2">
                         <span class="visually-hidden">View Product</span>
