@@ -183,8 +183,7 @@ Route::get('payment/cancel', [PayPalController::class, 'cancel'])->name('payment
 
 Route::post('getway-checkout/processed',[PayMobController::class, 'checkout_processed']);
 Route::get('/checkout/response', function (Request $request) {
-    // redirect(config('frontend_url') . '/checkout'.'?success=true');
-    return $request->all() ;
+    return response()->view('response', [], 200);
 });
 Route::post('getway-checkout',  [GetwayCheckoutController::class,'index']);
 
