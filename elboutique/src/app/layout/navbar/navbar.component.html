@@ -35,20 +35,25 @@
           <div
             class="header-action-icon d-flex flex-row align-items-baseline justify-content-between m-0 p-0"
           >
-            <div class="action-icon">
-              <a routerLink="/wishlist">
-                <fa-icon [icon]="faHeart"></fa-icon>
-                WishList
-                <span *ngIf="wishListItems">{{ wishListItems }}</span>
-              </a>
-            </div>
-            <div class="action-icon">
-              <a routerLink="/checkout">
-                <fa-icon [icon]="faShoppingCart"></fa-icon>
-                Cart
-                <span *ngIf="cartItems">{{ cartItems }}</span>
-              </a>
-            </div>
+       
+            @if(user_role == "user" ){
+              <div class="action-icon">
+                <a routerLink="/wishlist">
+                  <fa-icon [icon]="faHeart"></fa-icon>
+                  WishList
+                  <span *ngIf="wishListItems">{{ wishListItems }}</span>
+                </a>
+              </div>
+              <div class="action-icon">
+                <a routerLink="/checkout">
+                  <fa-icon [icon]="faShoppingCart"></fa-icon>
+                  Cart
+                  <span *ngIf="cartItems">{{ cartItems }}</span>
+                </a>
+              </div>
+            } 
+            
+          
 
             <div
               class="action-icon"
@@ -66,6 +71,12 @@
                   class="user-profile-img img-fluid"
                 />
               </a>
+            </div>
+            <div class="action-icon">
+              @if (user_role === "admin" || user_role === "vendor") {
+                <a class=" Dashboard text-light"  [routerLink]="getDashboardRoute()">Dashboard</a>
+              }
+              
             </div>
             <div class="action-icon">
               <a
