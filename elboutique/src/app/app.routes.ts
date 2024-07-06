@@ -302,6 +302,11 @@ export const routes: Routes = [
         loadComponent: () => ShowProductComponent,
       },
       {
+        path: 'products/edit/:id',
+        title: 'edit Product',
+        loadComponent: ()=> UpdateProductComponent
+      },
+      {
         path: 'account',
         title: 'Account',
         loadComponent: () => VendorAccountComponent,

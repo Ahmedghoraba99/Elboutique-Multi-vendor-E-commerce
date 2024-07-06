@@ -1,7 +1,7 @@
 <div class="container-fluid big-deals my-5">
   <div class="d-flex flex-row align-items-center justify-content-center my-4">
     <div class="big-deals-header">
-      <h2 class="fw-bold ">Big deals</h2>
+      <h2 class="fw-bold">Big deals</h2>
     </div>
     <div class="big-deals-btn">
       <!-- TODO: link to product sections -->
@@ -11,16 +11,21 @@
   <div class="container">
     <div class="row d-flex flex-row">
       <!-- part to be looped through -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative" *ngFor="let product of products">
-        <div class="big-deal-product-big-tag-deal position-absolute" *ngIf="product.sale">
-            <span>{{ product.sale }}% Off</span>
+      <div
+        class="col-sm-6 col-md-3 mb-4 position-relative"
+        *ngFor="let product of products"
+      >
+        <div
+          class="big-deal-product-big-tag-deal position-absolute"
+          *ngIf="product.sale"
+        >
+          <span>{{ product.sale }}% Off</span>
         </div>
-          <div class="d-flex flex-column">
-            <div class="big-deal-product-data p-4">
-              <div
-                class="big-deal-product-big-tags d-flex flex-row justify-content-end align-items-end"
-              >
-                
+        <div class="d-flex flex-column">
+          <div class="big-deal-product-data p-4">
+            <div
+              class="big-deal-product-big-tags d-flex flex-row justify-content-end align-items-end"
+            >
               <div class="products-wish">
                 <div class="con-like">
                   <input
@@ -52,12 +57,11 @@
                   </div>
                 </div>
               </div>
-              </div>
-              <div class="big-deal-product-slider">
-                <div class="swiper mySwiper big-deal-product-swiper">
-                  <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                    <a routerLink="/products/{{ product.id }}">
-
+            </div>
+            <div class="big-deal-product-slider">
+              <div class="swiper mySwiper big-deal-product-swiper">
+                <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                  <a routerLink="/products/{{ product.id }}">
                     <swiper-container pagination="true">
                       <swiper-slide
                         class="swiper-slide big-deal-product-swiper-slider"
@@ -70,68 +74,75 @@
                       </swiper-slide>
                     </swiper-container>
                   </a>
-                  </div>
-                  <div class="swiper-pagination"></div>
                 </div>
+                <div class="swiper-pagination"></div>
               </div>
-              <div class="big-deal-product-detail">
-                <div class="big-deal-detail-header">
-                  <div class="big-deal-detail-data">
-                    <span>{{ product.name }}</span>
-                  </div>
-                  <div class="big-deal-info d-flex flex-column my-2">
-                    <span class="my-2">{{ product.vendor.name }}</span>
-                    <div  class="big-deal-price d-flex align-items-center justify-content-between">
-                      <div class="big-deal-price-span">
-                        <span class="ms-2">EGP</span>
-                        <strong class="fs-4">250</strong>
-                      </div>
-                      <div class="products-wish">
-                        <div class="con-like-cart mt-1">
-                          <input
-                            class="like-cart"
-                            type="checkbox"
-                            title="Cart"
-                            [checked]="isInCart(product.id)"
-                            (change)="toggleCart($event, product.id)"
-                          />
-                          <div class="checkmark-cart">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="outline"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path d="M6 6h15l-1.5 9H6"></path>
-                              <path d="M6 6l-1-3H3"></path>
-                              <circle cx="9" cy="21" r="1"></circle>
-                              <circle cx="20" cy="21" r="1"></circle>
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="filled"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
-                              ></path>
-                            </svg>
-                          </div>
+            </div>
+            <div class="big-deal-product-detail">
+              <div class="big-deal-detail-header">
+                <div class="big-deal-detail-data">
+                  <span>{{ product.name }}</span>
+                </div>
+                <div class="big-deal-info d-flex flex-column my-2">
+                  <span class="my-2">{{ product.vendor.name }}</span>
+                  <div
+                    class="big-deal-price d-flex align-items-center justify-content-between"
+                  >
+                    <div class="big-deal-price-span">
+                      <span class="ms-2">EGP</span>
+                      <strong class="fs-4" *ngIf="!product.sale">{{
+                        product.price
+                      }}</strong>
+                      <strong class="fs-4 text-danger" *ngIf="product.sale"
+                        >{{
+                          product.price * (1 - product.sale / 100)
+                        }}!</strong
+                      >
+                    </div>
+                    <div class="products-wish">
+                      <div class="con-like-cart mt-1">
+                        <input
+                          class="like-cart"
+                          type="checkbox"
+                          title="Cart"
+                          [checked]="isInCart(product.id)"
+                          (change)="toggleCart($event, product.id)"
+                        />
+                        <div class="checkmark-cart">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="outline"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M6 6h15l-1.5 9H6"></path>
+                            <path d="M6 6l-1-3H3"></path>
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                          </svg>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="filled"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path
+                              d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
+                            ></path>
+                          </svg>
                         </div>
                       </div>
                     </div>
-                    
-                   
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>

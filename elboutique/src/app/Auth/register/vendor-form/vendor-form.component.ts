@@ -12,6 +12,7 @@ import { AuthService } from '../../../service/auth.service';
 import { Router } from '@angular/router';
 import { ToastComponent } from '../../../widgets/toast/toast.component';
 import { Subscription } from 'rxjs';
+import { UtilityService } from '../../../service/utility.service';
 
 @Component({
   selector: 'app-vendor-form',
@@ -32,7 +33,8 @@ export class VendorFormComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private utilityService: UtilityService
   ) {
     this.vendorForm = this.fb.group(
       {
@@ -73,13 +75,14 @@ export class VendorFormComponent implements OnDestroy {
     );
   }
   onFileSelected(event: any, controlName: string) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.vendorForm.patchValue({
-        [controlName]: file,
-      });
-    }
+    // const input = event.target as HTMLInputElement;
+    // if (input.files && input.files.length > 0) {
+    //   const file = input.files[0];
+    //   this.vendorForm.patchValue({
+    //     [controlName]: file,
+    //   });
+    // }
+    this.utilityService.uploadFile(event, controlName, this.vendorForm);
   }
   onBlur(controler: string) {
     const query = { [controler]: this.vendorForm.get(controler)?.value };
@@ -92,7 +95,8 @@ export class VendorFormComponent implements OnDestroy {
             this.vendorForm
               .get(controler)
               ?.setErrors({ existingAccount: true });
-            this.showToastMessage(
+            this.utilityService.showToastMessage(
+              this,
               'Phones and emails cannot be linked to more than one account.',
               'Validation Error'
             );
@@ -102,45 +106,52 @@ export class VendorFormComponent implements OnDestroy {
     this.vendorSubscriptions.push(emailAndPasswordExisting);
   }
   onSubmit() {
-    this.markFormGroupTouched(this.vendorForm);
+    this.utilityService.markFormGroupTouched(this.vendorForm);
     this.loading = true;
 
-    if (this.vendorForm.valid) {
+    if (this.vendorForm.valid) 
+    {
       const from = this.createForm();
 
       const register = this.authService.register('vendors', from).subscribe(
         () => {
-          this.handleSuccess();
+          // this.handleSuccess();
+          this.utilityService.handleSuccess(this, 'Vendor created successfully. Please check your email for verification.', '/checkmail');
           this.loading = false;
         },
         (err) => {
-          this.handleError(err);
+          // this.handleError(err);
+          this.utilityService.handleError(this, err);
           this.loading = false;
         }
       );
       this.vendorSubscriptions.push(register);
     }
+    else {
+      this.utilityService.handleError(this, null);
+      this.loading = false;
+    }
   }
 
-  handleSuccess() {
-    sessionStorage.setItem('needactivation', 'true');
-    this.showToastMessage(
-      'Welcome! Redirecting to checkmail page...',
-      'vendor created successfully we sent a verification email to you please check your inbox'
-    );
-    setTimeout(() => {
-      this.router.navigateByUrl('/checkmail');
-    }, 2000);
+  // handleSuccess() {
+  //   sessionStorage.setItem('needactivation', 'true');
+  //   this.showToastMessage(
+  //     'Welcome! Redirecting to checkmail page...',
+  //     'vendor created successfully we sent a verification email to you please check your inbox'
+  //   );
+  //   setTimeout(() => {
+  //     this.router.navigateByUrl('/checkmail');
+  //   }, 2000);
 
-    this.vendorForm.reset();
-  }
-  handleError(err: any) {
-    console.log(err);
-    this.showToastMessage(
-      'Please fill out the form correctly',
-      'Validation Error'
-    );
-  }
+  //   this.vendorForm.reset();
+  // }
+  // handleError(err: any) {
+  //   console.log(err);
+  //   this.showToastMessage(
+  //     'Please fill out the form correctly',
+  //     'Validation Error'
+  //   );
+  // }
   createForm() {
     const formData = new FormData();
     for (const key in this.vendorForm.value) {
@@ -149,23 +160,23 @@ export class VendorFormComponent implements OnDestroy {
     return formData;
   }
 
-  markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach((control) => {
-      control.markAsTouched();
+  // markFormGroupTouched(formGroup: FormGroup) {
+  //   Object.values(formGroup.controls).forEach((control) => {
+  //     control.markAsTouched();
 
-      if (control instanceof FormGroup) {
-        this.markFormGroupTouched(control);
-      }
-    });
-  }
-  showToastMessage(message: string, title: string) {
-    this.toastMessage = message;
-    this.toastTitle = title;
-    this.showToast = true;
-    setTimeout(() => {
-      this.showToast = false;
-    }, 5000);
-  }
+  //     if (control instanceof FormGroup) {
+  //       this.markFormGroupTouched(control);
+  //     }
+  //   });
+  // }
+  // showToastMessage(message: string, title: string) {
+  //   this.toastMessage = message;
+  //   this.toastTitle = title;
+  //   this.showToast = true;
+  //   setTimeout(() => {
+  //     this.showToast = false;
+  //   }, 5000);
+  // }
   ngOnDestroy() {
     this.vendorSubscriptions.forEach((sub) => sub.unsubscribe());
   }

@@ -29,7 +29,8 @@ interface Data{
   phone: string | null;
   addresses: Address[];
   phones: Phone[];
-  image:string
+  image:string,
+  image_url:string
 }
 export interface ProfileUser{
   data: Data;

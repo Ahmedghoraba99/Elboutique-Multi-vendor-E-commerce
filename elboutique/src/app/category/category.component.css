@@ -25,6 +25,7 @@ a {
 .big-deal-product-data {
   background-color: #ffff;
   border-radius: 0.5rem;
+  /* height: 20rem; */
 }
 
 .big-deal-product-big-tags {
@@ -78,7 +79,7 @@ a {
   display: block;
   width: 100%;
   height: 15rem;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 1rem;
 }
 
@@ -88,6 +89,7 @@ a {
   font-weight: 500;
   color: #1a1818;
   text-overflow: ellipsis;
+  /* overflow: hidden; */
 }
 
 .big-deal-info {
@@ -117,6 +119,10 @@ a {
   white-space: wrap;
   color: #1a1818;
   text-overflow: ellipsis;
+}
+.big-deal-detail-data span {
+  height: 3rem;
+  display: inline-block;
 }
 .big-deals-header {
   flex: 1 1 0%;
@@ -149,8 +155,8 @@ a {
   color: var(--accent-color-2);
   position: relative;
 }
-.con-like-cart{
-  color:var(--accent-color-1);
+.con-like-cart {
+  color: var(--accent-color-1);
   position: relative;
 }
 
@@ -246,7 +252,7 @@ a {
   font-weight: 500;
 }
 
-.swiper-slide{
+.swiper-slide {
   padding: 5px;
 }
 
@@ -264,11 +270,11 @@ a {
   padding: 0.4rem;
   margin: 0;
 }
-.products-tag span{
+.products-tag span {
   font-size: 0.9rem;
 }
 
-.big-deal-product-big-tag-deal{
+.big-deal-product-big-tag-deal {
   background-color: red;
   text-transform: capitalize;
   padding: 6px;
@@ -279,12 +285,11 @@ a {
   left: 11px;
   transform: rotate(-45deg);
 }
-.big-deal-product-big-tag-deal span{
+.big-deal-product-big-tag-deal span {
   font-weight: 600;
-
 }
 
-.big-deal-product-big-tag-deal::after{
+.big-deal-product-big-tag-deal::after {
   content: "";
   position: absolute;
   width: 10px;
@@ -293,9 +298,8 @@ a {
   border-radius: 50%;
   top: 9px;
   right: -6px;
-
 }
-.big-deal-product-big-tag-deal::before{
+.big-deal-product-big-tag-deal::before {
   content: "";
   position: absolute;
   width: 10px;
@@ -311,21 +315,21 @@ a {
   color: #fff;
   text-shadow: none;
 }
-.filtering-section{
+.filtering-section {
   background-color: var(--accent-color-3);
-  
+  border-radius: 0px 10px 10px 0px;
 }
-.no-outline:focus ,.accordion-button:not(.collapsed) {
+.no-outline:focus,
+.accordion-button:not(.collapsed) {
   outline: none;
   box-shadow: none;
   background-color: var(--accent-color-2);
   color: var(--accent-color-3);
 }
-.accordion-item{
+.accordion-item {
   margin: 2rem 0rem;
 }
 
-::placeholder{
+::placeholder {
   color: #1a18184f;
-  
 }

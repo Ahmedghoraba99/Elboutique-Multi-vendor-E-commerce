@@ -1,54 +1,55 @@
 .products-data {
-    background-color: #ffff;
-    border-radius: 0.5rem;
+  background-color: #ffff;
+  border-radius: 0.5rem;
 }
 .products-detail-data {
-    line-height: 1.5;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #1a1818;
-    text-overflow: ellipsis;
-  }
-  a {
-    cursor: pointer;
-    color: #1a1818;
-  }
-  
-  .big-deal-product-swiper {
-    width: 100%;
-  }
-  .products-slider{
-    margin-bottom: 1rem;
-  }
-  .big-deal-product-swiper-slider img {
-    display: block;
-    width: 100%;
-    height: 15rem;
-    object-fit: cover;
-    border-radius: 1rem;
-    padding: 5px;
-  }
-  .products-tag {
-    margin: 1rem;
-    overflow: hidden;
-    display: flex;
-    -moz-box-align: center;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    color: #ffff;
-    padding: 0.4rem;
-    margin: 0;
-  }
-  .products-tag span{
-    font-size: 0.9rem;
-  }
-  
-.big-deals-btn a{
-    font-size: 1.2rem;
-    font-weight:500;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1818;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+a {
+  cursor: pointer;
+  color: #1a1818;
+}
+
+.big-deal-product-swiper {
+  width: 100%;
+}
+.products-slider {
+  margin-bottom: 1rem;
+}
+.big-deal-product-swiper-slider img {
+  display: block;
+  width: 100%;
+  height: 15rem;
+  object-fit: cover;
+  border-radius: 1rem;
+  padding: 5px;
+}
+.products-tag {
+  margin: 1rem;
+  overflow: hidden;
+  display: flex;
+  -moz-box-align: center;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  color: #ffff;
+  padding: 0.4rem;
+  margin: 0;
+}
+.products-tag span {
+  font-size: 0.9rem;
+}
+
+.big-deals-btn a {
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 .big-deal-price-span strong {
   font-weight: 600;
@@ -70,13 +71,16 @@
 }
 
 /*  */
-
+.products-detail-data span {
+  height: 3rem;
+  display: inline-block;
+}
 .con-like {
   color: var(--accent-color-2);
   position: relative;
 }
-.con-like-cart{
-  color:var(--accent-color-1);
+.con-like-cart {
+  color: var(--accent-color-1);
   position: relative;
 }
 
@@ -130,13 +134,11 @@
   }
 }
 
-
-.seemorelink{
+.seemorelink {
   margin-right: 1.4rem;
 }
 @media only screen and (max-width: 450) {
- 
-  .seemorelink{
+  .seemorelink {
     margin-right: none;
   }
 }
