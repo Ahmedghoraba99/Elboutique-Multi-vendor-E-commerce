@@ -50,6 +50,11 @@
                 <td>{{ product.vendorName }}</td>
                 <td>{{ product.stock }}</td>
                 <td>
+                    <button type="button" (click)="toggleFeaturedStatus(product)" pButton pRipple
+                        [icon]="product.is_featured ? 'pi pi-star-fill' : 'pi pi-star'"
+                        class=" p-button-rounded p-button-primary mr-2">
+                        <span class="visually-hidden">Featured</span>
+                    </button>
                     <button type="button" pButton pRipple icon="pi pi-eye" (click)="showProductDialog(product)"
                         class="p-button-rounded p-button-secondary mr-2">
                         <span class="visually-hidden">View Product</span>
@@ -135,7 +140,7 @@
                             <td colspan="2"><strong>Images:</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="2">
+                            <td colspan="2" class=" d-flex flex-wrap gap-3">
                                 <div *ngFor="let image of selectedProduct.images">
                                     <img [src]="image.image_url" [alt]="selectedProduct.name" title="image" width="200"
                                         height="200">

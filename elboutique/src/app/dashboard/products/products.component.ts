@@ -119,6 +119,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
           }));
           this.totalItems = response.total;
           this.paginationLinks = response.links;
+          console.log(this.products);
         },
         error: (error) => {
           console.error('Error fetching products:', error);
@@ -186,6 +187,44 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private getVendorName(vendorId: number): string {
     const vendor = this.vendors.find((ven) => ven.id === vendorId);
     return vendor ? vendor.name : '-';
+  }
+  toggleFeaturedStatus(product: any): void {
+    const updatedStatus = !product.is_featured;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to change the status of this product?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#270949',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, change it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productsSubscriptions.push(
+          this.productService
+            .updateFeaturedStatus(product.id, updatedStatus)
+            .subscribe({
+              next: () => {
+                this.getProducts();
+                Swal.fire(
+                  'Updated!',
+                  'The product status has been updated.',
+                  'success'
+                );
+              },
+              error: (error) => {
+                console.error('Error updating product status:', error);
+                Swal.fire(
+                  'Error!',
+                  'There was an error updating the product status.',
+                  'error'
+                );
+              },
+            })
+        );
+      }
+    });
   }
 
   loadPage(page: number): void {
