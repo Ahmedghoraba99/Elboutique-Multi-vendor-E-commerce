@@ -72,6 +72,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           });
           this.totalItems = response.total;
           this.loading = false;
+          console.log(this.orders);
         },
         error: (error: any) => console.error('Error loading orders', error),
       })
