@@ -33,7 +33,9 @@ class PayPalController extends Controller
 
     public function cancel()
     {
-        return response()->json(['message' => 'Payment Cancelled'], 482);
+        $frontEndUrl = $this->getFrontendUrl();
+        return redirect($frontEndUrl . '?success=false');
+        // return response()->json(['message' => 'Payment Cancelled'], 482);
     }
 
     public function success(Request $request)
@@ -47,13 +49,15 @@ class PayPalController extends Controller
                 'payment_status' => 'finished',
                 'transaction_id' => $response['PAYERID']
             ]);
+            return response()->view('response', [], 200);
+            // return redirect($frontEndUrl . '?success=true');
 
-            return redirect($frontEndUrl . '?success=true');
         }
         $order->update([
             'payment_status' => "failed",
             'transaction_id' => $response['PAYERID']
         ]);
+
         return redirect($frontEndUrl . '?success=false');
     }
 
