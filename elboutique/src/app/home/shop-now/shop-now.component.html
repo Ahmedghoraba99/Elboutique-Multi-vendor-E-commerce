@@ -2,7 +2,7 @@
   <div class="row">
     <div class="row">
       <div class="shop-now-header my-2">
-        <h2 class="fw-bold ">Shop Now</h2>
+        <h2 class="fw-bold">Shop Now</h2>
       </div>
       <div class="shop-now-slider my-4">
         <div class="swiper mySwiper shop-now-swiper">
@@ -17,21 +17,21 @@
                 }
                 ,
                 "780":{
-                  "slidesPerView": 5,
+                  "slidesPerView": 6,
                   "spaceBetween":0
                 }
               }'
             >
               @for(item of categories ; track item.id){
-                <swiper-slide class="swiper-slide shop-now-swiper-slider">
-                  <span>{{ item.name }}</span>
-                  <a routerLink="/categories/{{ item.id }}">
-                    <img
-                      src="http://localhost:8000/storage/{{ item.image }}"
-                      alt="{{ item.name }}"
-                    />
-                  </a>
-                </swiper-slide>
+              <swiper-slide class="swiper-slide shop-now-swiper-slider">
+                <span>{{ item.name }}</span>
+                <a routerLink="/categories/{{ item.id }}">
+                  <img
+                    src="http://localhost:8000/storage/{{ item.image }}"
+                    alt="{{ item.name }}"
+                  />
+                </a>
+              </swiper-slide>
               }
             </swiper-container>
           </div>

@@ -22,7 +22,7 @@
             <div class="col form-group">
                 <label for="name">First Name</label>
                 <input type="text" class="form-control" id="name" formControlName="name"
-                    placeholder="Enter your first name" aria-label="First Name" [(ngModel)]="user.data.name">
+                    placeholder="Enter your first name" aria-label="First Name" [(ngModel)]="user!.data.name">
                 <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="text-danger">
                     First name is required and must be at least 2 characters.
                 </div>
@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="text" class="form-control" id="email" formControlName="email"
-                    placeholder="Enter your email" aria-label="Email" [(ngModel)]="user.data.email">
+                    placeholder="Enter your email" aria-label="Email" [(ngModel)]="user!.data!.email">
                 <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger">
                     Email is required and must be a valid email address.
                 </div>
