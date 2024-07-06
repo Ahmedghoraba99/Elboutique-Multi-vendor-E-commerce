@@ -185,7 +185,7 @@
                 <div class="checkout-btn text-center my-4">
                   <button
                     #checkout
-                    class="btn"
+                    class="btn w-75"
                     type="submit"
                     (click)="CreateOrder(checkout)"
                   >
@@ -193,17 +193,17 @@
                   </button>
                   <button
                     #paypal
-                    class="btn paypal mt-3"
+                    class="btn paypal mt-3 w-75"
                     (click)="CreateOrder(paypal)"
                   >
-                    Pay By PayPal
+                    <i class="fa-brands fa-cc-paypal"></i> PayPal
                   </button>
                   <button
-                    #paymob
-                    class="btn paypal mt-3"
-                    (click)="CreateOrder(paymob)"
+                    #credit
+                    class="btn paypal mt-3 w-75"
+                    (click)="CreateOrder(credit)"
                   >
-                    Pay By PayMob
+                    <i class="fa-regular fa-credit-card"></i> Credit Card
                   </button>
                 </div>
               </div>
