@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CustomerService } from '../../service/admin/customer.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -12,6 +12,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -32,7 +34,7 @@ import { Table, TableModule } from 'primeng/table';
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table | undefined;
 
   customers: any[] = [];
@@ -41,6 +43,7 @@ export class UsersComponent implements OnInit {
   selectedCustomers: any[] = [];
   page: number = 1;
   loading = true;
+  private customerSubscriptions: Subscription[] = [];
   constructor(private customerService: CustomerService) {}
 
   ngOnInit(): void {
@@ -48,21 +51,23 @@ export class UsersComponent implements OnInit {
   }
   loadCustomers() {
     this.loading = true;
-    this.customerService.getCustomers().subscribe((data) => {
-      this.customers = data.map((customer) => ({
-        ...customer,
-        phone:
-          customer.phones.length > 0 ? customer.phones[0].phoneNumper : null,
-        addresses: customer.addresses
-          .map(
-            (address: any) =>
-              `${address.street}, ${address.city}, ${address.governorate}`
-          )
-          .join(', '),
-      }));
-      this.totalItems = data.length;
-      this.loading = false;
-    });
+    this.customerSubscriptions.push(
+      this.customerService.getCustomers().subscribe((data) => {
+        this.customers = data.map((customer) => ({
+          ...customer,
+          phone:
+            customer.phones.length > 0 ? customer.phones[0].phoneNumper : null,
+          addresses: customer.addresses
+            .map(
+              (address: any) =>
+                `${address.street}, ${address.city}, ${address.governorate}`
+            )
+            .join(', '),
+        }));
+        this.totalItems = data.length;
+        this.loading = false;
+      })
+    );
   }
   onFilter(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -79,22 +84,28 @@ export class UsersComponent implements OnInit {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.customerService.deleteCustomer(id).subscribe({
-          next: () => {
-            this.customers = this.customers.filter(
-              (customer) => customer.id !== id
-            );
-            Swal.fire('Deleted!', 'Customer has been deleted.', 'success');
-          },
-          error: () => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the customer.',
-              'error'
-            );
-          },
-        });
+        this.customerSubscriptions.push(
+          this.customerService.deleteCustomer(id).subscribe({
+            next: () => {
+              this.customers = this.customers.filter(
+                (customer) => customer.id !== id
+              );
+              Swal.fire('Deleted!', 'Customer has been deleted.', 'success');
+            },
+            error: () => {
+              Swal.fire(
+                'Error!',
+                'There was an error deleting the customer.',
+                'error'
+              );
+            },
+          })
+        );
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.customerSubscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

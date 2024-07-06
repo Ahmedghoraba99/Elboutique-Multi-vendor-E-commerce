@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { CategoryService } from '../../service/admin/category.service';
 import {
@@ -18,6 +18,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-category',
   standalone: true,
@@ -39,8 +41,9 @@ import { Table, TableModule } from 'primeng/table';
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table | undefined;
+  private categorySubscriptions: Subscription[] = [];
 
   categories: any[] = [];
   page = 1;
@@ -63,19 +66,21 @@ export class CategoryComponent {
     this.dt?.filterGlobal(inputElement.value, 'contains');
   }
   getCategories(): void {
-    this.categoryService.getCategories(this.page, this.pageSize).subscribe({
-      next: (response) => {
-        this.categories = response.data;
-        this.totalItems = response.total;
-        this.paginationLinks = response.links;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.loading = false;
+    this.categorySubscriptions.push(
+      this.categoryService.getCategories(this.page, this.pageSize).subscribe({
+        next: (response) => {
+          this.categories = response.data;
+          this.totalItems = response.total;
+          this.paginationLinks = response.links;
+          this.loading = false;
+        },
+        error: (error) => {
+          this.loading = false;
 
-        console.error('Error fetching categories:', error);
-      },
-    });
+          console.error('Error fetching categories:', error);
+        },
+      })
+    );
   }
 
   deleteCategory(id: number): void {
@@ -89,19 +94,21 @@ export class CategoryComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.categoryService.deleteCategory(id).subscribe({
-          next: () => {
-            this.getCategories();
-            Swal.fire('Deleted!', 'Category has been deleted.', 'success');
-          },
-          error: () => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the category.',
-              'error'
-            );
-          },
-        });
+        this.categorySubscriptions.push(
+          this.categoryService.deleteCategory(id).subscribe({
+            next: () => {
+              this.getCategories();
+              Swal.fire('Deleted!', 'Category has been deleted.', 'success');
+            },
+            error: () => {
+              Swal.fire(
+                'Error!',
+                'There was an error deleting the category.',
+                'error'
+              );
+            },
+          })
+        );
       }
     });
   }
@@ -136,29 +143,37 @@ export class CategoryComponent {
       }
       formData.append('_method', 'PUT');
 
-      this.categoryService
-        .editCategory(this.selectedCategory.id, formData)
-        .subscribe({
+      this.categorySubscriptions.push(
+        this.categoryService
+          .editCategory(this.selectedCategory.id, formData)
+          .subscribe({
+            next: () => {
+              this.getCategories();
+              this.modalService.dismissAll();
+              Swal.fire('Category updated successfully', '', 'success');
+            },
+            error: (error) => {
+              Swal.fire('Oops...', 'Something went wrong!', 'error');
+              console.error('Error editing category:', error);
+              // Handle error feedback to the user, e.g., using a toast or alert
+            },
+          })
+      );
+    } else {
+      this.categorySubscriptions.push(
+        this.categoryService.addCategory(this.selectedCategory).subscribe({
           next: () => {
             this.getCategories();
             this.modalService.dismissAll();
+            Swal.fire('Category added successfully', '', 'success');
           },
           error: (error) => {
-            console.error('Error editing category:', error);
+            Swal.fire('Oops...', 'Error adding category' + error, 'error');
+            console.error('Error adding category:', error);
             // Handle error feedback to the user, e.g., using a toast or alert
           },
-        });
-    } else {
-      this.categoryService.addCategory(this.selectedCategory).subscribe({
-        next: () => {
-          this.getCategories();
-          this.modalService.dismissAll();
-        },
-        error: (error) => {
-          console.error('Error adding category:', error);
-          // Handle error feedback to the user, e.g., using a toast or alert
-        },
-      });
+        })
+      );
     }
   }
 
@@ -182,5 +197,11 @@ export class CategoryComponent {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.categorySubscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
   }
 }
