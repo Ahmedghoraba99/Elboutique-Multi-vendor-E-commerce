@@ -101,7 +101,8 @@ class OrderController extends Controller
             return response()->json(["message"=> "Customer Doesn't exist"],404);
         }
         $this->authorize('getUserOrders', $customer);
-        $orders = Order::where('customer_id',$id)->with(['products','products.images'])->get();
+        $orders = Order::where('customer_id',$id)->with(['products','products.images','customers'])->get();
+
         return response()->json(["orders"=>$orders]);
     }
 
