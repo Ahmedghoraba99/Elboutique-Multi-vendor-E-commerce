@@ -36,10 +36,10 @@ export class UserComponent {
       icon: '<i class="fa-solid fa-comment-dots"></i>',
       name: 'My Reviews',
     },
-    {
-      path: 'payment',
-      icon: '<i class="fa-solid fa-credit-card"></i>',
-      name: 'My Payment',
-    },
+    // {
+    //   path: 'payment',
+    //   icon: '<i class="fa-solid fa-credit-card"></i>',
+    //   name: 'My Payment',
+    // },
   ];
 }

@@ -68,6 +68,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.productsReports = response.data;
           this.loading = false;
+          console.log('getProducts', this.productsReports);
         },
         error: (error) => {
           console.log(error);
@@ -85,7 +86,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Yes, ban !',
     }).then((result) => {
       if (result.isConfirmed) {
         this.reportsSubscriptions.push(

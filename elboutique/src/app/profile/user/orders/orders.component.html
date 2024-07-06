@@ -28,55 +28,40 @@
   <div class="order-item">
     <div class="d-flex">
       <div class="order-img">
-        <img
-          [src]="'http://localhost:8000/storage/' + product.images[0].image"
-          alt="{{ product.name }}"
-        />
+        <img [src]="'http://localhost:8000/storage/' + product.images[0].image" alt="{{ product.name }}" />
       </div>
       <div class="order-details">
         <div class="d-flex justify-content-between">
           <h6>{{ product.name }}</h6>
           <!-- <button type="button"  -->
-          <button
-            type="button"
-            class="view-product btn btn-link p-0 border-0"
-            [routerLink]="['/products', product.id]"
-          >
-            <i class="fa-solid fa-eye primary-color"></i> View Product
+          <button type="button" class="view-product btn btn-link border-0" [routerLink]="['/products', product.id]">
+            <i class="fa-solid fa-eye primary-color"></i> <span class="d-none d-lg-inline">View Product</span>
           </button>
         </div>
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
           <p>{{ product.price }} EGP</p>
           <p class="ms-3 fw-bold">
             x <span>{{ product.pivot.quantity }}</span>
           </p>
           @if (order.status === "arrived") {
-          <i
-            class="ms-3 fa-regular fa-flag fs-5 report-flag"
-            data-bs-toggle="modal"
-            data-bs-target="#reportProduct"
-            (click)="updateProduct(product.id)"
-            ><span class="report-text">report</span></i
-          >
+          <i class="ms-3 fa-regular fa-flag fs-5 report-flag" data-bs-toggle="modal" data-bs-target="#reportProduct"
+            (click)="updateProduct(product.id)"><span class="report-text mx-2">report</span></i>
           }
         </div>
-        <p class="text-muted m-0">
+        <p class="text-muted m-0 desc">
           {{ product.description }}
         </p>
 
-        @if (order.status === "arrived") {
-        <button
-          class="Btn header me-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalId"
-          (click)="updateProduct(product.id)"
-        >
-          <i class="fa-solid fa-comment-dots"></i>
-          <div class="text">Review</div>
-        </button>
-        }
+
       </div>
     </div>
+    @if (order.status === "arrived") {
+    <button type="button" class="Btn header me-2" data-bs-toggle="modal" data-bs-target="#modalId"
+      (click)="updateProduct(product.id)">
+      <i class="fa-solid fa-comment-dots"></i>
+      <div class="text ms-2">Review</div>
+    </button>
+    }
   </div>
   }
 </div>
@@ -96,8 +81,5 @@
 </div>
 }
 
-<app-add-review
-  [product_id]="productId"
-  [customer_id]="getUser()"
-></app-add-review>
+<app-add-review [product_id]="productId" [customer_id]="getUser()"></app-add-review>
 <app-add-report-product [productId]="productId"></app-add-report-product>
