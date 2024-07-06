@@ -122,7 +122,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
       delete this.filters.max_price;
       delete this.filters.min_price;
     }
-    this.filters.vendor_id =this.tags.filter(vendor => vendor.selected).map(vendor => vendor.id)
+    this.filters.vendors =this.vendors.filter(vendor => vendor.selected).map(vendor => vendor.id).join(',');
+    console.log(this.filters);
         this.searchProducts();
   }
 
