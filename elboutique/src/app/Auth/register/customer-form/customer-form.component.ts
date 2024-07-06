@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
 import { ToastComponent } from '../../../widgets/toast/toast.component';
 import { Subscription } from 'rxjs';
+import { UtilityService } from '../../../service/utility.service';
 
 @Component({
   selector: 'app-customer-form',
@@ -31,7 +32,8 @@ export class CustomerFormComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private utilityService: UtilityService
   ) {
     this.customerForm = this.fb.nonNullable.group(
       {
@@ -111,7 +113,8 @@ export class CustomerFormComponent implements OnDestroy {
             this.customerForm
               .get(controler)
               ?.setErrors({ existingAccount: true });
-            this.showToastMessage(
+            this.utilityService.showToastMessage(
+              this,
               'Phones and emails cannot be linked to more than one account.',
               'Validation Error'
             );
@@ -121,46 +124,56 @@ export class CustomerFormComponent implements OnDestroy {
     this.customerSubscriptions.push(emailAndPasswordExisting);
   }
   onSubmit() {
-    this.markFormGroupTouched(this.customerForm);
+    // this.markFormGroupTouched(this.customerForm);
+    this.utilityService.markFormGroupTouched(this.customerForm);
     this.loading = true;
 
     if (this.customerForm.valid) {
       const from = this.createForm();
       const register = this.authService.register('customers', from).subscribe(
         (res) => {
-          console.log('Vendor Form Data:', res);
+          // console.log('Vendor Form Data:', res);
+          this.utilityService.handleSuccess(
+            this,
+            'Customer created successfully. Please check your email for verification.',
+            '/checkmail'
+          );
           this.loading = false;
 
-          this.handleSuccess();
+          // this.handleSuccess();
         },
         (err) => {
           this.loading = false;
-          this.handleError(err);
+          // this.handleError(err);
+          this.utilityService.handleError(this, err);
         }
       );
       this.customerSubscriptions.push(register);
+    } else {
+      this.utilityService.handleError(this, null);
+      this.loading = false;
     }
   }
 
-  handleSuccess() {
-    sessionStorage.setItem('needactivation', 'true');
-    this.showToastMessage(
-      'Welcome! Redirecting to checkmail page...',
-      'customer created successfully we sent a verification email to you please check your inbox'
-    );
-    setTimeout(() => {
-      this.router.navigateByUrl('/checkmail');
-    }, 2000);
+  // handleSuccess() {
+  //   sessionStorage.setItem('needactivation', 'true');
+  //   this.showToastMessage(
+  //     'Welcome! Redirecting to checkmail page...',
+  //     'customer created successfully we sent a verification email to you please check your inbox'
+  //   );
+  //   setTimeout(() => {
+  //     this.router.navigateByUrl('/checkmail');
+  //   }, 2000);
 
-    this.customerForm.reset();
-  }
-  handleError(err: any) {
-    console.log(err);
-    this.showToastMessage(
-      'Please fill out the form correctly',
-      'Validation Error'
-    );
-  }
+  //   this.customerForm.reset();
+  // }
+  // handleError(err: any) {
+  //   console.log(err);
+  //   this.showToastMessage(
+  //     'Please fill out the form correctly',
+  //     'Validation Error'
+  //   );
+  // }
 
   createForm() {
     const formData = new FormData();
@@ -184,13 +197,14 @@ export class CustomerFormComponent implements OnDestroy {
     return formData;
   }
   onFileSelected(event: any, controlName: string) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.customerForm.patchValue({
-        [controlName]: file,
-      });
-    }
+    // const input = event.target as HTMLInputElement;
+    // if (input.files && input.files.length > 0) {
+    //   const file = input.files[0];
+    //   this.customerForm.patchValue({
+    //     [controlName]: file,
+    //   });
+    // }
+    this.utilityService.uploadFile(event, controlName, this.customerForm);
   }
 
   markFormGroupTouched(formGroup: FormGroup) {

@@ -13,6 +13,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CartService } from '../../service/cart.service';
 import { WishlistService } from '../../service/wishlist.service';
+import { UtilityService } from '../../service/utility.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,7 @@ import { WishlistService } from '../../service/wishlist.service';
   ],
 })
 export class LoginComponent implements OnDestroy, OnInit {
-  private loginSubscriptions: Subscription[]=[];
+  private loginSubscriptions: Subscription[] = [];
   currentStep = 0;
   loginForm: FormGroup;
   showToast = false;
@@ -41,7 +42,8 @@ export class LoginComponent implements OnDestroy, OnInit {
     private authService: AuthService,
     private router: Router,
     private cartService: CartService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private utilityService: UtilityService
   ) {
     this.loginForm = this.fb.group({
       userType: ['', Validators.required],
@@ -79,7 +81,11 @@ export class LoginComponent implements OnDestroy, OnInit {
   }
   nextStep() {
     if (this.currentStep === 0 && !this.loginForm.controls['userType'].valid) {
-      this.showToastMessage('Please select a user type', 'Validation Error');
+      this.utilityService.showToastMessage(
+        this,
+        'Please select a user type',
+        'Validation Error'
+      );
       return;
     }
     if (
@@ -87,7 +93,8 @@ export class LoginComponent implements OnDestroy, OnInit {
       (!this.loginForm.controls['email'].valid ||
         !this.loginForm.controls['password'].valid)
     ) {
-      this.showToastMessage(
+      this.utilityService.showToastMessage(
+        this,
         'Please enter valid email and password',
         'Validation Error'
       );
@@ -111,11 +118,12 @@ export class LoginComponent implements OnDestroy, OnInit {
         .login(email, password, userType)
         .subscribe({
           next: (response: any) => this.handleSuccess(response),
-          error: (error: any) => this.handleError(error),
+          error: (error: any) => this.utilityService.handleError(this, error),
         });
       this.loginSubscriptions.push(loginSubscription);
     } else {
-      this.showToastMessage(
+      this.utilityService.showToastMessage(
+        this,
         'Please fill out the form correctly',
         'Validation Error'
       );
@@ -150,17 +158,23 @@ export class LoginComponent implements OnDestroy, OnInit {
     this.notfayNavBar();
 
     if (response.role === 'admin') {
-      this.showToastMessage(
+      this.utilityService.showToastMessage(
+        this,
         'Welcome! Redirecting to admin dashboard...',
         'Success'
       );
     } else if (response.role === 'vendor') {
-      this.showToastMessage(
+      this.utilityService.showToastMessage(
+        this,
         'Welcome! Redirecting to vendor dashboard...',
         'Success'
       );
     } else {
-      this.showToastMessage('Welcome! Redirecting to home page...', 'Success');
+      this.utilityService.showToastMessage(
+        this,
+        'Welcome! Redirecting to home page...',
+        'Success'
+      );
     }
     console.log(response);
 
@@ -171,10 +185,6 @@ export class LoginComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/v');
       } else this.navigateToRoot();
     }, 3000);
-  }
-  handleError(error: any) {
-    console.log(error);
-    this.showToastMessage('Login failed. Please try again.', 'Error');
   }
 
   showToastMessage(message: string, title: string) {
