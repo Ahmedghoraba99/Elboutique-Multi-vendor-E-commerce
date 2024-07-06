@@ -129,6 +129,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       .filter((vendor) => vendor.selected)
       .map((vendor) => vendor.id)
       .join(',');
+      if (this.filters.vendors === '') delete this.filters.vendors;
     this.searchProducts();
   }
 
