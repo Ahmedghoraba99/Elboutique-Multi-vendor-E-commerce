@@ -199,13 +199,14 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             const { id } = res.order;
             this.addProducts(id);
             this.clearCart();
+            this.cartService.clearCart();
 
             if (paymentType.innerText === 'CKECKOUT') {
               this.successOrderCreatedAlert();
               this.customerCart = [];
-            } else if (paymentType.innerText === 'PAY BY PAYPAL') {
+            } else if (paymentType.innerText.includes('PAYPAL')) {
               this.paypalPayment(id, sentBody.total);
-            } else if (paymentType.innerText === 'PAY BY PAYMOB') {
+            } else if (paymentType.innerText.includes('CREDIT')) {
               this.payMobPayment(id, sentBody.total);
             }
           },
@@ -248,14 +249,35 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.paybalSub = this.paymentService
       .payByPayPal({ total, order_id })
       .subscribe((res) => {
-        window.location.href = res.paypal_link;
+        const paymentUrl = res.paypal_link;
+        const windowFeatures = `width=600,height=600,left=${
+          window.screenLeft + (window.innerWidth - 600) / 2
+        },top=${window.screenTop + (window.innerHeight - 600) / 2}`;
+        const paymentWindow = window.open(paymentUrl, '_blank', windowFeatures);
+        if (!paymentWindow) {
+          // Handle the case where the popup was blocked by the browser
+          alert(
+            'Payment window was blocked by the browser. Please allow popups and try again.'
+          );
+        }
       });
   }
+
   payMobPayment(order_id: number, total: number) {
     this.paybalSub = this.paymentService
       .payByPayMob({ order_id, total })
       .subscribe((res) => {
-        window.location.href = `https://accept.paymob.com/api/acceptance/iframes/854400?payment_token=${res.token}`;
+        const paymentUrl = `https://accept.paymob.com/api/acceptance/iframes/853869?payment_token=${res.token}`;
+        const windowFeatures = `width=600,height=600,left=${
+          window.screenLeft + (window.innerWidth - 600) / 2
+        },top=${window.screenTop + (window.innerHeight - 600) / 2}`;
+        const paymentWindow = window.open(paymentUrl, '_blank', windowFeatures);
+        if (!paymentWindow) {
+          // Handle the case where the popup was blocked by the browser
+          alert(
+            'Payment window was blocked by the browser. Please allow popups and try again.'
+          );
+        }
       });
   }
   getShippingPrice() {

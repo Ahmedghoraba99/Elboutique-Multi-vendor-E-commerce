@@ -7,7 +7,7 @@
 @else {
 <div class="card overflow-auto">
     <p-table #dt class="p-datatable" [value]="products" [rows]="pageSize" [paginator]="false"
-        [globalFilterFields]="['name', 'categoryName', 'vendorName']" [tableStyle]="{'min-width': '75rem'}"
+        [globalFilterFields]="['id', 'name', 'categoryName', 'vendorName']" [tableStyle]="{'min-width': '75rem'}"
         [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
         [totalRecords]="totalItems">
@@ -140,7 +140,7 @@
                             <td colspan="2"><strong>Images:</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="2" class=" d-flex flex-wrap gap-3">
+                            <td class=" d-flex flex-wrap gap-3">
                                 <div *ngFor="let image of selectedProduct.images">
                                     <img [src]="image.image_url" [alt]="selectedProduct.name" title="image" width="200"
                                         height="200">
