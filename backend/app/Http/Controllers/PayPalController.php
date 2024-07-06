@@ -1,5 +1,5 @@
 <?php
- 
+
 
 namespace App\Http\Controllers;
 
@@ -19,7 +19,7 @@ class PayPalController extends Controller
 
     public function createPayment(PaymentRequest $request)
     {
-       
+
         $data = $this->getPaymentData($request);
 
         $response = $this->payPalService->createPayment($data);
@@ -40,10 +40,10 @@ class PayPalController extends Controller
 
     public function success(Request $request)
     {
-        
+
         $response = $this->payPalService->getPaymentDetails($request->token);
         $frontEndUrl = $this->getFrontendUrl();
-        $order = Order::find($response['INVNUM']) ;
+        $order = Order::find($response['INVNUM']);
         if ($this->isPaymentSuccessful($response)) {
             $order->update([
                 'payment_status' => 'finished',
@@ -51,12 +51,12 @@ class PayPalController extends Controller
             ]);
             return response()->view('response', [], 200);
             // return redirect($frontEndUrl . '?success=true');
-            
+
         }
-            $order->update([
-                    'payment_status' => "failed",
-                    'transaction_id' => $response['PAYERID']
-                ]);
+        $order->update([
+            'payment_status' => "failed",
+            'transaction_id' => $response['PAYERID']
+        ]);
 
         return redirect($frontEndUrl . '?success=false');
     }
@@ -85,8 +85,7 @@ class PayPalController extends Controller
 
     private function getFrontendUrl()
     {
-     
-        return env('frontend_url') . '/checkout';
+        return env('FRONTEND_URL') . '/checkout';
     }
 
 
@@ -95,4 +94,3 @@ class PayPalController extends Controller
         return in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING']);
     }
 }
-
