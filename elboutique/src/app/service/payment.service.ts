@@ -6,11 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PaymentService {
-  private baseUrl = 'http://127.0.0.1:8000/api/payment';
-
+  private payPalUrl = 'http://127.0.0.1:8000/api/payment';
+  private payMobUrl = 'http://127.0.0.1:8000/api/getway-checkout';
   constructor(private http: HttpClient) {}
 
   payByPayPal(body: Object): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, body);
+    return this.http.post(`${this.payPalUrl}`, body);
+  }
+
+  payByPayMob(body: Object): Observable<any> {
+    return this.http.post(`${this.payMobUrl}`, body);
   }
 }

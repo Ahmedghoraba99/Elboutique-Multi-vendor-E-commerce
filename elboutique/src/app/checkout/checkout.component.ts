@@ -183,53 +183,43 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.getShippingPrice() -
         this.getDiscountedAmount(),
     };
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to Make this Order !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#270949',
+      cancelButtonColor: '#f95b3d',
+      confirmButtonText: 'Yes, Make it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+          next: (res: any) => {
+            const { id } = res.order;
+            this.addProducts(id);
+            this.clearCart();
 
-    if (paymentType.innerText === 'CKECKOUT') {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to Make this Order !',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#270949',
-        cancelButtonColor: '#f95b3d',
-        confirmButtonText: 'Yes, Make it!',
-        cancelButtonText: 'No, cancel!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
-            next: (res: any) => {
-              const { id } = res.order;
-              this.addProducts(id);
-              this.clearCart();
+            if (paymentType.innerText === 'CKECKOUT') {
               this.successOrderCreatedAlert();
               this.customerCart = [];
-            },
-            error: (error) => {
-              console.error('Error making order:', error);
-              Swal.fire(
-                'Error!',
-                'There was an error making the order.',
-                'error'
-              );
-            },
-          });
-        }
-      });
-    } else if (paymentType.innerText === 'PAY BY PAYPAL') {
-      this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
-        next: (res) => {
-          const { id } = res.order;
-          this.addProducts(id);
-          this.clearCart();
-          this.paypalPayment(id, sentBody.total);
-          // this.customerCart = [];
-        },
-        error: (err) => {
-          console.error('Error making order:', err);
-          Swal.fire('Error!', 'There was an error making the order.', 'error');
-        },
-      });
-    }
+            } else if (paymentType.innerText === 'PAY BY PAYPAL') {
+              this.paypalPayment(id, sentBody.total);
+            } else if (paymentType.innerText === 'PAY BY PAYMOB') {
+              this.payMobPayment(id, sentBody.total);
+            }
+          },
+          error: (error) => {
+            console.error('Error making order:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error making the order.',
+              'error'
+            );
+          },
+        });
+      }
+    });
   }
   addProducts(id: number) {
     const orderProductBody: any = {
@@ -238,8 +228,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.customerCart.forEach((product: any) => {
       orderProductBody.products[`${product.id}`] = product.cart_table.quantity;
     });
-    // console.log('Order Product Body', orderProductBody);
-
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)
       .subscribe((res) => {
@@ -261,6 +249,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       .payByPayPal({ total, order_id })
       .subscribe((res) => {
         window.location.href = res.paypal_link;
+      });
+  }
+  payMobPayment(order_id: number, total: number) {
+    this.paybalSub = this.paymentService
+      .payByPayMob({ order_id, total })
+      .subscribe((res) => {
+        window.location.href = `https://accept.paymob.com/api/acceptance/iframes/854400?payment_token=${res.token}`;
       });
   }
   getShippingPrice() {
