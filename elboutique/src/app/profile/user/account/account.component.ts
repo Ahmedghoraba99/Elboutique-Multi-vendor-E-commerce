@@ -38,7 +38,9 @@ export class AccountComponent implements OnInit {
     this.authService.getUserDataObservable().subscribe(
       (data) => {
         this.user = data;
-        this.profileImage = this.user.data.image;
+        this.profileImage = this.user?.data?.image_url;
+        // console.log(this.user);
+
         this.initForm();
         // console.log(this.user.data);
     });
@@ -48,11 +50,11 @@ export class AccountComponent implements OnInit {
   initForm() {
     this.profileForm = this.fb.group({
       name: [
-        { value: this.user.data.name, disabled: true },
+        { value: this.user?.data?.name, disabled: true },
         [Validators.required, Validators.minLength(2)],
       ],
       email: [
-        { value: this.user.data.email, disabled: true },
+        { value: this.user?.data?.email, disabled: true },
         [Validators.required, Validators.email],
       ],
       ...this.user.data.phones.reduce((acc: any, phone, index) => {
