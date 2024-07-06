@@ -52,8 +52,6 @@ export class ReportListComponent implements OnInit{
     this.report_id = report.id;
     console.log(this.report_id);
     console.log(this.reason);
-
-
   }
 
   deleteReview(id:number){
@@ -62,10 +60,6 @@ export class ReportListComponent implements OnInit{
   comnfirmDeleteReview(){
     this.reportService.deleteReview(this.id).subscribe(
       response => {
-        this.successMessage = 'Report deleted successfully';
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 3000);
         this.loadReviews();
       }
     );
