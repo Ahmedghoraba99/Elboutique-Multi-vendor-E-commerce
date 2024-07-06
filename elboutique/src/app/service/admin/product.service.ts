@@ -24,12 +24,15 @@ export class ProductService {
   }
 
   updateProduct(id: number, productData: FormData): Observable<any> {
-    console.log(productData);
-
     return this.http.put(`${this.apiUrl}/${id}`, productData);
   }
 
   deleteProduct(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+  updateFeaturedStatus(id: number, isFeatured: boolean): Observable<any> {
+    const url = `${this.apiUrl}/${id}`;
+    const data = { is_featured: isFeatured };
+    return this.http.patch(url, data);
   }
 }

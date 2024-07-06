@@ -1,5 +1,5 @@
 <?php
- 
+
 
 namespace App\Http\Controllers;
 
@@ -19,7 +19,7 @@ class PayPalController extends Controller
 
     public function createPayment(PaymentRequest $request)
     {
-       
+
         $data = $this->getPaymentData($request);
 
         $response = $this->payPalService->createPayment($data);
@@ -33,28 +33,31 @@ class PayPalController extends Controller
 
     public function cancel()
     {
-        return response()->json(['message' => 'Payment Cancelled'], 482);
+        $frontEndUrl = $this->getFrontendUrl();
+        return redirect($frontEndUrl . '?success=false');
+        // return response()->json(['message' => 'Payment Cancelled'], 482);
     }
 
     public function success(Request $request)
     {
-        
+
         $response = $this->payPalService->getPaymentDetails($request->token);
         $frontEndUrl = $this->getFrontendUrl();
-        $order = Order::find($response['INVNUM']) ;
+        $order = Order::find($response['INVNUM']);
         if ($this->isPaymentSuccessful($response)) {
             $order->update([
                 'payment_status' => 'finished',
                 'transaction_id' => $response['PAYERID']
             ]);
-        
-            return redirect($frontEndUrl . '?success=true');
-            
+            return response()->view('response', [], 200);
+            // return redirect($frontEndUrl . '?success=true');
+
         }
-            $order->update([
-                    'payment_status' => "failed",
-                    'transaction_id' => $response['PAYERID']
-                ]);
+        $order->update([
+            'payment_status' => "failed",
+            'transaction_id' => $response['PAYERID']
+        ]);
+
         return redirect($frontEndUrl . '?success=false');
     }
 
@@ -82,8 +85,7 @@ class PayPalController extends Controller
 
     private function getFrontendUrl()
     {
-     
-        return env('frontend_url') . '/checkout';
+        return env('FRONTEND_URL') . '/checkout';
     }
 
 
@@ -92,4 +94,3 @@ class PayPalController extends Controller
         return in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING']);
     }
 }
-

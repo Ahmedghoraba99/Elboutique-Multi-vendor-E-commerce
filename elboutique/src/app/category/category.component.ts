@@ -104,7 +104,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
         this.tags = res.data;
       }
     );
-
+    this.categoriySubscriptions.push(
+      this.authService.isAuthObservable().subscribe((isAuth) => {
+        this.isAuthenticated = isAuth;
+      })
+    );
     this.categoriySubscriptions.push(getAllTagsSubscribe);
     this.categoriySubscriptions.push(queryParamMapSubscribe);
   }
@@ -129,7 +133,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       .filter((vendor) => vendor.selected)
       .map((vendor) => vendor.id)
       .join(',');
-      if (this.filters.vendors === '') delete this.filters.vendors;
+    if (this.filters.vendors === '') delete this.filters.vendors;
     this.searchProducts();
   }
 

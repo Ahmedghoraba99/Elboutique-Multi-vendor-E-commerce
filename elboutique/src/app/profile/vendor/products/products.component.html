@@ -4,8 +4,9 @@
   <div class="row height d-flex justify-content-center align-items-center">
     <div class="col-md-8">
       <div class="search">
-          <i class="fa fa-search"></i>
-          <input type="text" class="form-control" placeholder="Can you search About Product" [(ngModel)]="searchTerm" (input)="filterProducts()">
+        <i class="fa fa-search"></i>
+        <input type="text" class="form-control" placeholder="Can you search About Product" [(ngModel)]="searchTerm"
+          (input)="filterProducts()">
       </div>
     </div>
   </div>
@@ -19,76 +20,86 @@
 
 
 @if (filteredProducts.length > 0) {
-  <div class="table-responsive  ">
-    <table class="table">
-        <thead>
-            <tr >
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Price</th>
-                <th scope="col">Category</th>
-                <th scope="col">Stock</th>
-                <th scope="col" class="text-center">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let product of filteredProducts; let i = index">
-              <th scope="row">{{ i + 1 }}</th>
-              <td>{{ product.name }}</td>
-              <td>{{ product.description }}</td>
-              <td>{{ product.price | currency }}</td>
-              <td>{{ getCategoryName(product.category_id) }}</td>
-              <td>{{ product.stock }}</td>
-              <td>
-                @if(currentVendor.data.active === 'true'){
-                <!-- show -->
-                <button type="button" class="btn btn-success btn-sm me-2" (click)="navigateToProductPage('/v/products/show', product.id)">
-                  <i class="fa-solid fa-eye"></i>
-                  <span class="visually-hidden">Show</span>
-                </button>
+<div class="table-responsive  ">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Price</th>
+        <th scope="col">Category</th>
+        <th scope="col">Stock</th>
+        <th scope="col" colspan="5" class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of filteredProducts; let i = index">
+        <th scope="row">{{ i + 1 }}</th>
+        <td style="min-width: 10rem;">{{ product.name }}</td>
+        <td style="min-width: 15rem;">{{ product.description }}</td>
+        <td>{{ product.price | currency }}</td>
+        <td>{{ getCategoryName(product.category_id) }}</td>
+        <td>{{ product.stock }}</td>
+        <td>
+          @if(currentVendor.data.active === 'true'){
+          <!-- show -->
+        <td>
+          <button type="button" class="btn btn-success btn-sm me-2"
+            (click)="navigateToProductPage('/v/products/show', product.id)">
+            <i class="fa-solid fa-eye"></i>
+            <span class="visually-hidden">Show</span>
+          </button>
+        </td>
 
-                <!-- update -->
-                <button type="button" class="btn btn-warning btn-sm me-2" (click)="navigateToProductPage('/v/products/edit', product.id)">
-                  <i class="fa-solid fa-pen-to-square"></i>
-                  <span class="visually-hidden">Edit</span>
-                </button>
+        <!-- update -->
+        <td>
+          <button type="button" class="btn btn-warning btn-sm me-2"
+            (click)="navigateToProductPage('/v/products/edit', product.id)">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span class="visually-hidden">Edit</span>
+          </button>
+        </td>
+        <!-- delete -->
+        <td>
+          <button type="button" class="btn btn-danger btn-sm me-2" (click)="confirmDelete(product.id)">
+            <i class="fa-solid fa-trash"></i>
+            <span class="visually-hidden">Delete</span>
+          </button>
+        </td>
+        <!-- Sale -->
+        <td>
 
-                <!-- delete -->
-                <button type="button" class="btn btn-danger btn-sm me-2" (click)="confirmDelete(product.id)">
-                  <i class="fa-solid fa-trash"></i>
-                  <span class="visually-hidden">Delete</span>
-                </button>
+          <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)"
+            data-bs-toggle="modal" data-bs-target="#addSale">
+            <!-- <i class="fa-brands fa-salesforce"></i> -->
+            <span class="">Sale</span>
+          </button>
+        </td>
+        <!-- tages -->
+        <td>
+          <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)"
+            data-bs-toggle="modal" data-bs-target="#tages">
+            <i class="fa-solid fa-tags"></i>
+            <span class="visually-hidden">tages</span>
+          </button>
+        </td>
+        }@else {
+      <tr>
+        <td class="text-danger text-center">You are Not Active Know Cant Make any thing on Product</td>
+      </tr>
+      }
 
-                <!-- Sale -->
-                <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#addSale">
-                  <!-- <i class="fa-brands fa-salesforce"></i> -->
-                  <span class="">Sale</span>
-                </button>
+      </td>
+      </tr>
 
-
-                <!-- tages -->
-                <button type="button" class="btn btn-primary btn-sm me-2" (click)="changeProductId(product.id)" data-bs-toggle="modal" data-bs-target="#tages">
-                  <i class="fa-solid fa-tags"></i>
-                  <span class="visually-hidden">tages</span>
-                </button>
-              }@else {
-                <tr>
-                  <td class="text-danger text-center">You are Not Active Know Cant Make any thing on Product</td>
-                </tr>
-              }
-
-              </td>
-          </tr>
-
-        </tbody>
-    </table>
+    </tbody>
+  </table>
 </div>
 }@else {
-  <h3 class="text-center mb-3">No products found.</h3>
+<h3 class="text-center mb-3">No products found.</h3>
 }
 
 
 <app-add-sale [productId]="product_id"></app-add-sale>
 <app-tage-product [product_id]="product_id"></app-tage-product>
-

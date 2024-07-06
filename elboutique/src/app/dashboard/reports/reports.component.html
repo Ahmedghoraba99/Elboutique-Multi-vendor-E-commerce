@@ -13,8 +13,8 @@
                         <div class="bg-white flex align-items-center gap-2 p-3 pb-0 my-3 border rounded-2 ">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <p-avatar image="{{report.customer.image_url}}" shape="circle" />
-                                    <span class="font-bold mx-2 fs-6">{{report.customer.name}}</span>
+                                    <p-avatar image="{{report.customer_id.image_url}}" shape="circle" />
+                                    <span class="font-bold mx-2 fs-6">{{report.customer_id.name}}</span>
                                 </div>
                                 <span class="text-muted fw-light mx-2 fs-6">report: #{{report.id}}</span>
                             </div>
@@ -32,9 +32,9 @@
                                     <h5 class="card-title fs-6">Product Details</h5>
                                     <p class="card-text m-0 text-muted fs-6 fw-light">#{{report.review_id.product_id}}
                                     </p>
-                                    <p class="card-text m-0 text-muted fs-6 fw-light">Product
+                                    <!-- <p class="card-text m-0 text-muted fs-6 fw-light">Product
                                         :{{report.review_id.product.name}}
-                                    </p>
+                                    </p> -->
                                 </div>
                             </div>
                         </div>
@@ -87,8 +87,9 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <button [disabled]="report.product.vendor_status" (click)="banVendor(report.product.vendor)"
-                                type="button" class="btn btn-warning mx-2">Ban Vendor</button>
+                            <button [disabled]="report.product.vendor_status === 'true'"
+                                (click)="banVendor(report.product.vendor_id)" type="button"
+                                class="btn btn-warning mx-2">Ban Vendor</button>
                             <button (click)="deleteProduct(report.product.id)" type="button"
                                 class="btn btn-outline-danger mx-2">Delete Product</button>
                             <button (click)="deleteProductReport(report.id)" type="button" class="btn btn-danger">Delete
