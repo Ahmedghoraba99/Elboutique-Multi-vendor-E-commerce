@@ -58,7 +58,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
     this.categoriySubscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
-
     const queryParamMapSubscribe = this.route.queryParamMap.subscribe(
       (queryParams) => {
         const name = queryParams.get('name');
@@ -105,25 +104,33 @@ export class CategoryComponent implements OnInit, OnDestroy {
         this.tags = res.data;
       }
     );
-   
+
     this.categoriySubscriptions.push(getAllTagsSubscribe);
     this.categoriySubscriptions.push(queryParamMapSubscribe);
   }
 
- 
-  // serch for products 
+  // serch for products
   applyFilters(): void {
-    this.filters.cats = this.categories.filter(cat => cat.selected).map(cat => cat.id).join(',');
-    if(this.filters.cats === "") delete this.filters.cats;
-    this.filters.tags = this.tags.filter(tag => tag.selected).map(tag => tag.name);
-    this.filters.max_price ; 
+    this.filters.cats = this.categories
+      .filter((cat) => cat.selected)
+      .map((cat) => cat.id)
+      .join(',');
+    if (this.filters.cats === '') delete this.filters.cats;
+    this.filters.tags = this.tags
+      .filter((tag) => tag.selected)
+      .map((tag) => tag.name);
+    this.filters.max_price;
     this.filters.min_price;
     if (this.filters.max_price === null || this.filters.min_price === null) {
       delete this.filters.max_price;
       delete this.filters.min_price;
     }
-    this.filters.vendor_id =this.tags.filter(vendor => vendor.selected).map(vendor => vendor.id)
-        this.searchProducts();
+    this.filters.vendors = this.vendors
+      .filter((vendor) => vendor.selected)
+      .map((vendor) => vendor.id)
+      .join(',');
+      if (this.filters.vendors === '') delete this.filters.vendors;
+    this.searchProducts();
   }
 
   preventNegativeValue(event: Event): void {
@@ -140,8 +147,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
       }
     });
     this.vendors = Array.from(uniqueVendors.values());
-    console.log(this.products);
-    console.log(this.vendors);
+    // console.log(this.products);
+    // console.log(this.vendors);
   }
 
   private searchProducts(): void {
@@ -152,7 +159,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       this.setPageParameters(data);
     });
   }
-  
+
   private handleCategoryLoading(): void {
     if (this.id === 'all') {
       const getAllProductsInAllSubscribe = this.categoryService

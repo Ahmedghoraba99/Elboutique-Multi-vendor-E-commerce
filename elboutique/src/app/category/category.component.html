@@ -3,7 +3,7 @@
     <h1 class="text-capitalize">{{ title }}</h1>
   </div>
   <div class="row">
-    <div class="col-3 mt-5 sticky-top filtering-section p-3">
+    <div class=" col-sm-12  col-md-3 mt-5  filtering-section p-3 ">
      <div class="filtering">
       <h4 class="text-uppercase text-center my-4"> filtering </h4>
       <div class="accordion accordion-flush filtering-section" id="accordionFlushExample">
@@ -108,9 +108,9 @@
 
     </div>
 
-    <div class="col-9">
-      <div class="d-flex justify-content-end align-items-center">
-        <div class="sort-by mx-4 d-flex gap-3 align-items-center">
+    <div class=" col-sm-12 col-md-9">
+      <div class="d-flex  flex-wrap justify-content-center align-items-center">
+        <div class="sort-by mx-4 d-flex gap-4  my-2 align-items-center">
           <span>Sort by</span>
           <select
             class="form-select"
@@ -123,8 +123,8 @@
             <option [ngValue]="'sale'">Sale (Highest)</option>
           </select>
         </div>
-        <div class="sort-price mx-4 d-flex gap-3 align-items-center">
-          <span>Price</span>
+        <div class="sort-price mx-4 d-flex my-2 gap-4 align-items-center">
+          <span class="p-2">Price</span>
           <select
             class="form-select"
             name=""
@@ -142,7 +142,7 @@
         <i class="fa-solid fa-ghost mx-2"></i>
       </div>
       <div class="row">
-        <div class="col-sm-4 col-md-3 my-3 position-relative" *ngFor="let product of products">
+        <div class="col-sm-6 col-md-4 my-3 position-relative" *ngFor="let product of products">
           <div class="big-deal-product-big-tag-deal position-absolute" *ngIf="product.sale">
             <span>{{ product.sale }}% Off</span>
         </div>
