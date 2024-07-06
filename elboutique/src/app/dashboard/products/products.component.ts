@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ProductService } from '../../service/admin/product.service';
 import { VendorService } from '../../service/admin/vendor.service';
@@ -17,7 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Table, TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { SkeletonModule } from 'primeng/skeleton';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -42,7 +42,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
-export class ProductsComponent {
+export class ProductsComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table | undefined;
 
   loading: boolean = false;
@@ -57,7 +57,7 @@ export class ProductsComponent {
   paginationLinks: any[] = [];
   selectedProduct: any;
   displayDialog = false;
-
+  private productsSubscriptions: Subscription[] = [];
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
@@ -109,26 +109,30 @@ export class ProductsComponent {
   }
 
   getProducts(): void {
-    this.productService.getProducts(this.page, this.pageSize).subscribe({
-      next: (response) => {
-        this.products = response.data.map((product: any) => ({
-          ...product,
-          categoryName: this.getCategoryName(product.category_id),
-          vendorName: this.getVendorName(product.vendor_id),
-        }));
-        this.totalItems = response.total;
-        this.paginationLinks = response.links;
-      },
-      error: (error) => {
-        console.error('Error fetching products:', error);
-      },
-    });
+    this.productsSubscriptions.push(
+      this.productService.getProducts(this.page, this.pageSize).subscribe({
+        next: (response) => {
+          this.products = response.data.map((product: any) => ({
+            ...product,
+            categoryName: this.getCategoryName(product.category_id),
+            vendorName: this.getVendorName(product.vendor_id),
+          }));
+          this.totalItems = response.total;
+          this.paginationLinks = response.links;
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+        },
+      })
+    );
   }
   getProduct(id: number): void {
-    this.productService.getProduct(id).subscribe((product) => {
-      this.selectedProduct = product;
-      this.displayDialog = true;
-    });
+    this.productsSubscriptions.push(
+      this.productService.getProduct(id).subscribe((product) => {
+        this.selectedProduct = product;
+        this.displayDialog = true;
+      })
+    );
   }
   showProductDialog(product: any): void {
     this.selectedProduct = this.getProduct(product.id);
@@ -146,20 +150,26 @@ export class ProductsComponent {
       cancelButtonText: 'No, cancel!',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.productService.deleteProduct(id).subscribe({
-          next: () => {
-            this.getProducts();
-            Swal.fire('Deleted!', 'Your product has been deleted.', 'success');
-          },
-          error: (error) => {
-            console.error('Error deleting product:', error);
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the product.',
-              'error'
-            );
-          },
-        });
+        this.productsSubscriptions.push(
+          this.productService.deleteProduct(id).subscribe({
+            next: () => {
+              this.getProducts();
+              Swal.fire(
+                'Deleted!',
+                'Your product has been deleted.',
+                'success'
+              );
+            },
+            error: (error) => {
+              console.error('Error deleting product:', error);
+              Swal.fire(
+                'Error!',
+                'There was an error deleting the product.',
+                'error'
+              );
+            },
+          })
+        );
       }
     });
   }
@@ -181,5 +191,11 @@ export class ProductsComponent {
   loadPage(page: number): void {
     this.page = page;
     this.getProducts();
+  }
+
+  ngOnDestroy(): void {
+    this.productsSubscriptions.forEach((subscription) =>
+      subscription.unsubscribe()
+    );
   }
 }

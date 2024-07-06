@@ -40,6 +40,8 @@ import { UpdateProductComponent } from './profile/vendor/products/update-product
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
 import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
+
+
 export const routes: Routes = [
   {
     path: '',

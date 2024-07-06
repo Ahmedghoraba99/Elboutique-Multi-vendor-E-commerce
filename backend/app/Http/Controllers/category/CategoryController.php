@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -53,8 +54,16 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         try {
+            $validatedData = $request->validated();
+            if ($request->hasFile('image')) {
+                if ($category->image){
+                     Storage::delete('public/categories'. $category->image);
+                }
+                $path = $request->file('image')->store('categories', 'public');
+                $validatedData['image'] = $path;
+            }
 
-            $category->updateOrFail($request->validated());
+            $category->updateOrFail($validatedData);
             return response()->json($category);
         } catch (\Exception $e) {
             return response()->json($e->getMessage(), 400);

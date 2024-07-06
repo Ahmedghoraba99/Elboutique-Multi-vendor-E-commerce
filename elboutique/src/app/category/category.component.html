@@ -21,7 +21,6 @@
                   <label class="form-check-label" for="catName">{{cat.name}}</label>
                 </div>
               }
-             
             </div>
           </div>
         </div>
@@ -82,8 +81,7 @@
               data-bs-toggle="collapse"
               data-bs-target="#flush-collapseFour"
               aria-expanded="false"
-              aria-controls="flush-collapseFour"
-            >
+              aria-controls="flush-collapseFour">
               Vendors
             </button>
           </h2>
@@ -101,7 +99,7 @@
           </div>
 
         </div>
-           
+
           </div>
           }
         </div>
@@ -109,6 +107,7 @@
      </div>
 
     </div>
+
     <div class="col-9">
       <div class="d-flex justify-content-end align-items-center">
         <div class="sort-by mx-4 d-flex gap-3 align-items-center">
@@ -149,16 +148,16 @@
         </div>
           <div class="d-flex flex-column">
             <div class="big-deal-product-data p-3">
-              
+
               <div
               class="big-deal-product-big-tags d-flex flex-row align-items-end"
               [ngClass]="{'justify-content-between': product.is_featured, 'justify-content-end': !product.is_featured}"
             >
-              <div 
+              <div
               *ngIf="product.is_featured && product.sale"
               [ngClass]="{ 'd-none ': product.sale }"
               class="products-tag"
-            > 
+            >
                 <span class="text-capitalize">Featured</span>
               </div>
               <div class="my-2">

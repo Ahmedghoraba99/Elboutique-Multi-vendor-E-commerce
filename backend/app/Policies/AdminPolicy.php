@@ -29,7 +29,6 @@ class AdminPolicy
      */
     public function create( $customer): bool
     {
-         
         return  $customer instanceof Admin;
     }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { VendorService } from '../../service/admin/vendor.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-vendors',
   standalone: true,
@@ -31,7 +33,7 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './vendors.component.html',
   styleUrl: './vendors.component.css',
 })
-export class VendorsComponent {
+export class VendorsComponent implements OnInit, OnDestroy {
   @ViewChild('dt') dt: Table | undefined;
 
   vendors: any[] = [];
@@ -40,7 +42,7 @@ export class VendorsComponent {
   totalItems: number = 0;
   pageSize: number = 10;
   page: number = 1;
-
+  private vendorsSubscriptions: Subscription[] = [];
   constructor(private vendorService: VendorService) {}
   ngOnInit(): void {
     this.loadVendors();
@@ -48,16 +50,18 @@ export class VendorsComponent {
 
   loadVendors() {
     this.loading = true;
-    this.vendorService.getVendors().subscribe({
-      next: (response) => {
-        this.vendors = response.data;
-        this.totalItems = response.total;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
+    this.vendorsSubscriptions.push(
+      this.vendorService.getVendors().subscribe({
+        next: (response) => {
+          this.vendors = response.data;
+          this.totalItems = response.total;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        },
+      })
+    );
   }
   onFilter(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -80,75 +84,87 @@ export class VendorsComponent {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.vendorService.deleteVendor(id).subscribe({
-          next: () => {
-            this.vendors = this.vendors.filter((vendor) => vendor.id !== id);
-            Swal.fire('Deleted!', 'Vendor has been deleted.', 'success');
-          },
-          error: () => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the vendor.',
-              'error'
-            );
-          },
-        });
+        this.vendorsSubscriptions.push(
+          this.vendorService.deleteVendor(id).subscribe({
+            next: () => {
+              this.vendors = this.vendors.filter((vendor) => vendor.id !== id);
+              Swal.fire('Deleted!', 'Vendor has been deleted.', 'success');
+            },
+            error: () => {
+              Swal.fire(
+                'Error!',
+                'There was an error deleting the vendor.',
+                'error'
+              );
+            },
+          })
+        );
       }
     });
   }
 
   activateVendor(vendor: any): void {
-    this.vendorService.activateVendor(vendor.id).subscribe({
-      next: (response) => {
-        if (vendor.active == 'true') {
-          vendor.active = 'false';
-        } else {
-          vendor.active = 'true';
-        }
-        Swal.fire(
-          'Success!',
-          `Vendor has been ${
-            vendor.active == 'true' ? 'activated' : 'deactivated'
-          }.`,
-          'success'
-        );
-      },
-      error: () => {
-        Swal.fire(
-          'Error!',
-          `There was an error ${
-            vendor.active ? 'activating' : 'deactivating'
-          } the vendor.`,
-          'error'
-        );
-      },
-    });
+    this.vendorsSubscriptions.push(
+      this.vendorService.activateVendor(vendor.id).subscribe({
+        next: (response) => {
+          if (vendor.active == 'true') {
+            vendor.active = 'false';
+          } else {
+            vendor.active = 'true';
+          }
+          Swal.fire(
+            'Success!',
+            `Vendor has been ${
+              vendor.active == 'true' ? 'activated' : 'deactivated'
+            }.`,
+            'success'
+          );
+        },
+        error: () => {
+          Swal.fire(
+            'Error!',
+            `There was an error ${
+              vendor.active ? 'activating' : 'deactivating'
+            } the vendor.`,
+            'error'
+          );
+        },
+      })
+    );
   }
 
   banVendor(vendor: any): void {
-    this.vendorService.banVendor(vendor.id, !vendor.banned).subscribe({
-      next: () => {
-        if (vendor.banned == 'true') {
-          vendor.banned = 'false';
-        } else {
-          vendor.banned = 'true';
-        }
+    this.vendorsSubscriptions.push(
+      this.vendorService.banVendor(vendor.id, !vendor.banned).subscribe({
+        next: () => {
+          if (vendor.banned == 'true') {
+            vendor.banned = 'false';
+          } else {
+            vendor.banned = 'true';
+          }
 
-        Swal.fire(
-          'Success!',
-          `Vendor has been ${vendor.banned == 'true' ? 'banned' : 'unbanned'}.`,
-          'success'
-        );
-      },
-      error: () => {
-        Swal.fire(
-          'Error!',
-          `There was an error ${
-            vendor.banned ? 'banning' : 'unbanning'
-          } the vendor.`,
-          'error'
-        );
-      },
-    });
+          Swal.fire(
+            'Success!',
+            `Vendor has been ${
+              vendor.banned == 'true' ? 'banned' : 'unbanned'
+            }.`,
+            'success'
+          );
+        },
+        error: () => {
+          Swal.fire(
+            'Error!',
+            `There was an error ${
+              vendor.banned ? 'banning' : 'unbanning'
+            } the vendor.`,
+            'error'
+          );
+        },
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.vendorsSubscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

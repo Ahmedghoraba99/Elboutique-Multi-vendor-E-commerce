@@ -1,19 +1,36 @@
 <div class="overview">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="h6 text-uppercase">Overview</div>
-    <button class="btn btn-primary float-end"  data-bs-toggle="modal" data-bs-target="#logout">logout</button>
   </div>
   <hr class="hr">
   <div class="row">
       <div class="col">
+        @if (vendorReceivables?.data?.amount != null){
           <p class="m-0">{{ vendorReceivables?.data?.amount | currency }}</p>
           <h6 class="m-0">Total Receivables</h6>
+        }@else {
+          <p class="m-0">{{0 | currency}}</p>
+          <h6 class="m-0">Total Receivables</h6>
+        }
       </div>
       <div class="col">
-          <p class="m-0">565</p>
+          <p class="m-0">{{vendorReceivables?.vendor_products?.length}}</p>
           <h6 class="m-0">Total Products</h6>
       </div>
   </div>
+  <div class="row mt-3">
+    <div class="col">
+      <p class="m-0">{{totalReviewProduct}}</p>
+      <h6 class="m-0">Total Review Product</h6>
+    </div>
+
+    <div class="col">
+      <p class="m-0">{{totalReportsProduct}}</p>
+      <h6 class="m-0">Total Report Product</h6>
+    </div>
+
+  </div>
+
 </div>
 
 
