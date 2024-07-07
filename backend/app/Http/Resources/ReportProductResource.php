@@ -31,8 +31,8 @@ class ReportProductResource extends JsonResource
                     ? url('storage/' . $this->product->images->first()->image)
                     : null,
             ],
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }
