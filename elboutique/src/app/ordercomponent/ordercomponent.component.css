@@ -1,0 +1,67 @@
+.order-checkout{
+    background: var(--accent-color-3);
+}
+.shipping-section , .order-summary-section , .order-section , .payment-section {
+    background-color: var(--accent-color-3);
+    border-radius: 0.5rem;
+    border: 3px solid var(--accent-color-1);
+}
+.shipping-section fa-icon{
+    font-size: 2rem ;   
+    color: var(--accent-color-2);
+}
+.address-section ,.order-details ,.order-shipping , .detail-data span{
+    color: #404553;
+}
+.order-total{
+      border-top: 1px solid var(--accent-color-1);
+}
+.total-price {
+    color: var(--accent-color-2);
+}
+.detail-data span{
+    font-weight: 500;
+
+}
+.seller-name ,.sold {
+    color: #404553;
+
+}
+.seller-name ,.sold ,.deal-price strong{
+    font-size: 15px;
+
+}
+.deal-price strong{
+    font-weight: bold;
+    color: var(--accent-color-2);
+}
+.product-slider img {
+    object-fit: cover;
+    border-radius: 1rem;
+    display: block;
+    width: 100%;
+    height: 8rem;
+    padding: 5px;
+}
+.product-quantity{
+    background-color:#404553;
+    color: var(--accent-color-3);
+    border-radius:35px;
+    position: absolute;
+    top: -13px;
+    right: 0px;
+    padding: 2px 10px;
+    margin-top: 2px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+.checkout-btn button {
+    border-left:1px solid rgb(241, 243, 249);
+}
+.cash-payment fa-icon , .paypal-payment i , .card-payment i {
+    color: var(--accent-color-2);
+    font-size: 1.5rem;
+}
+.cash-payment button , .paypal-payment button , .card-payment button{
+    border: none;
+}

@@ -1,12 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit,EventEmitter , Output } from '@angular/core';
 import { SelectDropComponent } from './select-drop/select-drop.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CommonModule } from '@angular/common';
 import {
   faSearch,
   faShoppingCart,
   faArrowRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faUser, faChevronDown  ,faRightFromBracket} from '@fortawesome/free-solid-svg-icons';
+
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../service/auth.service';
 import { NgIf } from '@angular/common';
@@ -16,11 +19,18 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [FontAwesomeModule, RouterLink, SelectDropComponent, NgIf],
+  imports: [FontAwesomeModule, RouterLink, SelectDropComponent,  CommonModule,NgIf ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  faUser=faUser ;
+  faRightFromBracket=faRightFromBracket;
+  faChevronDown = faChevronDown;
+  isDropdownOpen = false;
+  selectedIndex: number | null = null;
+  selectedItem: string = "My Account";
+
   private navBarSubscriptions: Subscription[] = [];
   selectedCategory: any = null;
   constructor(
@@ -119,5 +129,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
       subscription.unsubscribe()
     );
   }
+
+  @Output() categorySelected = new EventEmitter<any>();
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  setIsOpen(index: number, name: string) {
+    this.selectedIndex = index;
+    this.isDropdownOpen = false;
+    this.selectedItem = name;
+  }
+
+ 
+
+
 
 }

@@ -1,364 +1,361 @@
-<div class="container-fluid my-5">
-  <div class="row my-3 ms-3">
-    <h1 class="text-capitalize">{{ title }}</h1>
-  </div>
-  <div class="row">
-    <div class="col-sm-12 col-md-3 mt-5 filtering-section p-3">
-      <div class="filtering">
-        <h4 class="text-uppercase text-center my-4">filtering</h4>
-        <div
-          class="accordion accordion-flush filtering-section"
-          id="accordionFlushExample"
-        >
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingOne">
-              <button
-                class="accordion-button collapsed fw-bold no-outline"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseOne"
-                aria-expanded="true"
-                aria-controls="flush-collapseOne"
-              >
-                Categories
-              </button>
-            </h2>
-            <div
-              id="flush-collapseOne"
-              class="accordion-collapse collapse"
-              aria-labelledby="flush-headingOne"
-              data-bs-parent="#accordionFlushExample"
+<div class="container-fluid ">
+<div class="row">
+  <div class="col-sm-12 col-md-3  filtering-section p-3">
+    <div class="filtering">
+      <h4 class="text-uppercase text-center my-4">filtering</h4>
+      <div
+        class="accordion accordion-flush filtering-section"
+        id="accordionFlushExample"
+      >
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingOne">
+            <button
+              class="accordion-button collapsed fw-bold no-outline"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseOne"
+              aria-expanded="true"
+              aria-controls="flush-collapseOne"
             >
-              <div class="accordion-body">
-                @for (cat of categories ; track cat.id ){
-                <div class="mb-3 form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [id]="'cat-' + cat.id"
-                    [(ngModel)]="cat.selected"
-                    (change)="applyFilters()"
-                  />
-                  <label class="form-check-label" for="catName">{{
-                    cat.name
-                  }}</label>
-                </div>
-                }
+              Categories
+            </button>
+          </h2>
+          <div
+            id="flush-collapseOne"
+            class="accordion-collapse collapse"
+            aria-labelledby="flush-headingOne"
+            data-bs-parent="#accordionFlushExample"
+          >
+            <div class="accordion-body">
+              @for (cat of categories ; track cat.id ){
+              <div class="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'cat-' + cat.id"
+                  [(ngModel)]="cat.selected"
+                  (change)="applyFilters()"
+                />
+                <label class="form-check-label" for="catName">{{
+                  cat.name
+                }}</label>
               </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingTwo">
-              <button
-                class="accordion-button collapsed fw-bold no-outline"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseTwo"
-                aria-expanded="true"
-                aria-controls="flush-collapseTwo"
-              >
-                Tags
-              </button>
-            </h2>
-            <div
-              id="flush-collapseTwo"
-              class="accordion-collapse collapse no-outline"
-              aria-labelledby="flush-headingTwo"
-              data-bs-parent="#accordionFlushExample"
-            >
-              @for(tag of tags ; track tag.name){
-              <div class="accordion-body">
-                <div class="mb-3 form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [id]="'tag-' + tag.id"
-                    [(ngModel)]="tag.selected"
-                    (change)="applyFilters()"
-                  />
-                  <label class="form-check-label" for="tagName">{{
-                    tag.name
-                  }}</label>
-                </div>
-              </div>
-
               }
             </div>
           </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingThree">
-              <button
-                class="accordion-button collapsed fw-bold no-outline"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseThree"
-                aria-expanded="false"
-                aria-controls="flush-collapseThree"
-              >
-                Price Range
-              </button>
-            </h2>
-            <div
-              id="flush-collapseThree"
-              class="accordion-collapse collapse"
-              aria-labelledby="flush-headingThree"
-              data-bs-parent="#accordionFlushExample"
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingTwo">
+            <button
+              class="accordion-button collapsed fw-bold no-outline"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseTwo"
+              aria-expanded="true"
+              aria-controls="flush-collapseTwo"
             >
-              <div class="p-2 my-2">
-                <label for="minPriceInput" class="form-label">Min Price</label>
+              Tags
+            </button>
+          </h2>
+          <div
+            id="flush-collapseTwo"
+            class="accordion-collapse collapse no-outline"
+            aria-labelledby="flush-headingTwo"
+            data-bs-parent="#accordionFlushExample"
+          >
+            @for(tag of tags ; track tag.name){
+            <div class="accordion-body">
+              <div class="mb-3 form-check">
                 <input
-                  type="number"
-                  class="form-control"
-                  id="minPriceInput"
-                  name="min"
-                  aria-label="min"
-                  data-qa="filter-min-input"
-                  (input)="preventNegativeValue($event)"
-                  [(ngModel)]="filters.min_price"
-                  (ngModelChange)="applyFilters()"
-                  min="0"
-                  max="1000"
-                  step="10"
-                  placeholder="MinPrice.."
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'tag-' + tag.id"
+                  [(ngModel)]="tag.selected"
+                  (change)="applyFilters()"
                 />
-              </div>
-              <div class="p-2 my-2">
-                <label for="maxPriceInput" class="form-label">Max Price</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="maxPriceInput"
-                  name="max"
-                  aria-label="max"
-                  data-qa="filter-max-input"
-                  (input)="preventNegativeValue($event)"
-                  [(ngModel)]="filters.max_price"
-                  (ngModelChange)="applyFilters()"
-                  min="0"
-                  max="1000"
-                  step="10"
-                  placeholder="MaxPrice.."
-                />
+                <label class="form-check-label" for="tagName">{{
+                  tag.name
+                }}</label>
               </div>
             </div>
-          </div>
 
-          <!-- vendor -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="flush-headingFour">
-              <button
-                class="accordion-button collapsed fw-bold no-outline"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#flush-collapseFour"
-                aria-expanded="false"
-                aria-controls="flush-collapseFour"
-              >
-                Vendors
-              </button>
-            </h2>
-            @for(vendor of vendors ; track vendor.id){
-            <div
-              id="flush-collapseFour"
-              class="accordion-collapse collapse"
-              aria-labelledby="flush-headingFour"
-              data-bs-parent="#accordionFlushExample"
-            >
-              <div class="accordion-body">
-                <div class="mb-3 form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [id]="'vendor-' + vendor.id"
-                    [(ngModel)]="vendor.selected"
-                    (change)="applyFilters()"
-                  />
-                  <label class="form-check-label" for="catName">{{
-                    vendor.name
-                  }}</label>
-                </div>
-              </div>
-            </div>
             }
           </div>
         </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingThree">
+            <button
+              class="accordion-button collapsed fw-bold no-outline"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseThree"
+              aria-expanded="false"
+              aria-controls="flush-collapseThree"
+            >
+              Price Range
+            </button>
+          </h2>
+          <div
+            id="flush-collapseThree"
+            class="accordion-collapse collapse"
+            aria-labelledby="flush-headingThree"
+            data-bs-parent="#accordionFlushExample"
+          >
+            <div class="p-2 my-2">
+              <label for="minPriceInput" class="form-label">Min Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="minPriceInput"
+                name="min"
+                aria-label="min"
+                data-qa="filter-min-input"
+                (input)="preventNegativeValue($event)"
+                [(ngModel)]="filters.min_price"
+                (ngModelChange)="applyFilters()"
+                min="0"
+                max="1000"
+                step="10"
+                placeholder="MinPrice.."
+              />
+            </div>
+            <div class="p-2 my-2">
+              <label for="maxPriceInput" class="form-label">Max Price</label>
+              <input
+                type="number"
+                class="form-control"
+                id="maxPriceInput"
+                name="max"
+                aria-label="max"
+                data-qa="filter-max-input"
+                (input)="preventNegativeValue($event)"
+                [(ngModel)]="filters.max_price"
+                (ngModelChange)="applyFilters()"
+                min="0"
+                max="1000"
+                step="10"
+                placeholder="MaxPrice.."
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- vendor -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="flush-headingFour">
+            <button
+              class="accordion-button collapsed fw-bold no-outline"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#flush-collapseFour"
+              aria-expanded="false"
+              aria-controls="flush-collapseFour"
+            >
+              Vendors
+            </button>
+          </h2>
+          @for(vendor of vendors ; track vendor.id){
+          <div
+            id="flush-collapseFour"
+            class="accordion-collapse collapse"
+            aria-labelledby="flush-headingFour"
+            data-bs-parent="#accordionFlushExample"
+          >
+            <div class="accordion-body">
+              <div class="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [id]="'vendor-' + vendor.id"
+                  [(ngModel)]="vendor.selected"
+                  (change)="applyFilters()"
+                />
+                <label class="form-check-label" for="catName">{{
+                  vendor.name
+                }}</label>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
       </div>
     </div>
-
-    <div class="col-sm-12 col-md-9">
-      <div class="d-flex flex-wrap justify-content-center align-items-center">
-        <div class="sort-by mx-4 d-flex gap-4 my-2 align-items-center">
-          <span>Sort by</span>
-          <select
-            class="form-select"
-            name="orderBy"
-            [(ngModel)]="orderByValue"
-            (ngModelChange)="orderBy($event)"
-            id=""
-          >
-            <option [ngValue]="'recent'">Date (Newest)</option>
-            <option [ngValue]="'sale'">Sale (Highest)</option>
-          </select>
-        </div>
-        <div class="sort-price mx-4 d-flex my-2 gap-4 align-items-center">
-          <span class="p-2">Price</span>
-          <select
-            class="form-select"
-            name=""
-            [(ngModel)]="orderByPriceValue"
-            (ngModelChange)="orderByPrice($event)"
-            id=""
-          >
-            <option value="highToLow">Hight to Low</option>
-            <option value="lowToHigh">Low to Hight</option>
-          </select>
-        </div>
-      </div>
-      <div class="text-center h3 my-5" *ngIf="products.length == 0">
-        No products found
-        <i class="fa-solid fa-ghost mx-2"></i>
-      </div>
-      <div class="row">
-        <div
-          class="col-sm-6 col-md-4 my-3 position-relative"
-          *ngFor="let product of products"
+  </div>
+  <!-- products -->
+  <div class="col-sm-12 col-md-9 my-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center">
+      <h1 class="text-capitalize">{{ title }}</h1>
+      <div class="sort-by mx-4 d-flex gap-4 my-2 align-items-center">
+        <span>Sort by</span>
+        <select
+          class="form-select"
+          name="orderBy"
+          [(ngModel)]="orderByValue"
+          (ngModelChange)="orderBy($event)"
+          id=""
         >
-          <div
-            class="big-deal-product-big-tag-deal position-absolute"
-            *ngIf="product.sale"
-          >
-            <span>{{ product.sale }}% Off</span>
-          </div>
-          <div class="d-flex flex-column">
-            <div class="big-deal-product-data p-3">
+          <option [ngValue]="'recent'">Date (Newest)</option>
+          <option [ngValue]="'sale'">Sale (Highest)</option>
+        </select>
+      </div>
+      <div class="sort-price mx-4 d-flex my-2 gap-4 align-items-center">
+        <span class="p-2">Price</span>
+        <select
+          class="form-select"
+          name=""
+          [(ngModel)]="orderByPriceValue"
+          (ngModelChange)="orderByPrice($event)"
+          id=""
+        >
+          <option value="highToLow">Hight to Low</option>
+          <option value="lowToHigh">Low to Hight</option>
+        </select>
+      </div>
+    </div>
+    <div class="text-center h3 my-5" *ngIf="products.length == 0">
+      No products found
+      <i class="fa-solid fa-ghost mx-2"></i>
+    </div>
+    <div class="row">
+      <div
+        class="col-sm-6 col-md-4 my-3 position-relative"
+        *ngFor="let product of products"
+      >
+        <div
+          class="big-deal-product-big-tag-deal position-absolute"
+          *ngIf="product.sale"
+        >
+          <span>{{ product.sale }}% Off</span>
+        </div>
+        <div class="d-flex flex-column">
+          <div class="big-deal-product-data p-3">
+            <div
+              class="big-deal-product-big-tags d-flex flex-row align-items-end"
+              [ngClass]="{
+                'justify-content-between': product.is_featured,
+                'justify-content-end': !product.is_featured
+              }"
+            >
               <div
-                class="big-deal-product-big-tags d-flex flex-row align-items-end"
-                [ngClass]="{
-                  'justify-content-between': product.is_featured,
-                  'justify-content-end': !product.is_featured
-                }"
+                *ngIf="product.is_featured && !product.sale"
+                [ngClass]="{ 'd-none ': product.sale }"
+                class="products-tag"
               >
-                <div
-                  *ngIf="product.is_featured && !product.sale"
-                  [ngClass]="{ 'd-none ': product.sale }"
-                  class="products-tag"
-                >
-                  <span class="text-capitalize">Featured</span>
-                </div>
-                <div class="my-2">
-                  <span class="opacity-0">space holder </span>
-                </div>
-                <div class="products-wish">
-                  <div class="con-like">
-                    <input
-                      class="like"
-                      type="checkbox"
-                      [checked]="isInWishlist(product.id)"
-                      title="Wishlist"
-                      (change)="toggleWishList($event, product.id)"
-                    />
-                    <div class="checkmark">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="outline"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"
-                        ></path>
-                      </svg>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="filled"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"
-                        ></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                <span class="text-capitalize">Featured</span>
               </div>
-              <div class="big-deal-product-slider">
-                <div class="swiper mySwiper big-deal-product-swiper">
-                  <a class="sss" routerLink="/products/{{ product.id }}">
-                    <div class="swiper-wrapp" id="big-deal-product-wrapper">
-                      <swiper-container class="m-1" pagination="true">
-                        <swiper-slide
-                          class="swiper-slide big-deal-product-swiper-slider"
-                          *ngFor="let image of product.images"
-                        >
-                          <img
-                            [src]="
-                              'http://localhost:8000/storage/' + image.image
-                            "
-                            alt="{{ product.name }}"
-                          />
-                        </swiper-slide>
-                      </swiper-container>
-                    </div>
-                  </a>
-                  <!-- <div class="swiper-pagination"></div> -->
-                </div>
+              <div class="my-2">
+                <span class="opacity-0">space holder </span>
               </div>
-              <div class="big-deal-product-detail">
-                <div class="big-deal-detail-header">
-                  <div class="big-deal-detail-data">
-                    <span>{{ product.name }}</span>
-                  </div>
-                  <div class="big-deal-info d-flex flex-column my-2">
-                    <span class="my-2"></span>
-                    <div
-                      class="big-deal-price d-flex align-items-center justify-content-between"
+              <div class="products-wish">
+                <div class="con-like">
+                  <input
+                    class="like"
+                    type="checkbox"
+                    [checked]="isInWishlist(product.id)"
+                    title="Wishlist"
+                    (change)="toggleWishList($event, product.id)"
+                  />
+                  <div class="checkmark">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="outline"
+                      viewBox="0 0 24 24"
                     >
-                      <div class="big-deal-price-span">
-                        <span class="ms-2">EGP</span>
-                        <strong class="fs-4" *ngIf="!product.sale">{{
-                          product.price
-                        }}</strong>
-                        <strong class="fs-4 text-danger" *ngIf="product.sale"
-                          >{{
-                            product.price * (1 - product.sale / 100)
-                          }}</strong
-                        >
-                      </div>
-                      <div class="products-wish">
-                        <div class="con-like-cart mt-1">
-                          <input
-                            class="like-cart"
-                            type="checkbox"
-                            title="Cart"
-                            [checked]="isInCart(product.id)"
-                            (change)="toggleCart($event, product.id)"
-                          />
-                          <div class="checkmark-cart">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="outline"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path d="M6 6h15l-1.5 9H6"></path>
-                              <path d="M6 6l-1-3H3"></path>
-                              <circle cx="9" cy="21" r="1"></circle>
-                              <circle cx="20" cy="21" r="1"></circle>
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="filled"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                            >
-                              <path
-                                d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
-                              ></path>
-                            </svg>
-                          </div>
+                      <path
+                        d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"
+                      ></path>
+                    </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="filled"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="big-deal-product-slider">
+              <div class="swiper mySwiper big-deal-product-swiper">
+                <a class="sss" routerLink="/products/{{ product.id }}">
+                  <div class="swiper-wrapp" id="big-deal-product-wrapper">
+                    <swiper-container class="m-1" pagination="true">
+                      <swiper-slide
+                        class="swiper-slide big-deal-product-swiper-slider"
+                        *ngFor="let image of product.images"
+                      >
+                        <img
+                          [src]="
+                            'http://localhost:8000/storage/' + image.image
+                          "
+                          alt="{{ product.name }}"
+                        />
+                      </swiper-slide>
+                    </swiper-container>
+                  </div>
+                </a>
+                <!-- <div class="swiper-pagination"></div> -->
+              </div>
+            </div>
+            <div class="big-deal-product-detail">
+              <div class="big-deal-detail-header">
+                <div class="big-deal-detail-data">
+                  <span>{{ product.name }}</span>
+                </div>
+                <div class="big-deal-info d-flex flex-column my-2">
+                  <span class="my-2"></span>
+                  <div
+                    class="big-deal-price d-flex align-items-center justify-content-between"
+                  >
+                    <div class="big-deal-price-span">
+                      <span class="ms-2">EGP</span>
+                      <strong class="fs-4" *ngIf="!product.sale">{{
+                        product.price
+                      }}</strong>
+                      <strong class="fs-4 text-danger" *ngIf="product.sale"
+                        >{{
+                          product.price * (1 - product.sale / 100)
+                        }}</strong
+                      >
+                    </div>
+                    <div class="products-wish">
+                      <div class="con-like-cart mt-1">
+                        <input
+                          class="like-cart"
+                          type="checkbox"
+                          title="Cart"
+                          [checked]="isInCart(product.id)"
+                          (change)="toggleCart($event, product.id)"
+                        />
+                        <div class="checkmark-cart">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="outline"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path d="M6 6h15l-1.5 9H6"></path>
+                            <path d="M6 6l-1-3H3"></path>
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                          </svg>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="filled"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path
+                              d="M7 4V2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h5v2h-1l-2 14H5L3 6H2V4h5zm2-2v2h6V2H9zm-2 6v10h10V8H7z"
+                            ></path>
+                          </svg>
                         </div>
                       </div>
                     </div>
@@ -371,11 +368,12 @@
       </div>
     </div>
   </div>
-  <!-- load more button -->
-  <div class="row text-center my-2" *ngIf="thereIsNextPage">
-    <a (click)="loadMore()" class="loadmore-btn"
-      >Load More <fa-icon [icon]="faChevronRight"></fa-icon>
-      <fa-icon [icon]="faChevronRight"></fa-icon>
-    </a>
-  </div>
+<!-- load more button -->
+<div class="row text-center my-2" *ngIf="thereIsNextPage">
+  <a (click)="loadMore()" class="loadmore-btn"
+    >Load More <fa-icon [icon]="faChevronRight"></fa-icon>
+    <fa-icon [icon]="faChevronRight"></fa-icon>
+  </a>
+</div>
+</div>
 </div>

@@ -61,3 +61,17 @@ body {
   transform: translateY(-58%);
   opacity: 1;
 }
+
+.big-deals-header {
+  flex: 1 1 0%;
+  display: inline-flex;
+  flex-direction: row;
+  max-width: 92%;
+}
+.big-deals-btn{
+  margin-right: 1rem;
+}
+.big-deals-btn a {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
