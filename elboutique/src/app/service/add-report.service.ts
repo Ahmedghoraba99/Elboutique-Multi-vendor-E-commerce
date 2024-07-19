@@ -10,7 +10,7 @@ import { AllReport } from '../_model/reviews';
 })
 export class AddReportService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/report-reviews';
+  private apiUrl = 'http://127.0.0.1:8000/api/report-products';
   constructor(private http: HttpClient) { }
 
 

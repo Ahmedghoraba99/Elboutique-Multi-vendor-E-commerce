@@ -111,6 +111,9 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($request->input('product_id'));
 
+        // Detach all existing tags from the product
+        $product->tags()->detach();
+
         // Attach the new tags to the product
         $product->tags()->attach($request->input('tag_ids'));
 
@@ -421,7 +424,7 @@ class ProductController extends Controller
 
     function getAllVendors()
     {
-        // get all vendors and return id,name only 
+        // get all vendors and return id,name only
 
         $vendors = Vendor::select('id', 'name')->get();
         return response()->json($vendors);
@@ -429,7 +432,7 @@ class ProductController extends Controller
 
     function getAllProducts()
     {
-        // get all products and return id,name only 
+        // get all products and return id,name only
 
         $products = Product::select('id', 'name')->get();
         return response()->json($products);

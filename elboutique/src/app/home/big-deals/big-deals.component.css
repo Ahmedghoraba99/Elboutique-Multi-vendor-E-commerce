@@ -1,5 +1,4 @@
-*{
-
+* {
   font-family: "Poppins", sans-serif;
   text-transform: capitalize;
 }
@@ -9,135 +8,136 @@ a {
   color: #1a1818;
 }
 .container-fluid.big-deals {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-  
-  .big-deals-header h2 {
-    font-weight: bold;
-    /* margin-left: 1rem; */
-  }
-  
-  .big-deals-btn a {
-    margin-right: 1rem;
-    font-weight: bold;
-    font-size: 24px;
-  }
-  
-  .big-deal-product-data {
-    background-color: #ffff;
-    border-radius: 0.5rem;
-    /* height: 40rem; */
-  }
-  
-  .big-deal-product-big-tags {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .big-deal-product-big-tag {
-    display: flex;
-    align-items: center;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    color: #ffff;
-    padding: 0.4rem 0.5rem;
-  }
-  
-  .big-deal-product-big-tag span {
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.8px;
-    text-align: center;
-  }
-  
-  
-  .big-deal-product-wish {
-    display: flex;
-    align-items: center;
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    color: #ffff;
-    padding: 0.4rem 0.5rem;
-  }
-  
-  .big-deal-product-slider {
-    margin-bottom: 1rem;
-  }
-  
-  .big-deal-product-swiper {
-    width: 100%;
-  }
-  
-  .big-deal-product-swiper-slider img {
-    /* display: block;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.big-deals-header h2 {
+  font-weight: bold;
+  /* margin-left: 1rem; */
+}
+
+.big-deals-btn a {
+  margin-right: 1rem;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.big-deal-product-data {
+  background-color: #ffff;
+  border-radius: 0.5rem;
+  /* height: 40rem; */
+}
+
+.big-deal-product-big-tags {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.big-deal-product-big-tag {
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  color: #ffff;
+  padding: 0.4rem 0.5rem;
+}
+
+.big-deal-product-big-tag span {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-align: center;
+}
+
+.big-deal-product-wish {
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  color: #ffff;
+  padding: 0.4rem 0.5rem;
+}
+
+.big-deal-product-slider {
+  margin-bottom: 1rem;
+}
+
+.big-deal-product-swiper {
+  width: 100%;
+}
+
+.big-deal-product-swiper-slider img {
+  /* display: block;
     width: 100%;
     height: 22rem;
     object-fit: contain;
     border-radius: 1rem; */
-    display: block;
+  display: block;
   width: 100%;
   height: 15rem;
   object-fit: cover;
   border-radius: 1rem;
   padding: 5px;
-  }
-  
-  .big-deal-product-detail {
-    line-height: 1.5;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #1a1818;
-    text-overflow: ellipsis;
-  }
-  
-  .big-deal-info {
-    display: flex;
-    flex-direction: column;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .big-deal-price {
-    display: flex;
-    align-items: center;
-  }
-  
-  .big-deal-price span {
-    margin-right: 0.5rem;
-  }
-  
-  .big-deal-price strong {
-    font-size: 1.5rem;
-    font-weight: 600;
+}
 
-  }
-  .big-deal-detail-data {
-    line-height: 1.5;
-    font-size: 1rem;
-    font-weight: 500;
-    white-space: wrap;
-    color: #1a1818;
-    text-overflow: ellipsis;
-  }
-  .big-deals-header {
-    flex: 1 1 0%;
-    display: inline-flex;
-    flex-direction: row;
-    max-width: 92%;
-  }
-  .big-deals-btn a{
-    font-size: 1.2rem;
-    font-weight:500;
+.big-deal-product-detail {
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a1818;
+  text-overflow: ellipsis;
+}
+.big-deal-detail-data span {
+  height: 3rem;
+  display: inline-block;
+}
+.big-deal-info {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.big-deal-price {
+  display: flex;
+  align-items: center;
+}
+
+.big-deal-price span {
+  margin-right: 0.5rem;
+}
+
+.big-deal-price strong {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.big-deal-detail-data {
+  line-height: 1.5;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: wrap;
+  color: #1a1818;
+  text-overflow: ellipsis;
+}
+.big-deals-header {
+  flex: 1 1 0%;
+  display: inline-flex;
+  flex-direction: row;
+  max-width: 92%;
+}
+.big-deals-btn a {
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 .products-wish {
   /* width: 2.5rem;
@@ -160,8 +160,8 @@ a {
   color: var(--accent-color-2);
   position: relative;
 }
-.con-like-cart{
-  color:var(--accent-color-1);
+.con-like-cart {
+  color: var(--accent-color-1);
   position: relative;
 }
 
@@ -217,8 +217,7 @@ a {
 
 /* tag discount */
 
-
-.big-deal-product-big-tag-deal{
+.big-deal-product-big-tag-deal {
   background-color: red;
   text-transform: capitalize;
   padding: 6px;
@@ -229,12 +228,11 @@ a {
   left: 11px;
   transform: rotate(-45deg);
 }
-.big-deal-product-big-tag-deal span{
+.big-deal-product-big-tag-deal span {
   font-weight: 600;
-
 }
 
-.big-deal-product-big-tag-deal::after{
+.big-deal-product-big-tag-deal::after {
   content: "";
   position: absolute;
   width: 10px;
@@ -243,9 +241,8 @@ a {
   border-radius: 50%;
   top: 9px;
   right: -6px;
-
 }
-.big-deal-product-big-tag-deal::before{
+.big-deal-product-big-tag-deal::before {
   content: "";
   position: absolute;
   width: 10px;
@@ -255,7 +252,6 @@ a {
   top: 9px;
   left: -6px;
 }
-
 
 /* .seemorelink{
   margin-right: 7rem !important;

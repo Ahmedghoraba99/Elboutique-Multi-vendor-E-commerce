@@ -15,13 +15,21 @@
       <h6>Status</h6>
       <p>{{ order.status }}</p>
     </div>
-    <div class="header">
+    <!-- <div class="header">
       <h6>Delivery <i class="fa-solid fa-truck primary-color"></i></h6>
-      <p>November 2022</p>
-    </div>
+      <p>{{ }}</p>
+    </div> -->
     <div class="header">
       <h6>SHIPPING TO</h6>
-      <P>El-Boutique</P>
+      <P>
+        {{ order.customer.addresses[0].governorate }}
+        {{ order?.customer?.addresses[0]?.city }} -
+        {{ order?.customer?.addresses[0]?.street }}
+      </P>
+    </div>
+    <div class="header">
+      <h6>Payment-Stauts</h6>
+      <P>{{ order.payment_status }}</P>
     </div>
   </div>
   @for (product of order.products; track $index) {
@@ -39,13 +47,14 @@
           <!-- <button type="button"  -->
           <button
             type="button"
-            class="view-product btn btn-link p-0 border-0"
+            class="view-product btn btn-link border-0"
             [routerLink]="['/products', product.id]"
           >
-            <i class="fa-solid fa-eye primary-color"></i> View Product
+            <i class="fa-solid fa-eye primary-color"></i>
+            <span class="d-none d-lg-inline">View Product</span>
           </button>
         </div>
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
           <p>{{ product.price }} EGP</p>
           <p class="ms-3 fw-bold">
             x <span>{{ product.pivot.quantity }}</span>
@@ -56,27 +65,27 @@
             data-bs-toggle="modal"
             data-bs-target="#reportProduct"
             (click)="updateProduct(product.id)"
-            ><span class="report-text">report</span></i
+            ><span class="report-text mx-2">report</span></i
           >
           }
         </div>
-        <p class="text-muted m-0">
+        <p class="text-muted m-0 desc">
           {{ product.description }}
         </p>
-
-        @if (order.status === "arrived") {
-        <button
-          class="Btn header me-2"
-          data-bs-toggle="modal"
-          data-bs-target="#modalId"
-          (click)="updateProduct(product.id)"
-        >
-          <i class="fa-solid fa-comment-dots"></i>
-          <div class="text">Review</div>
-        </button>
-        }
       </div>
     </div>
+    @if (order.status === "arrived") {
+    <button
+      type="button"
+      class="Btn header me-2"
+      data-bs-toggle="modal"
+      data-bs-target="#modalId"
+      (click)="updateProduct(product.id)"
+    >
+      <i class="fa-solid fa-comment-dots"></i>
+      <div class="text ms-2">Review</div>
+    </button>
+    }
   </div>
   }
 </div>

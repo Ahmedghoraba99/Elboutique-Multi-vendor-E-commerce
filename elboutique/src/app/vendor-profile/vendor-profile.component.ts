@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
@@ -14,57 +14,84 @@ import { CartService } from '../service/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../service/auth.service';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-vendor-profile',
-  // imports: [ CommonModule,FontAwesomeModule, RouterLink, NgIf, NgFor],
+  // imports: [ CommonModule, FontAwesomeModule, RouterLink, NgIf, NgFor],
   templateUrl: './vendor-profile.component.html',
   styleUrl: './vendor-profile.component.css',
 })
-export class VendorProfileComponent {
-  productGroups: any = [];
+export class VendorProfileComponent implements OnInit, OnDestroy {
+  productGroups: any[] = [];
   vendor: any = {};
   userWishlist: any[] = [];
   userCart: any[] = [];
   isAuthenticated = false;
+  private subscriptions: Subscription[] = [];
+
+  faLocationDot = faLocationDot;
+  faPhone = faPhone;
+  faEnvelope = faEnvelope;
 
   constructor(
     private vendorPortofolio: VendorPortofolioService,
     private route: ActivatedRoute,
     private toast: ToastrService,
     private cartService: CartService,
-    private wishlisteService: WishlistService,
+    private wishlistService: WishlistService,
     private authService: AuthService,
     private toaster: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.vendorPortofolio
-        .getVendorProducts(params['id'])
-        .subscribe((data: any) => {
-          this.productGroups.push(data.data);
-          if (data.data) {
-            this.vendor = this.productGroups[0][0].vendor;
-          }
+    this.subscriptions.push(
+      this.route.params.subscribe((params) => {
+        // Clear the productGroups array before fetching new data
+        this.productGroups = [];
+        this.vendorPortofolio
+          .getVendorProducts(params['id'])
+          .subscribe((data: any) => {
+            this.productGroups.push(data.data);
+            if (data.data) {
+              this.vendor = this.productGroups[0][0].vendor;
+            }
+          });
+      })
+    );
+
+    this.subscriptions.push(
+      this.wishlistService.getWishlistData().subscribe((data) => {
+        this.userWishlist = [];
+        data?.forEach((item: { id: any }) => {
+          this.userWishlist.push(item.id);
         });
-    });
-    this.wishlisteService.getWishlistData().subscribe((data) => {
-      data?.forEach((item: { id: any }) => {
-        this.userWishlist.push(item.id);
-      });
-    });
-    this.cartService.getCartData().subscribe((data) => {
-      data.forEach((item: { id: any }) => {
-        this.userCart.push(item.id);
-      });
-    });
-    this.authService.isAuthObservable().subscribe((isAuth) => {
-      this.isAuthenticated = isAuth;
-    });
+      })
+    );
+
+    this.subscriptions.push(
+      this.cartService.getCartData().subscribe((data) => {
+        this.userCart = [];
+        data.forEach((item: { id: any }) => {
+          this.userCart.push(item.id);
+        });
+      })
+    );
+
+    this.subscriptions.push(
+      this.authService.isAuthObservable().subscribe((isAuth) => {
+        this.isAuthenticated = isAuth;
+      })
+    );
   }
-  faLocationDot = faLocationDot;
-  faPhone = faPhone;
-  faEnvelope = faEnvelope;
+
+  ngOnDestroy(): void {
+    this.userCart = [];
+    this.userWishlist = [];
+    this.productGroups = [];
+    this.vendor = [];
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
 
   toggleCart(event: Event, id: number): void {
     if (!this.isAuthenticated) {
@@ -117,14 +144,14 @@ export class VendorProfileComponent {
   }
 
   private addToWishlist(id: number): void {
-    this.wishlisteService.addItemToWishlist({
+    this.wishlistService.addItemToWishlist({
       products: [id],
     });
     this.toast.success('Product added to wishlist', 'Added');
   }
 
   private removeFromWishlist(id: number): void {
-    this.wishlisteService.deleteItemFromWishlist({
+    this.wishlistService.deleteItemFromWishlist({
       products: id,
     });
     this.toast.error('Product removed from wishlist', 'Removed');

@@ -76,6 +76,11 @@ export class AuthService {
     return user ? user.token : null;
   }
 
+  getUserRole() {
+    const user = this.getStorageData();
+    return user ? user.role : null;
+  }
+
   forgotPassword(email: string) {
     return this.http.post(`${this.baseUrl}forgot-password`, { email });
   }
@@ -95,10 +100,8 @@ export class AuthService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(verificationLink, { headers });
   }
-  logout(): void {
-    localStorage.removeItem('user_info');
-    this.updateAuthStatus(false);
-    this.router.navigate(['/login']);
+  logout() {
+    return this.http.get(`${this.baseUrl}logout`);
   }
   registerCustomer(customerData: any): Observable<any> {
     return this.http.post(this.customerRegisterUrl, customerData);
@@ -124,5 +127,13 @@ export class AuthService {
   }
   isAuthObservable(): Observable<boolean> {
     return this.authStatus.asObservable();
+  }
+
+  loginWithGoogle(): Observable<any> {
+    return this.http.get(`${this.baseUrl}auth/google`);
+  }
+
+  loginWithFacebook(): Observable<any> {
+    return this.http.get(`${this.baseUrl}auth/facebook`);
   }
 }

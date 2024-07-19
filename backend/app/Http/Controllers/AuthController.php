@@ -15,6 +15,12 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 class AuthController extends Controller
 {
+    private static $frontendUrl;
+    public function __construct()
+    {
+        self::$frontendUrl = config('app.frontend_url');
+    }
+
     public function login(LoginRequest $request) {
 
         $user = $this->getUserByRole($request->role, $request->email);
@@ -40,6 +46,7 @@ class AuthController extends Controller
 
 
     public function logout(Request $request) {
+ 
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -62,51 +69,43 @@ class AuthController extends Controller
         }
     }
 
-    public function redirectToGoogle()
-    {
-        $url = Socialite::driver('google')->stateless()->redirect()->getTargetUrl();
-        return response()->json(['url' => $url]);
-    }
+    private function redirectToOAuth($driver)
+{
+    $url = Socialite::driver($driver)->stateless()->redirect()->getTargetUrl();
+    return response()->json(['url' => $url]);
+}
 
-    public function handleGoogleCallback()
-    {
-        try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
-            $authUser = $this->findOrCreateUser($googleUser,'google_id');
-    
-            $token = $authUser->createToken('Personal Access Token')->plainTextToken;
-            $modelName = strtolower(class_basename(get_class($authUser)));
-    
-            return response()->json([
-                'token' => $token,
-                'id' => $authUser->id,
-                'role' => $modelName,
-            ], 200);
-        } catch (\Exception $e) {
-            $errorMessage = 'Unauthorized';
-            if (config('app.debug')) {
-                $errorMessage .= ': ' . $e->getMessage();
-            }
-            return response()->json(['error' => $errorMessage], 401);
+public function redirectToFacebook()
+{
+    return $this->redirectToOAuth('facebook');
+}
+
+public function redirectToGoogle()
+{
+    return $this->redirectToOAuth('google');
+}
+ 
+
+
+    private function handleOAuthCallback($driver)
+{
+    try {
+        $user = Socialite::driver($driver)->stateless()->user();
+        $authUser = $this->findOrCreateUser($user);
+        $token = $authUser->createToken('Personal Access Token')->plainTextToken;
+        $role = strtolower(class_basename($authUser));
+        return redirect()->to(self::$frontendUrl."/login?token={$token}&role={$role}&id={$authUser->id}");
+    } catch (\Exception $e) {
+        $errorMessage = 'Unauthorized';
+        if (config('app.debug')) {
+            $errorMessage.= ': '. $e->getMessage();
         }
+        return response()->json(['error' => $errorMessage], 401);
     }
+    
+}
 
-// public function findOrCreateUser($googleUser)
-// {
-//     $authUser = $this->findUserByEmail($googleUser->email);
 
-//     if ($authUser) {
-//         return $authUser;
-//     }
-
-//     return Customer::create([
-//         'name' => $googleUser->name,
-//         'email' => $googleUser->email,
-//         'google_id' => $googleUser->id,
-//         'image' => $googleUser->avatar,
-//         'password' => bcrypt(Str::random(16)),
-//     ]);
-// }
 
 private function findUserByEmail($email)
 {
@@ -122,34 +121,7 @@ private function findUserByEmail($email)
     return null;
 }
 
-public function redirectToFacebook()
-{
-    $url = Socialite::driver('facebook')->stateless()->redirect()->getTargetUrl();
-    return response()->json(['url' => $url]);
-}
-
-public function handleFacebookCallback()
-{
-    try {
-        $facebookUser = Socialite::driver('facebook')->stateless()->user();
-        $authUser = $this->findOrCreateUser($facebookUser );
-
-        $token = $authUser->createToken('Personal Access Token')->plainTextToken;
-        $role = strtolower(class_basename($authUser));
-
-        return response()->json([
-            'token' => $token,
-            'id' => $authUser->id,
-            'role' => $role,
-        ], 200);
-    } catch (\Exception $e) {
-        $errorMessage = 'Unauthorized';
-        if (config('app.debug')) {
-            $errorMessage .= ': ' . $e->getMessage();
-        }
-        return response()->json(['error' => $errorMessage], 401);
-    }
-}
+ 
 
 private function findOrCreateUser($socialUser )
 {
@@ -166,7 +138,15 @@ private function findOrCreateUser($socialUser )
         'password' => bcrypt(Str::random(16)),
     ]);
 }
+public function handleGoogleCallback()
+{
+    return $this->handleOAuthCallback('google');
+}
 
+public function handleFacebookCallback()
+{
+    return $this->handleOAuthCallback('facebook');
+}
  
 }
     

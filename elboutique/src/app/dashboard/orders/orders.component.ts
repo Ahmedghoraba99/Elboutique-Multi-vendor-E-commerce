@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from '../../service/admin/order.service';
 import { CustomerService } from '../../service/admin/customer.service';
 import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -12,6 +12,8 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
@@ -31,7 +33,7 @@ import { InputTextModule } from 'primeng/inputtext';
     NgbPaginationModule,
   ],
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   @ViewChild('orderForm') orderForm!: any;
   @ViewChild('dt') dt!: any;
   selectedOrders = [];
@@ -48,7 +50,7 @@ export class OrdersComponent implements OnInit {
   totalItems = 0;
   page = 1;
   pageSize = 10;
-
+  private orderSubscriptions: Subscription[] = [];
   constructor(
     private orderService: OrderService,
     private customerService: CustomerService,
@@ -61,30 +63,35 @@ export class OrdersComponent implements OnInit {
   }
 
   loadOrders(): void {
-    this.orderService.getOrders().subscribe({
-      next: (response: any) => {
-        this.orders = response.data.map((order: any) => {
-          order.customer_name = this.getCustomerName(order.customer_id);
-          return order;
-        });
-        this.totalItems = response.total;
-        this.loading = false;
-      },
-      error: (error: any) => console.error('Error loading orders', error),
-    });
+    this.orderSubscriptions.push(
+      this.orderService.getOrders().subscribe({
+        next: (response: any) => {
+          this.orders = response.data.map((order: any) => {
+            order.customer_name = this.getCustomerName(order.customer_id);
+            return order;
+          });
+          this.totalItems = response.total;
+          this.loading = false;
+          console.log(this.orders);
+        },
+        error: (error: any) => console.error('Error loading orders', error),
+      })
+    );
   }
 
   loadCustomers(): void {
-    this.customerService.getCustomers().subscribe({
-      next: (response: any) => {
-        this.customers = response;
-        this.loading = false;
-        this.customers = response.map((customer: any) => {
-          return { name: customer.name, id: customer.id };
-        });
-      },
-      error: (error: any) => console.error('Error loading customers', error),
-    });
+    this.orderSubscriptions.push(
+      this.customerService.getCustomers().subscribe({
+        next: (response: any) => {
+          this.customers = response;
+          this.loading = false;
+          this.customers = response.map((customer: any) => {
+            return { name: customer.name, id: customer.id };
+          });
+        },
+        error: (error: any) => console.error('Error loading customers', error),
+      })
+    );
   }
 
   getCustomerName(customerId: number): string {
@@ -93,39 +100,49 @@ export class OrdersComponent implements OnInit {
   }
 
   updateOrder(): void {
-    this.orderService.updateOrder(this.editOrder.id, this.editOrder).subscribe({
-      next: (response: any) => {
-        this.loadOrders();
-        this.showMessage('Success', 'Order updated successfully', 'success');
-        this.closeModal();
-      },
-      error: (error: any) => {
-        console.error('Error updating order', error);
-        if (error.error.errors) {
-          this.validationErrors = error.error.errors;
-          this.showValidationErrors();
-        } else {
-          this.showMessage('Error', 'Failed to update order', 'error');
-        }
-      },
-    });
+    this.orderSubscriptions.push(
+      this.orderService
+        .updateOrder(this.editOrder.id, this.editOrder)
+        .subscribe({
+          next: (response: any) => {
+            this.loadOrders();
+            this.showMessage(
+              'Success',
+              'Order updated successfully',
+              'success'
+            );
+            this.closeModal();
+          },
+          error: (error: any) => {
+            console.error('Error updating order', error);
+            if (error.error.errors) {
+              this.validationErrors = error.error.errors;
+              this.showValidationErrors();
+            } else {
+              this.showMessage('Error', 'Failed to update order', 'error');
+            }
+          },
+        })
+    );
   }
 
   updateStatus(orderId: number, status: string): void {
-    this.orderService.updateStatus(orderId, status).subscribe({
-      next: (response: any) => {
-        this.loadOrders();
-        this.showMessage(
-          'Success',
-          'Order status updated successfully',
-          'success'
-        );
-      },
-      error: (error: any) => {
-        console.error('Error updating status', error);
-        this.showMessage('Error', 'Failed to update status', 'error');
-      },
-    });
+    this.orderSubscriptions.push(
+      this.orderService.updateStatus(orderId, status).subscribe({
+        next: (response: any) => {
+          this.loadOrders();
+          this.showMessage(
+            'Success',
+            'Order status updated successfully',
+            'success'
+          );
+        },
+        error: (error: any) => {
+          console.error('Error updating status', error);
+          this.showMessage('Error', 'Failed to update status', 'error');
+        },
+      })
+    );
   }
 
   deleteOrder(id: number): void {
@@ -144,20 +161,22 @@ export class OrdersComponent implements OnInit {
       buttonsStyling: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        this.orderService.deleteOrder(id).subscribe({
-          next: (response: any) => {
-            this.loadOrders();
-            this.showMessage(
-              'Deleted',
-              'Order deleted successfully',
-              'success'
-            );
-          },
-          error: (error: any) => {
-            console.error('Error deleting order', error);
-            this.showMessage('Error', 'Failed to delete order', 'error');
-          },
-        });
+        this.orderSubscriptions.push(
+          this.orderService.deleteOrder(id).subscribe({
+            next: (response: any) => {
+              this.loadOrders();
+              this.showMessage(
+                'Deleted',
+                'Order deleted successfully',
+                'success'
+              );
+            },
+            error: (error: any) => {
+              console.error('Error deleting order', error);
+              this.showMessage('Error', 'Failed to delete order', 'error');
+            },
+          })
+        );
       }
     });
   }
@@ -209,5 +228,10 @@ export class OrdersComponent implements OnInit {
   loadPage(page: number): void {
     this.page = page;
     this.loadOrders();
+  }
+  ngOnDestroy(): void {
+    this.orderSubscriptions.forEach((subscription) =>
+      subscription.unsubscribe()
+    );
   }
 }

@@ -58,6 +58,9 @@ export class UserReviewsComponent implements OnInit {
     this.reviewService.deleteReview(this.id).subscribe(
       () => {
         this.successMessage = 'Review deleted successfully';
+        setTimeout(() => {
+          this.successMessage = '';
+        },2000)
         this.loadReviews(); // Refresh the reviews list
       },
       error => {

@@ -68,3 +68,68 @@
   display: block;
   margin-top: 5px;
 }
+/* .googleLogin:hover,
+.facebookLogin:hover {
+  background-color: rgb(129 200 241);
+  color: black;
+  border-color: red !important;
+  font-weight: bold;
+  transition: 0.5s;
+}
+.googleLogin:hover {
+  border-color: red !important;
+}
+.facebookLogin:hover {
+  border-color: #0d6efd;
+  ;
+} */
+  
+.signup-section{
+  color: #1a181828;
+  font-size: 15px;
+}
+.signup-section::after{
+  position: absolute;
+  content: "";
+  width: 7rem;
+  background-color: #1a181828;
+  height: 1px;
+  top: 10px;
+  left: -120px;
+}
+.signup-section::before{
+  position: absolute;
+  content: "";
+  width: 7rem;
+  background-color: #1a181828;
+  height: 1px;
+  top: 10px;
+  right: -120px;
+ }
+ 
+.googlebtn , .facebookbtn{
+  border-radius: 7px;
+  width: 45px;
+  height: 45px;
+  padding: 2px;
+  cursor: pointer;
+   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: .2s ease-in-out;
+ }
+.facebook{
+  fill: #0794d6;
+}
+.gmail{
+  fill: #f14336;
+}
+.facebookbtn:hover .facebook , .googlebtn:hover .gmail{
+  cursor: pointer;
+  scale: 1.1;
+  fill: white;
+}
+.facebookbtn:hover{
+  background-color: #0794d6;
+}
+.googlebtn:hover{
+  background-color: #f14336;;
+}

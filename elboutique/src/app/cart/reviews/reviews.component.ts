@@ -25,11 +25,14 @@ export class ReviewsComponent implements OnInit, OnDestroy {
   averageRating: number = 0;
   totalRating: number = 0;
   reviewId: number = 0;
+  customerID:number = 0;
 
   constructor(
     private reviewService: ReviewService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.customerID = JSON.parse(localStorage.getItem('user_info') || '{}').id;
+  }
 
   ngOnInit(): void {
     const idSubscription = this.route.params.subscribe((params) => {

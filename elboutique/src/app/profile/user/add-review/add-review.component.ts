@@ -46,6 +46,9 @@ export class AddReviewComponent {
         },
         error => {
           this.errorMessage = 'An error occurred while submitting the review';
+          setTimeout(()=>{
+            this.errorMessage = '';
+          },2000);
           this.successMessage = '';
         }
       );

@@ -1,114 +1,247 @@
 <div class="container my-5 py-5">
-    <div class="row justify-content-center">
-        <div class="container card custom-border ">
-            <div class="card-body">
-                <div class="stepper d-flex justify-content-between align-items-center mb-4">
-                    <div class="step text-center" [ngClass]="{'active': currentStep === 0}">
-                        <div class="step-icon btn rounded-2"><i class=" fa-solid fa-user"></i>
-                        </div>
-                    </div>
-                    <span class="divider"></span>
-                    <div class="step text-center" [ngClass]="{'active': currentStep === 1}">
-                        <div class="step-icon btn rounded-2"><i class=" fa-solid fa-key"></i>
-                        </div>
-                    </div>
-                    <span class="divider"></span>
-                    <div class="step text-center" [ngClass]="{'active': currentStep === 2}">
-                        <div class="step-icon btn rounded-2"><i class="fa-regular fa-circle-check"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-header primary-color bg-body border-0 text-center">
-                    <h4 class="mb-0">Login </h4>
-                </div>
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                    <!-- Step 1: Select User Type -->
-                    @if (currentStep === 0) {
-                    <div class="form-step form-step-active">
-                        <div class="form-group mb-3">
-                            <p class="form-label text-center text-muted">Select User Type</p>
-                            <div class="d-flex justify-content-evenly">
-                                <button type="button" (click)="selectUserType('customer')" class="user-type-option"
-                                    [ngClass]="{'selected': loginForm.value.userType === 'customer'}">
-                                    <img src="assets/images/customer.gif" alt="Customer" class="user-type-image">
-                                    <p class="form-check-label">Customer</p>
-                                </button>
-                                <button type="button" (click)="selectUserType('vendor')" class="user-type-option"
-                                    [ngClass]="{'selected': loginForm.value.userType === 'vendor'}">
-                                    <img src="assets/images/vendor.gif" alt="Vendor" class="user-type-image">
-                                    <p class="form-check-label">Vendor</p>
-                                </button>
-                                <button type="button" (click)="selectUserType('admin')" class="user-type-option"
-                                    [ngClass]="{'selected': loginForm.value.userType === 'admin'}">
-                                    <img src="assets/images/admin.gif" alt="Admin" class="user-type-image">
-                                    <p class="form-check-label">Admin</p>
-                                </button>
-                            </div>
-                            <div *ngIf="loginForm.controls['userType'].invalid && (loginForm.controls['userType'].dirty || loginForm.controls['userType'].touched)"
-                                class="text-danger">
-                                Please select a user type
-                            </div>
-                        </div>
-                        <button type="button" class="btn primary-bg-color float-end" (click)="nextStep()">Next</button>
-                    </div>
-                    }
-                    @else if (currentStep === 1) {
-                    <!-- Step 2: Enter Credentials -->
-                    <div class="form-step form-step-active">
-                        <div class="form-group mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" formControlName="email"
-                                placeholder="Enter your email">
-                            <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
-                                class="text-danger">
-                                <div *ngIf="loginForm.controls['email'].errors?.['required']">Email is required
-                                </div>
-                                <div *ngIf="loginForm.controls['email'].errors?.['email']">Invalid email address
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" formControlName="password"
-                                placeholder="Enter your password">
-                            <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)"
-                                class="text-danger">
-                                <div *ngIf="loginForm.controls['password'].errors?.['required']">Password is
-                                    required</div>
-                                <div *ngIf="loginForm.controls['password'].errors?.['minlength']">Password must be
-                                    at least 8 characters long</div>
-                            </div>
-                        </div>
-                        <a routerLink="/login/forget-password"
-                            class="text-muted btn-link my-3 d-block text-start cursor-pointer">Forgot Password?</a>
-                        <button type="button" class="btn secondary-bg-color" (click)="prevStep()">Back</button>
-                        <button type="submit" class="btn primary-bg-color float-end">Login</button>
-                    </div>
-                    }
-                    @else if (currentStep === 2) {
-                    <!-- Step 3: Review and Submit -->
-                    <div class="form-step form-step-active my-4">
-
-                        <div class="form-group mb-3 text-center my-3">
-                            <img src="assets/images/done.gif" alt="done" width="100">
-                            <p class="text-muted">Welcome! Redirecting to home page...</p>
-                        </div>
-                    </div>
-                    }
-
-                </form>
+  <div class="row justify-content-center">
+    <div class="container card custom-border">
+      <div class="card-body">
+        <div
+          class="stepper d-flex justify-content-between align-items-center mb-4"
+        >
+          <div
+            class="step text-center"
+            [ngClass]="{ active: currentStep === 0 }"
+          >
+            <div class="step-icon btn rounded-2">
+              <i class="fa-solid fa-user"></i>
             </div>
+          </div>
+          <span class="divider"></span>
+          <div
+            class="step text-center"
+            [ngClass]="{ active: currentStep === 1 }"
+          >
+            <div class="step-icon btn rounded-2">
+              <i class="fa-solid fa-key"></i>
+            </div>
+          </div>
+          <span class="divider"></span>
+          <div
+            class="step text-center"
+            [ngClass]="{ active: currentStep === 2 }"
+          >
+            <div class="step-icon btn rounded-2">
+              <i class="fa-regular fa-circle-check"></i>
+            </div>
+          </div>
         </div>
+        <div class="card-header primary-color bg-body border-0 text-center">
+          <h4 class="mb-0">Login</h4>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <!-- Step 1: Select User Type -->
+          @if (currentStep === 0) {
+          <div class="form-step form-step-active">
+            <div class="form-group mb-3">
+              <p class="form-label text-center text-muted">Select User Type</p>
+              <div class="d-flex justify-content-evenly">
+                <button
+                  type="button"
+                  (click)="selectUserType('customer')"
+                  class="user-type-option"
+                  [ngClass]="{
+                    selected: loginForm.value.userType === 'customer'
+                  }"
+                >
+                  <img
+                    src="assets/images/customer.gif"
+                    alt="Customer"
+                    class="user-type-image"
+                  />
+                  <p class="form-check-label">Customer</p>
+                </button>
+                <button
+                  type="button"
+                  (click)="selectUserType('vendor')"
+                  class="user-type-option"
+                  [ngClass]="{
+                    selected: loginForm.value.userType === 'vendor'
+                  }"
+                >
+                  <img
+                    src="assets/images/vendor.gif"
+                    alt="Vendor"
+                    class="user-type-image"
+                  />
+                  <p class="form-check-label">Vendor</p>
+                </button>
+                <button
+                  type="button"
+                  (click)="selectUserType('admin')"
+                  class="user-type-option"
+                  [ngClass]="{ selected: loginForm.value.userType === 'admin' }"
+                >
+                  <img
+                    src="assets/images/admin.gif"
+                    alt="Admin"
+                    class="user-type-image"
+                  />
+                  <p class="form-check-label">Admin</p>
+                </button>
+              </div>
+              <div
+                *ngIf="
+                  loginForm.controls['userType'].invalid &&
+                  (loginForm.controls['userType'].dirty ||
+                    loginForm.controls['userType'].touched)
+                "
+                class="text-danger"
+              >
+                Please select a user type
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn primary-bg-color float-end"
+              (click)="nextStep()"
+            >
+              Next
+            </button>
+          </div>
+          } @else if (currentStep === 1) {
+          <!-- Step 2: Enter Credentials -->
+          <div class="form-step form-step-active">
+            <div class="form-group mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                formControlName="email"
+                placeholder="Enter your email"
+              />
+              <div
+                *ngIf="
+                  loginForm.controls['email'].invalid &&
+                  (loginForm.controls['email'].dirty ||
+                    loginForm.controls['email'].touched)
+                "
+                class="text-danger"
+              >
+                <div *ngIf="loginForm.controls['email'].errors?.['required']">
+                  Email is required
+                </div>
+                <div *ngIf="loginForm.controls['email'].errors?.['email']">
+                  Invalid email address
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                placeholder="Enter your password"
+              />
+              <div
+                *ngIf="
+                  loginForm.controls['password'].invalid &&
+                  (loginForm.controls['password'].dirty ||
+                    loginForm.controls['password'].touched)
+                "
+                class="text-danger"
+              >
+                <div
+                  *ngIf="loginForm.controls['password'].errors?.['required']"
+                >
+                  Password is required
+                </div>
+                <div
+                  *ngIf="loginForm.controls['password'].errors?.['minlength']"
+                >
+                  Password must be at least 8 characters long
+                </div>
+              </div>
+            </div>
+            <a
+              routerLink="/login/forget-password"
+              class="text-muted btn-link my-3 d-block text-start cursor-pointer"
+              >Forgot Password?</a
+            >
+            <button
+              type="button"
+              class="btn secondary-bg-color"
+              (click)="prevStep()"
+            >
+              Back
+            </button>
+            <button type="submit" class="btn primary-bg-color float-end">
+              Login
+            </button>
+          </div>
+          } @else if (currentStep === 2) {
+          <!-- Step 3: Review and Submit -->
+          <div class="form-step form-step-active my-4">
+            <div class="form-group mb-3 text-center my-3">
+              <img src="assets/images/done.gif" alt="done" width="100" />
+              <p class="text-muted">Welcome! Redirecting to home page...</p>
+            </div>
+          </div>
+          }
+        </form>
+      </div>
     </div>
-    <!-- register section -->
-    @if (currentStep!==2) {
-    <div class="d-flex justify-content-center align-items-center     my-3">
-        <h6 class="text-muted fw-light m-0">Don't have an account?</h6> <a routerLink="/register"
-            class="text-muted btn-link mx-1  text-start cursor-pointer ">Register here </a>
-    </div>}
+  </div>
+  <!-- register section -->
+  @if (currentStep!==2) {
 
-    <!-- Toast Notification -->
-    @if (showToast) {
-    <app-toast [message]="toastMessage" [title]="toastTitle"></app-toast>
-    }
+  <div
+    class="d-flex justify-content-center align-items-center flex-column my-3"
+  >
+  <!-- <div>
+    <div class="googleLogin p-2 m-2">
+      <button class="btn btn-danger fs-3 col-12" (click)="loginWithGoogle()">
+        <i class="fa-brands fa-google fs-3" style="color: white"></i> Log in
+        with Google
+      </button>
+    </div>
+    <div class="facebookLogin p-2 m-lg-2">
+      <button class="btn btn-info fs-3 col-12" (click)="loginWithFacebook()">
+        <i class="fa-brands fa-facebook" style="color: white"></i> Log in with
+        Facebook
+      </button>
+    </div>
+  </div> -->
+    <div class="position-relative my-2">
+      <span class="signup-section d-block text-center mb-1 text-muted">Or  Login with</span>
+     <div class="d-flex flex-row">
+      <div class="googleLogin p-2 m-2">
+        <button class="googlebtn btn" (click)="loginWithGoogle()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" class="gmail" width="24">
+            <path d="M6 12C6 15.3137 8.68629 18 12 18C14.6124 18 16.8349 16.3304 17.6586 14H12V10H21.8047V14H21.8C20.8734 18.5645 16.8379 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C15.445 2 18.4831 3.742 20.2815 6.39318L17.0039 8.68815C15.9296 7.06812 14.0895 6 12 6C8.68629 6 6 8.68629 6 12Z"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="facebookLogin p-2 m-lg-2">
+        <button class="facebookbtn btn " (click)="loginWithFacebook()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" class="facebook" width="24">
+            <path d="M9.19795 21.5H13.198V13.4901H16.8021L17.198 9.50977H13.198V7.5C13.198 6.94772 13.6457 6.5 14.198 6.5H17.198V2.5H14.198C11.4365 2.5 9.19795 4.73858 9.19795 7.5V9.50977H7.19795L6.80206 13.4901H9.19795V21.5Z"></path>
+          </svg>
+        </button>
+      </div>
+     </div>
+
+        </div>
+    <h6 class="text-muted fw-light m-0">Don't have an account?</h6>
+    <a
+      routerLink="/register"
+      class="text-muted btn-link mx-1 text-start cursor-pointer"
+      >Register here
+    </a>
+  </div>
+  }
+
+  <!-- Toast Notification -->
+  @if (showToast) {
+  <app-toast [message]="toastMessage" [title]="toastTitle"></app-toast>
+  }
 </div>

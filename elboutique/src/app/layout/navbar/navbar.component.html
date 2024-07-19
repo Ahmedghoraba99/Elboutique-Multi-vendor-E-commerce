@@ -33,8 +33,9 @@
       <div class="col-sm-4 my-2">
         <div class="header-actions px-2">
           <div
-            class="header-action-icon d-flex flex-row align-items-baseline justify-content-between m-0 p-0"
+            class="header-action-icon d-flex flex-row  justify-content-between m-0 p-0"
           >
+            @if(user_role == "customer" ){
             <div class="action-icon">
               <a routerLink="/wishlist">
                 <fa-icon [icon]="faHeart"></fa-icon>
@@ -49,38 +50,55 @@
                 <span *ngIf="cartItems">{{ cartItems }}</span>
               </a>
             </div>
+            }
 
             <div
-              class="action-icon"
+              class="d-flex flex-row"
               *ngIf="isAuthenticated"
               [class]="!isAuthenticated ? 'd-none' : ''"
             >
-              <a
-                [routerLink]="
-                  currentUser?.active ? '/v/overview' : '/u/account'
-                "
-                class="user-profile"
-              >
+        
                 <img
                   src="{{ currentUser?.image_url }}"
-                  class="user-profile-img img-fluid"
+                  class="user-profile-img img-fluid mx-1"
                 />
-              </a>
-            </div>
-            <div class="action-icon">
-              <a
-                class="mx-2 text-light logout"
-                *ngIf="!isAuthenticated"
-                (click)="logout()"
-              >
-                Login
-              </a>
-              <a
-                class="mx-2 text-light logout"
+              <div class="selectDrop position-relative ">
+                <span class="text-capitalize open-select" (click)="toggleDropdown()">
+                  {{ selectedItem }}
+                  <fa-icon [icon]="faChevronDown" class=""></fa-icon>
+                </span>
+                <div class="select-Drop" [ngClass]="{ 'd-none': !isDropdownOpen }">
+                  <ul class="search-result p-0 text-capitalize">
+                    <li>       <fa-icon [icon]="faUser" class=""></fa-icon>
+                        <a
+                        [routerLink]="
+                          currentUser?.active ? '/v/overview' : '/u/account'
+                        "
+                        class="user-profile"
+                    > 
+                My Account</a>
+                    </li>
+                    <li>
+                     
+                      <a
+                class=" "
                 *ngIf="isAuthenticated"
                 (click)="logout()"
-              >
+              ><fa-icon [icon]="faRightFromBracket" class=""></fa-icon>
                 Logout
+              </a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-icon mx-5"  *ngIf="!isAuthenticated"
+            >
+              <a
+                routerLink="/login"
+                class="mx-5 text-light logout"
+              >
+                Login
               </a>
             </div>
           </div>

@@ -183,53 +183,44 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         this.getShippingPrice() -
         this.getDiscountedAmount(),
     };
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to Make this Order !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#270949',
+      cancelButtonColor: '#f95b3d',
+      confirmButtonText: 'Yes, Make it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
+          next: (res: any) => {
+            const { id } = res.order;
+            this.addProducts(id);
+            this.clearCart();
+            this.cartService.clearCart();
 
-    if (paymentType.innerText === 'CKECKOUT') {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you really want to Make this Order !',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#270949',
-        cancelButtonColor: '#f95b3d',
-        confirmButtonText: 'Yes, Make it!',
-        cancelButtonText: 'No, cancel!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
-            next: (res: any) => {
-              const { id } = res.order;
-              this.addProducts(id);
-              this.clearCart();
+            if (paymentType.innerText === 'CKECKOUT') {
               this.successOrderCreatedAlert();
               this.customerCart = [];
-            },
-            error: (error) => {
-              console.error('Error making order:', error);
-              Swal.fire(
-                'Error!',
-                'There was an error making the order.',
-                'error'
-              );
-            },
-          });
-        }
-      });
-    } else if (paymentType.innerText === 'PAY BY PAYPAL') {
-      this.addOrderSub = this.orderService.createOrder(sentBody).subscribe({
-        next: (res) => {
-          const { id } = res.order;
-          this.addProducts(id);
-          this.clearCart();
-          this.paypalPayment(id, sentBody.total);
-          // this.customerCart = [];
-        },
-        error: (err) => {
-          console.error('Error making order:', err);
-          Swal.fire('Error!', 'There was an error making the order.', 'error');
-        },
-      });
-    }
+            } else if (paymentType.innerText.includes('PAYPAL')) {
+              this.paypalPayment(id, sentBody.total);
+            } else if (paymentType.innerText.includes('CREDIT')) {
+              this.payMobPayment(id, sentBody.total);
+            }
+          },
+          error: (error) => {
+            console.error('Error making order:', error);
+            Swal.fire(
+              'Error!',
+              'There was an error making the order.',
+              'error'
+            );
+          },
+        });
+      }
+    });
   }
   addProducts(id: number) {
     const orderProductBody: any = {
@@ -238,8 +229,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.customerCart.forEach((product: any) => {
       orderProductBody.products[`${product.id}`] = product.cart_table.quantity;
     });
-    // console.log('Order Product Body', orderProductBody);
-
     this.addProductsToOrderSub = this.orderService
       .addProductToOrder(orderProductBody, id)
       .subscribe((res) => {
@@ -260,8 +249,50 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.paybalSub = this.paymentService
       .payByPayPal({ total, order_id })
       .subscribe((res) => {
-        window.location.href = res.paypal_link;
+        const paymentUrl = res.paypal_link;
+        const windowFeatures = `width=600,height=600,left=${
+          window.screenLeft + (window.innerWidth - 600) / 2
+        },top=${window.screenTop + (window.innerHeight - 600) / 2}`;
+        const paymentWindow = window.open(paymentUrl, '_blank', windowFeatures);
+        if (!paymentWindow) {
+          // Handle the case where the popup was blocked by the browser
+          alert(
+            'Payment window was blocked by the browser. Please allow popups and try again.'
+          );
+        } else {
+          this.closePaymentWindow(paymentWindow);
+        }
       });
+  }
+
+  payMobPayment(order_id: number, total: number) {
+    this.paybalSub = this.paymentService
+      .payByPayMob({ order_id, total })
+      .subscribe((res) => {
+        const paymentUrl = `https://accept.paymob.com/api/acceptance/iframes/853869?payment_token=${res.token}`;
+        const windowFeatures = `width=600,height=600,left=${
+          window.screenLeft + (window.innerWidth - 600) / 2
+        },top=${window.screenTop + (window.innerHeight - 600) / 2}`;
+        const paymentWindow = window.open(paymentUrl, '_blank', windowFeatures);
+        if (!paymentWindow) {
+          // Handle the case where the popup was blocked by the browser
+          alert(
+            'Payment window was blocked by the browser. Please allow popups and try again.'
+          );
+        } else {
+          this.closePaymentWindow(paymentWindow);
+        }
+      });
+  }
+
+  closePaymentWindow(paymentWindow: any) {
+    const interval = setInterval(() => {
+      if (paymentWindow.closed) {
+        clearInterval(interval);
+        this.clearCart();
+        this.customerCart = [];
+      }
+    }, 500);
   }
   getShippingPrice() {
     return Math.floor(this.getOrderTotalPrice() * 0.2);
