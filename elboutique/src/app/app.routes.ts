@@ -41,7 +41,7 @@ import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/
 import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
 import { AddressComponent } from './profile/user/address/address.component';
-
+import { OrdercomponentComponent } from './ordercomponent/ordercomponent.component';
 
 export const routes: Routes = [
   {
@@ -77,6 +77,13 @@ export const routes: Routes = [
         // component: CategoryComponent,
         loadChildren: () =>
           import('./category/category.module').then((m) => m.CategoryModule),
+      },
+      {
+        path: 'checkout/order',
+        data: { title: 'order' },
+        // component: orderCompoent,
+        loadComponent: () => OrdercomponentComponent,
+
       },
       {
         path: 'vendor/:id',

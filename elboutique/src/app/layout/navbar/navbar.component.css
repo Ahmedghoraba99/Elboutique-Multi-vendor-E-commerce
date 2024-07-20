@@ -110,3 +110,67 @@ header .header-search .selectDrop:after{
   .Dashboard{
     background-color: var(--primary-color) !important; 
   }
+  /*  */
+
+.select-Drop{
+height: auto;
+box-sizing: border-box;
+position: absolute;
+top: 145%;  
+background: #ffff;
+z-index: 20;
+box-shadow: 0 3px 6px rgb( 0 0 0 / 20%);
+padding: 15px;
+left: -45px;
+}
+  .search-result li{
+        list-style: none;
+        font-size: 18px ;
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
+
+    }
+    .search-result li a{
+    text-decoration: none;
+    color:#1a1818;
+    cursor: pointer;
+ 
+  }
+  .search-result li fa-icon{
+    color: var(--accent-color-2);
+
+  }
+ 
+    
+    .search-result li:hover{
+        background-color: var(--accent-color-1);
+    
+    }
+    
+    /* open select  */
+    
+    .open-select{
+        transition: all .3s ease 0s;
+        display: block;
+        padding: 10px 0px;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .selectDrop{
+        width: 119px;
+        font-size: 15px;
+        font-weight: 500;
+        position: relative;
+    }
+    
+    .selectDrop fa-icon{
+        font-size: 0.7rem;
+    }
+    
+    .active{
+        background-color: var(--accent-color-1);
+        color: var(--accent-color-2);
+    }
+    

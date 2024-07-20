@@ -259,6 +259,8 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           alert(
             'Payment window was blocked by the browser. Please allow popups and try again.'
           );
+        } else {
+          this.closePaymentWindow(paymentWindow);
         }
       });
   }
@@ -277,8 +279,20 @@ export class CheckoutComponent implements OnInit, OnDestroy {
           alert(
             'Payment window was blocked by the browser. Please allow popups and try again.'
           );
+        } else {
+          this.closePaymentWindow(paymentWindow);
         }
       });
+  }
+
+  closePaymentWindow(paymentWindow: any) {
+    const interval = setInterval(() => {
+      if (paymentWindow.closed) {
+        clearInterval(interval);
+        this.clearCart();
+        this.customerCart = [];
+      }
+    }, 500);
   }
   getShippingPrice() {
     return Math.floor(this.getOrderTotalPrice() * 0.2);

@@ -1,5 +1,5 @@
 @if (reviews.length > 0) {
-  <div class="container product-rating-section my-5 " >
+  <div class="container-fluid product-rating-section my-5 px-5" >
     <h1 class="text-capitalize">Product ratings and reviews</h1>
     <div class="row border-top">
         <div class="col-md-5 my-3">
@@ -54,7 +54,7 @@
     </div>
 </div>
 }@else {
-  <div class="container product-rating-section my-5 " >
+  <div class="container-fluid product-rating-section my-5 px-5 " >
     <h1 class="text-capitalize">Product ratings and reviews</h1>
     <div class="rating-section d-flex flex-column gap-1  ">
     <strong>0<sub>out of 5</sub></strong>
@@ -67,7 +67,7 @@
       <fa-icon [icon]="faStar"></fa-icon>
     </div>
 
-    <p class="text-capitalize my-3 text-danger"> oops! Product has no rating at this moment .</p>
+    <p class="text-capitalize my-3 text-danger"> Product has no rating at this moment .</p>
     </div>
 }
 

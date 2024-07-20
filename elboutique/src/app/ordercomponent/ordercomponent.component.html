@@ -1,0 +1,136 @@
+<div class="container order-checkout py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-12 my-3">
+                    <h5 class="text-capitalize fw-bold">Shipping Address</h5>
+                    <div class="shipping-section d-flex flex-row align-items-center p-4">
+                        <fa-icon [icon]="faLocationDot" class="mx-4"></fa-icon>
+                        <div class="shipping-details">
+                            <div class="shipping-user">
+                                <strong class="fw-bold">{{user.data.name}}</strong>
+                            </div>
+                            <div class="address-section d-flex flex-column text-capitalize">
+                                @for(address of user.data.addresses ; track $index ){
+
+                                    <span class="my-1">{{ address.house_number  }} , {{ address.street }} , {{ address.city }} , {{ address.governorate }}  </span>
+                                }
+                                @for (phone of user.data.phones ; track $index){
+                                    <span class="my-1">{{phone.phoneNumper}}</span>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 my-3">
+                    <h5 class="text-capitalize fw-bold">Your order</h5>
+                    <div class="order-section p-4">
+                        @for (product of customerCart; track $index) {
+                        <div class="col-md-12 mb-3">
+                            <div class="d-flex flex-column">
+                                <div class="product-data d-flex flex-row flex-wrap gap-4 align-items-center p-4">
+                                    <div class="product-slider position-relative">
+                                        <span class="product-quantity fw-bold">{{product.cart_table.quantity}}</span>
+                                        @for (image of product.images; track $index) {
+                                        <img src="http://127.0.0.1:8000/storage/{{ image.image }}" alt="product-Name" />
+                                        }
+                                    </div>
+                                    <div class="containter">
+                                        <div class="row flex-wrap">
+                                            <div class="product-detail d-flex flex-column justify-content-between">
+                                                <div class="-detail-header">
+                                                    <div class="detail-data">
+                                                        <span>{{ product.name }}</span>
+                                                    </div>
+                                                    <div class="deal-info d-flex flex-column">
+                                                        <span class="my-2 seller-name"><span class="sold">Sold By: </span>{{ product.vendor.name }}</span>
+                                                        <div class="product-info-price">
+                                                            <div class="deal-price">
+                                                                <strong *ngIf="product.sale" >
+                                                                EGP {{ (product.price - (product.price * product.sale) / 100) * product.cart_table.quantity }}
+                                                                </strong>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-12 my-3">
+                    <h5 class="text-capitalize fw-bold">Payment</h5>
+                    <div class="payment-section">
+                        <div class="checkout-btn text-center d-flex justify-content-between align-items-baseline p-3">
+                          <div class="cash-payment d-flex  flex-column justify-content-center">
+                            <fa-icon [icon]="faMoneyBill"></fa-icon>
+                            <button
+                            #checkout
+                            class="btn"
+                            type="submit"
+                            (click)="CreateOrder(checkout)"
+                          >
+        
+                            Cash
+                          </button>
+                          </div>
+                          <div class="paypal-payment  d-flex flex-column justify-content-center">
+                              <i class="fa-brands fa-cc-paypal"></i> 
+                            <button
+                            #paypal
+                            class="btn paypal mt-3"
+                            (click)="CreateOrder(paypal)"
+                          >
+                          PayPal
+                          </button>
+                          </div>
+                           <div class="card-payment  d-flex  flex-column justify-content-center">
+                            <i class="fa-regular fa-credit-card"></i>
+
+                            <button
+                            #credit
+                            class="btn paypal mt-3"
+                            (click)="CreateOrder(credit)"
+                          >
+                          Credit Card
+                          </button>
+                           </div>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <h5 class="text-capitalize fw-bold">Order Summary</h5>
+            <div class="order-summary-section p-4">
+                <strong class="fw-bold">Order Details</strong>
+                <div class="order-details my-2 d-flex flex-row justify-content-between align-items-center text-capitalize">
+                    <span class="my-1">Subtotal</span>
+                    <span class="my-1 fw-bold">EGP {{ getOrderTotalPrice() }}</span>
+                </div>
+                <div class="order-shipping my-2 d-flex flex-row justify-content-between align-items-center text-capitalize">
+                    <span class="my-1">Shipping Fee</span>
+                    <span class="my-1 fw-bold">EGP {{ getShippingPrice() }}</span>
+                </div>
+                <div class="order-total my-2 d-flex flex-row justify-content-between align-items-center text-capitalize">
+                    <div class="order-total-details my-3">
+                        <span class="fw-bold">Total</span>
+                        <sub class="mx-2">inclusive of VAT</sub>
+                    </div>
+                    <span class="fw-bold my-3 total-price">
+                        EGP
+                        {{ getOrderTotalPrice() +
+                            getShippingPrice() }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,7 +8,7 @@
       <a href="#" class="seemorelink">See More</a>
     </div>
   </div>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row d-flex flex-row">
       <!-- part to be looped through -->
       <div
@@ -96,7 +96,7 @@
                       <strong class="fs-4 text-danger" *ngIf="product.sale"
                         >{{
                           product.price * (1 - product.sale / 100)
-                        }}!</strong
+                        }}</strong
                       >
                     </div>
                     <div class="products-wish">
