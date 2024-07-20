@@ -1,0 +1,35 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+  <div class="form-group mt-3">
+    <label for="government">Government</label>
+    <input type="text" class="form-control" id="government" formControlName="governorate" placeholder="Enter government">
+    <div *ngIf="addressForm.get('governorate')?.invalid && addressForm.get('governorate')?.touched" class="text-danger">
+      Government is required and must be at least 3 characters long.
+    </div>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="city">City</label>
+    <input type="text" class="form-control" id="city" formControlName="city" placeholder="Enter city">
+    <div *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched" class="text-danger">
+      City is required and must be at least 3 characters long.
+    </div>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="street">Street</label>
+    <input type="text" class="form-control" id="street" formControlName="street" placeholder="Enter street">
+    <div *ngIf="addressForm.get('street')?.invalid && addressForm.get('street')?.touched" class="text-danger">
+      Street is required and must be at least 3 characters long.
+    </div>
+  </div>
+
+  <div class="form-group mt-3">
+    <label for="house-number">House Number</label>
+    <input type="text" class="form-control" id="house-number" formControlName="houseNumber" placeholder="Enter house number">
+    <div *ngIf="addressForm.get('houseNumber')?.invalid && addressForm.get('houseNumber')?.touched" class="text-danger">
+      House Number is required and must be a number.
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-3" [disabled]="addressForm.invalid">ADD</button>
+</form>

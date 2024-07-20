@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 // Endpoints that use admin gaurd
-
+// Route::apiResource('customeraddresses', CustomerAddressController::class);
 Route::group(['middleware' => ['auth:admin']], function () {
 
     // Update users status "active banned"  endpoints
@@ -48,7 +48,7 @@ Route::group(['middleware' => ['auth:admin']], function () {
     Route::get('/customers/ban/{customer}', [CustomerController::class, 'banCustomer']);
 
     //Customer addresses & phones endpoints
-    Route::apiResource('customeraddresses', CustomerAddressController::class);
+
     Route::apiResource('customerphones', CustomerPhoneController::class);
 
 
@@ -87,7 +87,8 @@ Route::group(['middleware' => ['auth:sanctum', 'AdminCustomerAuth']], function (
     Route::post('/customer/deleteCart/{id}', [CartController::class, 'detachProductFromCustomerCart']);
     Route::get('/customer/showCart/{id}', [CartController::class, 'showCutsomerCart']);
     Route::delete('/customer/clearCart/{id}', [CartController::class, 'clearCart']);
-
+    Route::apiResource('customeraddresses', CustomerAddressController::class);
+    
     //wishlist endpoint
     Route::post('/customer/addWishlist/{id}', [WishlistController::class, 'attachProductToCustomerWishlist']);
     Route::post('/customer/deleteWishlist/{id}', [WishlistController::class, 'detachProductFromCustomerWishlist']);
@@ -195,4 +196,3 @@ Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback
 Route::get('auth/facebook', [AuthController::class, 'redirectToFacebook']);
 Route::get('auth/facebook/callback', [AuthController::class, 'handleFacebookCallback']);
 
- 

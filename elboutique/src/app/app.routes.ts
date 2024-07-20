@@ -40,6 +40,7 @@ import { UpdateProductComponent } from './profile/vendor/products/update-product
 import { ReportsComponent as ReviewReportsComponent } from './dashboard/reports/reports.component';
 import { ShowProductComponent } from './profile/vendor/products/show-product/show-product.component';
 import { AboutusComponent } from './aboutus/aboutus.component';
+import { AddressComponent } from './profile/user/address/address.component';
 
 
 export const routes: Routes = [
@@ -268,6 +269,11 @@ export const routes: Routes = [
         title: 'Reviews',
         loadComponent: () => UserReviewsComponent,
       },
+      {
+        path: 'address',
+        title: 'Address',
+        loadComponent: () => AddressComponent
+      }
     ],
   },
   {

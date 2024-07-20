@@ -70,12 +70,12 @@ class OrderController extends Controller
             return response()->json(['message' => 'Order not found'], 404);
         }
         $this->authorize('update',$order);
-        
+
         $order->update([
             'customer_id'=>$request->customer_id,
             "total" => $request->total,
             "payment_status" => $request->payment_status,
-             
+
         ]);
         return response()->json(['message' => 'Order updated successfully'], 200);
     }
@@ -91,7 +91,7 @@ class OrderController extends Controller
         }
         $this->authorize('delete',$order);
         $order->delete();
-         
+
         return response()->json(["message"=> "Order Deleted"]);
     }
 
@@ -108,30 +108,30 @@ class OrderController extends Controller
 
 
 
-    public function changeStatus(ChangeStatusOrderRequest $request, Order $order) 
+    public function changeStatus(ChangeStatusOrderRequest $request, Order $order)
     {
-    
+
         DB::beginTransaction();
-    
+
         try {
             $order->update(['status' => $request->status]);
-    
+
             if ($request->status === 'arrived') {
                 $order->load('products.vendor.vendorReceivables');
-    
+
                 foreach ($order->products as $product) {
                     $vendor = $product->vendor;
                     if ($vendor) {
                         $vendorReceivables = $vendor->vendorReceivables()->firstOrNew([
                             'vendor_id' => $vendor->id
                         ]);
-    
+
                         $vendorReceivables->amount += $product->price;
                         $vendorReceivables->save();
                     }
                 }
             }
-    
+
             DB::commit();
             return response()->json(['message' => 'Order status updated successfully'], 200);
         } catch (Exception $e) {
@@ -168,5 +168,5 @@ class OrderController extends Controller
             return response()->json(['msg'=>"can't cancel this order"]);
         }
     }
-    
+
 }
